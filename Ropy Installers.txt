@@ -1,0 +1,27 @@
+npm i react-redux
+npm i @reduxjs/toolkit
+
+
+
+navigation >>>
+
+npm install @react-navigation/native
+npx expo install react-native-screens react-native-safe-area-context
+npm install @react-navigation/native-stack
+
+
+
+
+npx expo install expo-font
+npm install @react-native-async-storage/async-storage
+
+npx expo install @expo/vector-icons
+npm i formik
+npm i yup
+
+
+npm i react-native-select-dropdown
+
+
+npm install @react-navigation/bottom-tabs
+npx expo install react-native-svg
