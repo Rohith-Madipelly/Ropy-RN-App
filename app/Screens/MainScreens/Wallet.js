@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponents from '../../Components/Loaders/LoaderComponents'
 import CustomToolKitHeader from '../../Components/UI/CustomToolKitHeader'
@@ -7,11 +7,71 @@ import UserProfile from './useAbles/UserProfile'
 import Redeem from '../../assets/Redeem'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import GiftIcon from '../../assets/GiftIcon'
+import { GetWalletAmountAPI } from '../../ApiCalls'
+import { useSelector } from 'react-redux'
 
 const Wallet = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
+  const [apiData, setApiData] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
+  const [walletAmount, setWalletAmount] = useState(0)
+
+  let tokenn = useSelector((state) => state.login.token);
+
+
+  try {
+      if (tokenn != null) {
+          tokenn = tokenn.replaceAll('"', '');
+      }
+  }
+  catch (err) {
+      console.log("Error in token quotes", err)
+      if (err.response.status === 500) {
+          console.log("Internal Server Error", err.message)
+      }
+  }
+
+  const WalletAmountFunction = async () => {
+    setSpinnerbool(true)
+    try {
+      const res = await GetWalletAmountAPI(tokenn)
+      console.log("scas",res.data)
+      setApiData(res.data)
+      setWalletAmount(res.data.Amount)
+    }
+    catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.log("Error With 400.")
+        }
+        else if (error.response.status === 500) {
+          console.log("Internal Server Error", error.message)
+        }
+        else {
+          console.log("An error occurred response.")
+        }
+      }
+      else if (error.request) {
+        console.log("No Response Received From the Server.")
+      }
+      else {
+        console.log("Error in Setting up the Request.")
+      }
+    }
+    finally {
+      setSpinnerbool(false)
+    }
+
+  }
+
+
+useEffect(()=>{
+  WalletAmountFunction()
+},[])
+
+
+
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
@@ -25,7 +85,7 @@ const Wallet = () => {
       <View style={styles.container}>
         <View style={styles.ContentBox}>
           <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-            <UserProfile />
+            <UserProfile data={apiData} userName={"ROhith msdipelly"}/>
 
             <View style={{
               borderRadius: 20, marginTop: 20
@@ -36,7 +96,7 @@ const Wallet = () => {
                 <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', }}>
 
                   <Text style={{ color: 'white', fontSize: 30, fontWeight: 700 }}>Rewards</Text>
-                  <Text style={{ color: 'white', fontSize: 20, fontWeight: 700 }}> <Text style={{ fontSize: 50, fontWeight: 900 }}>1032</Text> Points </Text>
+                  <Text style={{ color: 'white', fontSize: 20, fontWeight: 700 }}> <Text style={{ fontSize: 50, fontWeight: 900 }}>{walletAmount}</Text> Points </Text>
                 </View>
               </View>
             </View>

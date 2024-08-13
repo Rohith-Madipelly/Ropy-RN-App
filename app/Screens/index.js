@@ -21,6 +21,7 @@ import BottomTabScreen from './MainScreens/BottomTabScreen';
 import Hello from './Hello';
 import BankdetailsProfile from './MainScreens/Profile/BankdetailsProfile';
 import Edit_Account from './MainScreens/Profile/Edit_Account';
+import { setToken } from '../redux/actions/loginAction';
 
 
 
@@ -106,13 +107,13 @@ export default function Screens() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
+        {!user ? (
           <>
-            {/* <Stack.Screen name="Login" component={Login} /> */}
+            <Stack.Screen name="Login" component={Login} />
             {/* <Stack.Screen name="SignUp" component={SignUp} /> */}
             {/* <Stack.Screen name="VerificationCode" component={VerificationCode} /> */}
             {/* <Stack.Screen name="CreatePassword" component={CreatePassword} /> */}
-            <Stack.Screen name="Profile" component={Profile} />
+            {/* <Stack.Screen name="Profile" component={Profile} /> */}
             {/* <Stack.Screen name="InterestsForm" component={InterestsForm} /> */}
             {/* <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} /> */}
 

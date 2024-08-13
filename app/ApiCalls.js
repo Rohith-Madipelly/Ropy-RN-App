@@ -16,6 +16,7 @@ export const UserLoginApi = async (loginFormReq) => {
   return await axios.post(`${GUEST_URL}/login`, loginFormReq)
 }
 
+// 
 
 // Register API
 export const UserRegisterOTPApi = async (registerFormReq) => {
@@ -52,6 +53,33 @@ const appReqData={
   })
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Main Screen API's
+
+
+// Get Wallet Amount
+export const GetWalletAmountAPI = async (token) => {
+  return await axios.get(`${GUEST_URL}/user/walletamount`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+
+  });
+};
 
 
 

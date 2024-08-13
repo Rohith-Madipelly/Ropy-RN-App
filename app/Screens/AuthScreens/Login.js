@@ -12,6 +12,9 @@ import { LoginYupSchema } from '../../FormikYupSchema/LoginYupSchema'
 import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
+import { UserLoginApi } from '../../ApiCalls'
+import ASO from '../../Utils/AsyncStorage_Calls'
+import { setToken } from '../../redux/actions/loginAction'
 
 
 
@@ -20,7 +23,6 @@ const Login = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
-
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -36,7 +38,7 @@ const Login = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: {Mobile_Number:"9951072005", email: "madipellyrohith@gmail.com", password: "Rohith@7" },
+    initialValues: { phone_number: "9951072005",  password: "Rohith@7" },
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -52,9 +54,80 @@ const Login = () => {
   });
 
 
-  const submitHandler = async (values) => {
+  const submitHandler2 = async (values) => {
     console.log("values ", values)
   }
+
+
+  const submitHandler = async (user) => {
+
+    try {
+      setSpinnerbool(true)
+      const res =  await UserLoginApi(user)
+
+      if (res) {
+        console.log("fds", res)
+        const Message = res.data.message
+        const token = res.data.token
+
+
+        ASO.setTokenJWT("Token", JSON.stringify(res.data.token), function (res, status) {
+          if (status) {
+            // console.warn(status, " status>>>>>.")
+            // ToasterSender({ Message: `${Message}` })
+            dispatch(setToken(token));
+          }
+        })
+
+
+
+
+      }
+
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.log("Error With 400.")
+        }
+        else if (error.response.status === 401) {
+          console.log("Password is wrong", error.message)
+          // setError("Password is wrong")
+        }
+        else if (error.response.status === 500) {
+          console.log("Internal Server Error", error.message)
+        }
+        else {
+          console.log("An error occurred response.")
+        }
+      }
+      else if (error.request) {
+        console.log("No Response Received From the Server.")
+      }
+      else {
+        console.log("Error in Setting up the Request.")
+      }
+
+      ToasterSender("Error in setting up the request.")
+      ToasterSender({ Message: error.response.data.message })
+      // ToasterSender({ Message: error })
+
+      setSpinnerbool(false)
+
+      let message = "Failed to create user.";
+
+      if (error) {
+        console.log(error.response.data.message)
+        // message = error.message;
+        // setError(message)
+
+      }
+    }
+    finally {
+      // setLoading(false);
+      setSpinnerbool(false)
+    }
+  }
+
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
@@ -121,30 +194,30 @@ const Login = () => {
                     boxWidth={'95%'}
                     placeholder={'Mobile Number'}
                     label={'Mobile Number'}
-                    name='Mobile_Number'
+                    name='phone_number'
                     keyboardType={'phone-pad'}
-                    value={values.Mobile_Number}
+                    value={values.phone_number}
                     onChangeText={(e) => {
                       // Remove any non-numeric characters
                       const numericValue = e.replace(/[^0-9]/g, '');
                       // Update the state with the numeric value
                       const Only10digits = numericValue.slice(0, 10);
-                      // handleChange("Mobile_Number")(Only10digits);
+                      // handleChange("phone_number")(Only10digits);
 
-                      // seterrorFormAPI({ Mobile_Number: "" })
+                      // seterrorFormAPI({ phone_number: "" })
                       // if (Only10digits[0] < 6) {
-                      //   seterrorFormAPI({ Mobile_Number: "Mobile number must start with 6, 7, 8, or 9" })
+                      //   seterrorFormAPI({ phone_number: "Mobile number must start with 6, 7, 8, or 9" })
                       // }
-                      handleChange("Mobile_Number")(Only10digits);
+                      handleChange("phone_number")(Only10digits);
 
 
                     }}
-                    onBlur={handleBlur("Mobile_Number")}
-                    // validate={handleBlur("Mobile_Number")}
+                    onBlur={handleBlur("phone_number")}
+                    // validate={handleBlur("phone_number")}
 
                     eyboardType="numeric"
-                    borderColor={`${(errors.Mobile_Number) || (errorFormAPI && errorFormAPI.Mobile_NumberForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.Mobile_Number) ? `${errors.Mobile_Number}` : (errorFormAPI && errorFormAPI.Mobile_Number) ? `${errorFormAPI.Mobile_Number}` : ``}`}
+                    borderColor={`${(errors.phone_number) || (errorFormAPI && errorFormAPI.phone_numberForm) ? "red" : "#48484A"}`}
+                    errorMessage={`${(errors.phone_number) ? `${errors.phone_number}` : (errorFormAPI && errorFormAPI.phone_number) ? `${errorFormAPI.phone_number}` : ``}`}
                     // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}

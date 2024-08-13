@@ -8,6 +8,7 @@ import StatusBarComponent from '../../../Components/StatusBar/StatusBarComponent
 import LoaderComponents from '../../../Components/Loaders/LoaderComponents.js';
 import ProfileIcon from '../../../assets/BottomTabsIcons/ProfileIcon.js';
 import UserProfile from '../useAbles/UserProfile.js';
+import { LogOutHandle } from '../../../Utils/LogOutHandle.js';
 // import Wapper from '../../ShareScreens/Wapper';
 
 
@@ -92,7 +93,7 @@ const Menu = ({ items }) => {
       <CustomToolKitHeader componentName={"Profile"} />
       <View style={styles.container}>
 
-        <UserProfile />
+        <UserProfile data={"dvs"}/>
 
         <FlatList
           data={items}
@@ -184,7 +185,7 @@ const Profile = () => {
         { title: 'Delete Account', onPress: () => console.log('Delete Account') },
       ],
     },
-    { title: 'Logout', onPress: () => { console.log('Logout pressed') } },
+    { title: 'Logout', onPress: () => {  LogOutHandle(dispatch);console.log('Logout pressed') } },
   ];
 
 
