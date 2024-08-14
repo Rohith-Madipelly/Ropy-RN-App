@@ -25,3 +25,7 @@ npm i react-native-select-dropdown
 
 npm install @react-navigation/bottom-tabs
 npx expo install react-native-svg
+
+npm i react-native-swiper-flatlist
+
+npx expo install expo-av

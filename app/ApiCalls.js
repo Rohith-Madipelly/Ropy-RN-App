@@ -71,6 +71,39 @@ const appReqData={
 // Main Screen API's
 
 
+
+
+//Video api  locations based
+export const GetVideoByLocationAPI = async (ReqData,page,token) => {
+  return await axios.post(`${GUEST_URL}/user/locationvideos?page=${page}`,
+  ReqData,
+   {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+
+  });
+};
+
+
+//Profile rewarded
+export const rewardedAPI = async (videoId, tokenn) => {
+  const ReqData = {
+    videoId: videoId,
+  };
+
+  return await axios.post(`${GUEST_URL}/user/wallet`
+    , ReqData, {
+    headers: {
+      'Authorization': `Bearer ${tokenn}`
+    }
+  });
+};
+
+
+
+// Hello
+
 // Get Wallet Amount
 export const GetWalletAmountAPI = async (token) => {
   return await axios.get(`${GUEST_URL}/user/walletamount`, {
