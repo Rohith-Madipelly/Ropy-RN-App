@@ -1,17 +1,22 @@
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import StatusBarComponent from '../../../Components/StatusBar/StatusBarComponent'
 import LoaderComponents from '../../../Components/Loaders/LoaderComponents'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useFormik } from 'formik'
 import { LoginYupSchema } from '../../../FormikYupSchema/LoginYupSchema'
 import CustomTextInput2 from '../../../Components/UI/Inputs/CustomTextInput2'
 import CustomToolKitHeader from '../../../Components/UI/CustomToolKitHeader'
 import CustomButton1 from '../../../Components/UI/Buttons/CustomButton1'
-import { Bank_Details_on_IFSC } from '../../../ApiCalls'
+import { Bank_Details_on_IFSC, UserProfilePicUploadAPI } from '../../../ApiCalls'
 import CustomDropdown from '../../../Components/UI/Inputs/CustomDropdown'
 import ProfileIcon from '../../../assets/BottomTabsIcons/ProfileIcon'
+import CommonCss from '../../../Components/UI/CommonCss'
+import LoadingImage from '../../../Components/UI/ImageConatiners/LoadingImage'
+import { MaterialIcons } from '@expo/vector-icons'
+import { THEME_COLOR } from '../../../Utils/AppConts'
+import { openPickerImage } from '../../../Utils/FileHelper'
 
 const BankdetailsProfile = () => {
   const [edit, setEdit] = useState("")
@@ -22,6 +27,25 @@ const BankdetailsProfile = () => {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  let tokenn = useSelector((state) => state.login.token);
+
+
+  try {
+    if (tokenn != null) {
+      tokenn = tokenn.replaceAll('"', '');
+    }
+  }
+  catch (err) {
+    console.log("Error in token quotes", err)
+    if (err.response.status === 500) {
+      console.log("Internal Server Error", err.message)
+    }
+  }
+
+  let profileData = useSelector((state) => state.ProfileData.profileData);
+
+  console.log(profileData, "tokenn")
+
 
   const {
     handleChange,
@@ -72,6 +96,7 @@ const BankdetailsProfile = () => {
     { title: 'Other (custom entry)' },
   ]
 
+  // Required API Calls 
   // For Bank Name and Branch from IFSC Code 
   useEffect(() => {
     const GetBankDetails = async () => {
@@ -96,8 +121,48 @@ const BankdetailsProfile = () => {
   const submitHandler = async (values) => {
     console.log("values ", values)
   }
+  console.log("profileData.profile_pic", profileData.profile_pic)
+
+
+
+  // API Call for profile pic 
+
+  const UploadProfilePic = async (e) => {
+
+    try {
+
+      const res = await UserProfilePicUploadAPI(e,tokenn)
+      if(res)
+      {
+        console.log("Good api call",res)
+      }
+    } catch (error) {
+      console.log("Error in Uploading Profile pic ", error.response)
+    }
+
+  }
+
+
+
+  const handleImageResponse = async response => {
+    console.log('response ====', response);
+    if (response.canceled == false) {
+      // console.log("response >>>",response.assets[0].uri)
+      // setImage(response);
+      // UploadProfilePic(response.assets[0].uri)
+      UploadProfilePic(response.assets[0].uri)
+    } else {
+      // setImageData('')
+    }
+    // setImageData(response);
+  }
+
+
+
+
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      
       <LoaderComponents
         visible={spinnerBool}
         color={"#4A3AFF"}
@@ -111,15 +176,74 @@ const BankdetailsProfile = () => {
           <CustomToolKitHeader componentName={"Edit Profile"} />
 
           <View style={{ height: 114, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <View>
-              <View>
-                <ProfileIcon />
-              </View>
-              <Text>Rohith Madipelly</Text>
+
+
+
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: "space-around", flexDirection: 'row' }}>
+
+              <TouchableOpacity style={[styles.outerCircle,
+              // CommonCss.dropShadow,
+              { justifyContent: 'center', alignItems: 'center' }]}
+              // onPress={()=>{navigation.navigate('Edit_Account')}}
+              >
+
+                {profileData.profile_pic ? <LoadingImage
+                  source={{
+                    uri: `https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profile_pic}`,
+                  }}
+                  style={{
+                    width: '100%', height: '100%',
+                    borderRadius: 50
+                  }}
+                  loaderColor="#ff0000"
+                // resizeMode="contain"
+                /> : <LoadingImage
+                  source={require("../../../assets/utilsImages/profile2.jpg")}
+                  style={{
+                    width: '100%', height: '100%',
+                    borderRadius: 50
+                  }}
+                  loaderColor="#ff0000"
+                  resizeMode="contain"
+
+                />}
+              </TouchableOpacity>
+              <TouchableOpacity style={{
+                flex: 1, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 0, right: -5,
+                // backgroundColor:{THEME_COLOR},
+                padding: 1.5,
+                // backgroundColor:THEME_COLOR,
+                // borderRadius: '50%'
+              }}
+
+                onPress={() => { openPickerImage(handleImageResponse) }}
+
+              >
+                {/* <MaterialIcons name="edit" size={24} color={'#A9A9A9'} /> */}
+                <MaterialIcons name="edit" size={24} color={THEME_COLOR} />
+              </TouchableOpacity>
+
+
+              {/* <TouchableOpacity style={{width:10,height:10,backgroundColor:{THEME_COLOR}, flex: 1, justifyContent: 'center', alignItems: 'center',position:'absolute',bottom:0,right:-5 }}>
+                <MaterialIcons name="edit" size={24} color={THEME_COLOR} />
+              </TouchableOpacity> */}
+
+
             </View>
+
+
+
+
           </View>
 
-          
+
+
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {profileData ? <Text>{profileData.firstname} {profileData.lastname}</Text> : ""}
+          </View>
+
+
           <View style={styles.ContentBox}>
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -427,4 +551,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 17,
     barBackgroundColor: 'pink'
   }
+
+  ,
+
+  outerCircle: {
+    width: '100%',
+    height: '100%',
+    width: 89,
+    height: 89,
+    overflow: 'hidden',
+    // borderRadius:'50%',
+    // backgroundColor: 'black'
+  },
+
+  innerCircle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

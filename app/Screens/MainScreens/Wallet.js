@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponents from '../../Components/Loaders/LoaderComponents'
 import CustomToolKitHeader from '../../Components/UI/CustomToolKitHeader'
@@ -9,6 +9,7 @@ import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import GiftIcon from '../../assets/GiftIcon'
 import { GetWalletAmountAPI } from '../../ApiCalls'
 import { useSelector } from 'react-redux'
+import { useFocusEffect } from '@react-navigation/native'
 
 const Wallet = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
@@ -21,22 +22,22 @@ const Wallet = () => {
 
 
   try {
-      if (tokenn != null) {
-          tokenn = tokenn.replaceAll('"', '');
-      }
+    if (tokenn != null) {
+      tokenn = tokenn.replaceAll('"', '');
+    }
   }
   catch (err) {
-      console.log("Error in token quotes", err)
-      if (err.response.status === 500) {
-          console.log("Internal Server Error", err.message)
-      }
+    console.log("Error in token quotes", err)
+    if (err.response.status === 500) {
+      console.log("Internal Server Error", err.message)
+    }
   }
 
   const WalletAmountFunction = async () => {
     setSpinnerbool(true)
     try {
       const res = await GetWalletAmountAPI(tokenn)
-      console.log("scas",res.data)
+      console.log("scas", res.data)
       setApiData(res.data)
       setWalletAmount(res.data.Amount)
     }
@@ -66,10 +67,18 @@ const Wallet = () => {
   }
 
 
-useEffect(()=>{
-  WalletAmountFunction()
-},[])
+  useEffect(() => {
+    WalletAmountFunction()
+  }, [])
 
+
+  useFocusEffect(
+    useCallback(() => {
+      WalletAmountFunction()
+      return () => {
+      };
+    }, [])
+  )
 
 
 
@@ -84,14 +93,22 @@ useEffect(()=>{
       <CustomToolKitHeader componentName={"Wallet"} />
       <View style={styles.container}>
         <View style={styles.ContentBox}>
-          <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-            <UserProfile data={apiData} userName={"ROhith msdipelly"}/>
+          <View style={{ justifyContent: 'center', alignItems: 'center',paddingHorizontal:2 }}>
+            <UserProfile data={apiData} userName={"ROhith msdipelly"} />
 
-            <View style={{
+            {/* <View style={{
               borderRadius: 20, marginTop: 20
-              , overflow: 'hidden', width: '95%', height: 200,
-            }}>
-              <Redeem />
+              , overflow: 'hidden', width: '100%', height: 200,
+              // backgroundColor:'red'
+            }}> */}
+            {/* <ImageBackground source={} */}
+
+            <ImageBackground source={require('../../assets/RewardsBg.png')} resizeMode="cover" style={{
+              borderRadius: 20, marginTop: 20
+              , overflow: 'hidden', width: '100%', height: 200,
+              // backgroundColor: 'red'
+            }} >
+              {/* <Redeem /> */}
               <View style={{ position: 'absolute', width: '100%', height: '100%' }}>
                 <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', }}>
 
@@ -99,7 +116,8 @@ useEffect(()=>{
                   <Text style={{ color: 'white', fontSize: 20, fontWeight: 700 }}> <Text style={{ fontSize: 50, fontWeight: 900 }}>{walletAmount}</Text> Points </Text>
                 </View>
               </View>
-            </View>
+            </ImageBackground>
+            {/* </View> */}
           </View>
           <View style={{ marginTop: 20 }}>
             <CustomButton1

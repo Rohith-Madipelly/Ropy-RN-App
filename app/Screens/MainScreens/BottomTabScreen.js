@@ -30,6 +30,7 @@ import WalletIcon from '../../assets/BottomTabsIcons/WalletIcon';
 import WalletIconActive from '../../assets/BottomTabsIcons/WalletIconActive';
 import ProfileIcon from '../../assets/BottomTabsIcons/ProfileIcon';
 import DotIcon from '../../assets/BottomTabsIcons/DotIcon';
+import Test from './Test';
 
 
 
@@ -50,11 +51,8 @@ const BottomTabScreen = ({ route }) => {
           // height: 55,
           // flex: 0.102,
           flex: Platform.OS === "ios" ? 0.08 : 0.102,
-
           // backgroundColor: '#006AFF'
           backgroundColor: '#001F20'
-
-
         },
 
         tabBarIcon: ({ focused, size, colour }) => {
@@ -67,8 +65,8 @@ const BottomTabScreen = ({ route }) => {
               <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
                 {focused ? <ReelIconActive /> : <ReelIcon />}
                 {focused ? <View style={{
-                  marginTop:10
-                 }}><DotIcon/></View>:""}
+                  marginTop: 10
+                }}><DotIcon /></View> : ""}
                 {/* {focused ? <Text style={{ fontSize: 12, marginBottom: 7, color: focused ? "#4A3AFF" : "black" }}>0</Text> : <Text style={{ fontSize: 12, marginTop: 5, color: focused ? "#4A3AFF" : "black" }}></Text>} */}
               </View>)
           }
@@ -80,8 +78,8 @@ const BottomTabScreen = ({ route }) => {
               <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
                 {focused ? <WalletIconActive /> : <WalletIcon />}
                 {focused ? <View style={{
-                  marginTop:10
-                 }}><DotIcon/></View>:""}
+                  marginTop: 10
+                }}><DotIcon /></View> : ""}
                 {/* {focused ? <Text style={{ fontSize: 12, marginBottom: 7, color: focused ? "#4A3AFF" : "black" }}>0</Text> : <Text style={{ fontSize: 12, marginTop: 5, color: focused ? "#4A3AFF" : "black" }}></Text>} */}
               </View>)
           }
@@ -94,18 +92,20 @@ const BottomTabScreen = ({ route }) => {
               <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
                 {/* {focused ? <ProfileIcon /> : <ProfileIcon />}
                  */}
-                 <ProfileIcon/>
-                 {focused ? <View style={{
-                  marginTop:10
-                 }}><DotIcon/></View>:""}
+                <ProfileIcon />
+                {focused ? <View style={{
+                  marginTop: 10
+                }}><DotIcon /></View> : ""}
                 {/* {focused ? <Text style={{ fontSize: 12, marginBottom: 7, color: focused ? "#4A3AFF" : "black" }}>0</Text> : <Text style={{ fontSize: 12, marginTop: 5, color: focused ? "#4A3AFF" : "black" }}></Text>} */}
               </View>)
           }
         }
+
+
       })}>
 
 
-      <Tab.Screen name="Reels" component={Reels} options={{
+      {/* <Tab.Screen name="Reels" component={Reels} options={{
         headerShown: false, // Show the header
         // headerShown: false, // Show the header
         headerBackVisible: true, // Hide the back button
@@ -122,8 +122,7 @@ const BottomTabScreen = ({ route }) => {
         //   <AntDesign name="arrowleft" size={24} color="black" />
         // </TouchableOpacity>
         // ),
-      }} />
-
+      }} /> */}
 
       <Tab.Screen name="Wallet" component={Wallet} options={{
         headerShown: false, // Show the header
@@ -145,7 +144,7 @@ const BottomTabScreen = ({ route }) => {
       }} />
 
 
-<Tab.Screen name="Profile" component={Profile} options={{
+      <Tab.Screen name="Profile" component={Profile} options={{
         headerShown: false, // Show the header
         // headerShown: false, // Show the header
         headerBackVisible: true, // Hide the back button
@@ -164,6 +163,7 @@ const BottomTabScreen = ({ route }) => {
         // ),
       }} />
 
+   
 
     </Tab.Navigator>
 

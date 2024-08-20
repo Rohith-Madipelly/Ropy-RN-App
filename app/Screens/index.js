@@ -119,8 +119,8 @@ export default function Screens() {
 
           </>) : (
           <>
-            <Stack.Screen name="Home" component={BottomTabScreen} />
-            <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} />
+             <Stack.Screen name="Home" component={BottomTabScreen} />
+            <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} /> 
             <Stack.Screen name="Edit_Account" component={Edit_Account} />
             {/* <Stack.Screen name="Demo" component={Hello} /> */}
           </>

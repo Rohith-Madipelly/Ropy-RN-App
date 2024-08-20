@@ -61,6 +61,8 @@ const Login = () => {
 
   const submitHandler = async (user) => {
 
+    console.log("Check Login",user)
+
     try {
       setSpinnerbool(true)
       const res =  await UserLoginApi(user)
@@ -78,48 +80,55 @@ const Login = () => {
             dispatch(setToken(token));
           }
         })
-
-
-
-
       }
+    }
 
-    } catch (error) {
+    catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
-          console.log("Error With 400.")
+          console.log("Error With 400.", error.response.data)
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
         }
         else if (error.response.status === 401) {
-          console.log("Password is wrong", error.message)
-          // setError("Password is wrong")
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+        }
+        else if (error.response.status === 403) {
+          console.log("error.response.status login", error.response.data.message)
+        }
+        else if (error.response.status === 404) {
+          seterrorFormAPI({ phone_numberForm: `${error.response.data.message}` })
+        
         }
         else if (error.response.status === 500) {
           console.log("Internal Server Error", error.message)
         }
         else {
-          console.log("An error occurred response.")
+          console.log("An error occurred response.>>")
+          ErrorResPrinter(`${error.message}`)
         }
+      }
+      else if (error.code === 'ECONNABORTED') {
+        console.log('Request timed out. Please try again later.');
       }
       else if (error.request) {
         console.log("No Response Received From the Server.")
+        if (error.request.status === 0) {
+          // console.log("error in request ",error.request.status)
+          Alert.alert("No Network Found", "Please Check your Internet Connection")
+        }
       }
+
       else {
         console.log("Error in Setting up the Request.")
       }
 
-      ToasterSender("Error in setting up the request.")
-      ToasterSender({ Message: error.response.data.message })
-      // ToasterSender({ Message: error })
-
       setSpinnerbool(false)
 
-      let message = "Failed to create user.";
-
       if (error) {
-        console.log(error.response.data.message)
-        // message = error.message;
-        // setError(message)
 
+        // message = error.message;
+        // seterrorFormAPI(message)
+        // "userEmail or Password does not match !"
       }
     }
     finally {
@@ -217,7 +226,7 @@ const Login = () => {
 
                     eyboardType="numeric"
                     borderColor={`${(errors.phone_number) || (errorFormAPI && errorFormAPI.phone_numberForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.phone_number) ? `${errors.phone_number}` : (errorFormAPI && errorFormAPI.phone_number) ? `${errorFormAPI.phone_number}` : ``}`}
+                    errorMessage={`${(errors.phone_number) ? `${errors.phone_number}` : (errorFormAPI && errorFormAPI.phone_numberForm) ? `${errorFormAPI.phone_numberForm}` : ``}`}
                     // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}
@@ -246,8 +255,8 @@ const Login = () => {
 
                     secure={!show?.password} //default to true
                     validate={handleBlur("password")}
-                    borderColor={`${(errors.password && touched.password) || (errorFormAPI && errorFormAPI.PasswordForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.password && touched.password) ? `${errors.password}` : (errorFormAPI && errorFormAPI.PasswordForm) ? `${errorFormAPI.PasswordForm}` : ``}`}
+                    borderColor={`${(errors.password && touched.password) || (errorFormAPI && errorFormAPI.passwordForm) ? "red" : "#48484A"}`}
+                    errorMessage={`${(errors.password && touched.password) ? `${errors.password}` : (errorFormAPI && errorFormAPI.passwordForm) ? `${errorFormAPI.passwordForm}` : ``}`}
                     // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}

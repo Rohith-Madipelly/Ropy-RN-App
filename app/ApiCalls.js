@@ -115,6 +115,46 @@ export const GetWalletAmountAPI = async (token) => {
 };
 
 
+//Profile api 
+export const UserGetProfileDetails = async (token) => {
+  return await axios.get(`${GUEST_URL}/user/profile`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+};
+
+
+
+
+
+
+//Upload Profile Pic api 
+export const UserProfilePicUploadAPI = async (image, token) => {
+
+  // console.log("d",token,"image",image)
+  const formData = new FormData();
+  formData.append("profile_pic", image);
+
+
+  console.log("formData",formData)
+
+  return await axios.post(`${GUEST_URL}/user/updateprofilepicture`,formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+       'Content-Type': 'multipart/form-data'
+      // 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmM1YmNmNWU4OGY5ZTdmNTkzYWNlNyIsImlhdCI6MTcyNDE1MjIxMSwiZXhwIjoxNzI0MzI1MDExfQ.Tq-stjYZ9S_ws4GnJzoTk-qE221Vyoa-hZQ4agawBJY'
+    }
+  });
+};
+
+
+
+
+
+
+
+
 
 // Account Verfification API 
 

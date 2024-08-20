@@ -29,3 +29,6 @@ npx expo install react-native-svg
 npm i react-native-swiper-flatlist
 
 npx expo install expo-av
+
+
+npx expo install expo-image-picker
