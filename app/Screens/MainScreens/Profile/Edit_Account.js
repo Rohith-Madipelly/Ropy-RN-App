@@ -137,20 +137,24 @@ const BankdetailsProfile = () => {
         console.log("Good api call",res)
       }
     } catch (error) {
+      console.log("nb v",error)
       console.log("Error in Uploading Profile pic ", error.response)
+      // console.log("Error in Uploading Profile pic ", error.response.status)
+      console.log("Error in Uploading Profile pic  message", error.response.data.message)
     }
 
   }
 
 
 
+
   const handleImageResponse = async response => {
-    console.log('response ====', response);
+    // console.log('response ====', response);
     if (response.canceled == false) {
       // console.log("response >>>",response.assets[0].uri)
       // setImage(response);
       // UploadProfilePic(response.assets[0].uri)
-      UploadProfilePic(response.assets[0].uri)
+      UploadProfilePic(response.assets[0])
     } else {
       // setImageData('')
     }

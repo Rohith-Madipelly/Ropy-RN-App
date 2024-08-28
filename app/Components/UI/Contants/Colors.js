@@ -14,3 +14,4 @@ export const Colors = {
   gray700: '#221c30',
   white: '#fff5ee'
 };
+export const THEME_COLOR ="#03C4CB"

@@ -3,7 +3,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist'
 
 // import ReelSingle from './ReelSingle'
 import { useSelector } from 'react-redux'
-import { StatusBar } from 'expo-status-bar'
+
 import { Text, View } from 'react-native'
 import { GetVideoByLocationAPI } from '../../../ApiCalls'
 import ReelSingle from './ReelSingle'

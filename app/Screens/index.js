@@ -1,5 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -22,6 +21,9 @@ import Hello from './Hello';
 import BankdetailsProfile from './MainScreens/Profile/BankdetailsProfile';
 import Edit_Account from './MainScreens/Profile/Edit_Account';
 import { setToken } from '../redux/actions/loginAction';
+import { UserGetProfileDetails } from '../ApiCalls';
+import { setProfileData } from '../redux/actions/ProfileDataAction';
+import { ASYNC_STORAGE_NAME } from '../Utils/AppConts';
 
 
 
@@ -41,17 +43,40 @@ export default function Screens() {
 
 
   const loginSelector = useSelector((state) => state.login.isLogin);
-  console.log("login State>", loginSelector)
+  console.log("index.js login State>", loginSelector)
 
 
   const verifyToken = async () => {
-    AsyncStorage_Calls.getTokenJWT('Token', (error, token) => {
+    AsyncStorage_Calls.getTokenJWT(ASYNC_STORAGE_NAME, (error, token) => {
       if (error) {
         console.error('Error getting token:', error);
       } else {
         if (token != null) {
           dispatch(setToken(token));
+
+          try {
+            if (token != null) {
+              token = token.replaceAll('"', '');
+            }
+          }
+          catch (err) {
+            console.log("Error in token quotes", err)
+            if (err.response.status === 500) {
+              console.log("Internal Server Error", err.message)
+            }
+          }
+
+
+          // ApiCaller(token)
+          setTimeout(() => {
+            console.log("Token >", token)
+            ApiCaller(token)
+          }, 200);
+
         }
+        // else(
+        //   console.log("")
+        // )
       }
       setAppIsReady(true);
     });
@@ -59,13 +84,46 @@ export default function Screens() {
 
   useEffect(() => {
     setUser(loginSelector)
+    ApiCaller(loginSelector)
   }, [loginSelector])
+
+
+  const ApiCaller = async (tokenn) => {
+    if(!tokenn=="")
+    {
+    console.log(">",tokenn)
+    try {
+      const res = await UserGetProfileDetails(tokenn)
+      if (res.status === 200) {
+        // setUserProfileData(res.data)
+        dispatch(setProfileData(res.data))
+
+        console.log("nhjshvfj")
+
+
+        // if (res.data.profile_pic == "") {
+
+        // } else {
+        //   setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${res.data.profile_pic}`)
+        // }
+      }
+    } catch (error) {
+      console.log(error)
+      console.log("nhjshvfj error", error.response.data.message)
+    }
+  }
+  else{
+    console.log("No Token ")
+  }
+  }
 
 
   useEffect(() => {
     async function prepare() {
       try {
         await verifyToken();
+        // await ApiCaller(loginSelector)
+
         // Pre-load fonts, make any API calls you need to do here
         // await Font.loadAsync(Entypo.font);
 
@@ -74,7 +132,7 @@ export default function Screens() {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // setUser(loginSelector)
-      
+
       } catch (e) {
         console.warn(e);
       } finally {
@@ -119,8 +177,8 @@ export default function Screens() {
 
           </>) : (
           <>
-             <Stack.Screen name="Home" component={BottomTabScreen} />
-            <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} /> 
+            <Stack.Screen name="Home" component={BottomTabScreen} />
+            <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} />
             <Stack.Screen name="Edit_Account" component={Edit_Account} />
             {/* <Stack.Screen name="Demo" component={Hello} /> */}
           </>

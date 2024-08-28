@@ -117,6 +117,7 @@ export const GetWalletAmountAPI = async (token) => {
 
 //Profile api 
 export const UserGetProfileDetails = async (token) => {
+  console.log("api ",token)
   return await axios.get(`${GUEST_URL}/user/profile`, {
     headers: {
       'Authorization': `Bearer ${token}`
@@ -131,26 +132,62 @@ export const UserGetProfileDetails = async (token) => {
 
 //Upload Profile Pic api 
 export const UserProfilePicUploadAPI = async (image, token) => {
+  const data = new FormData();
 
-  // console.log("d",token,"image",image)
-  const formData = new FormData();
-  formData.append("profile_pic", image);
+  data.append('profile_pic',{
+    uri:image.uri,
+    name:image.name,
+    type:image.mimeType || 'application/octet-stream'
+  })
 
 
-  console.log("formData",formData)
+  // console.log(formData[0])c
+  // return await axios.post(`${GUEST_URL}/user/updateprofilepicture`,data,{
+  //   headers: {
+  //     'Authorization': `Bearer ${token}`,
+  //      'Content-Type': 'multipart/form-data'
+  //   }
+  // });
 
-  return await axios.post(`${GUEST_URL}/user/updateprofilepicture`,formData, {
+
+
+  return await axios.post(`${GUEST_URL}/user/updateprofilepicture`, data, {
     headers: {
       'Authorization': `Bearer ${token}`,
-       'Content-Type': 'multipart/form-data'
-      // 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmM1YmNmNWU4OGY5ZTdmNTkzYWNlNyIsImlhdCI6MTcyNDE1MjIxMSwiZXhwIjoxNzI0MzI1MDExfQ.Tq-stjYZ9S_ws4GnJzoTk-qE221Vyoa-hZQ4agawBJY'
+      'Content-Type': 'multipart/form-data'
     }
-  });
+  })
 };
 
 
 
 
+
+
+// Put Like on Video
+export const PutLikeAPI = async (dateVideoId,token) => {
+  return await axios.put(`${GUEST_URL}/user/${dateVideoId}/likes`,{}, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+
+  });
+};
+
+
+
+// Repost API Call
+export const PostRepostAPI = async (ReqData,token) => {
+
+  return await axios.post(`${GUEST_URL}/user/report`,
+  ReqData,
+   {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+
+  });
+};
 
 
 

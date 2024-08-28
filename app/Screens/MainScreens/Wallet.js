@@ -1,4 +1,4 @@
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponents from '../../Components/Loaders/LoaderComponents'
@@ -10,6 +10,9 @@ import GiftIcon from '../../assets/GiftIcon'
 import { GetWalletAmountAPI } from '../../ApiCalls'
 import { useSelector } from 'react-redux'
 import { useFocusEffect } from '@react-navigation/native'
+import CommonCss from '../../Components/UI/CommonCss'
+import LoadingImage from '../../Components/UI/ImageConatiners/LoadingImage'
+import BottomTabProfile from './useAbles/CustomBottomTabProfile'
 
 const Wallet = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
@@ -17,8 +20,16 @@ const Wallet = () => {
   const [apiData, setApiData] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
   const [walletAmount, setWalletAmount] = useState(0)
+  const [profilepic, setProfilepic] = useState(null)
 
   let tokenn = useSelector((state) => state.login.token);
+
+  let profileData = useSelector((state) => state.ProfileData.profileData);
+
+  // console.log(profileData, "tokenn")
+
+
+
 
 
   try {
@@ -67,14 +78,20 @@ const Wallet = () => {
   }
 
 
-  useEffect(() => {
-    WalletAmountFunction()
-  }, [])
+  // useEffect(() => {
+  //   WalletAmountFunction()
+  // }, [])
 
 
   useFocusEffect(
     useCallback(() => {
       WalletAmountFunction()
+
+      if (profileData.profile_pic == "") {
+
+      } else {
+        setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profile_pic}`)
+      }
       return () => {
       };
     }, [])
@@ -93,16 +110,10 @@ const Wallet = () => {
       <CustomToolKitHeader componentName={"Wallet"} />
       <View style={styles.container}>
         <View style={styles.ContentBox}>
-          <View style={{ justifyContent: 'center', alignItems: 'center',paddingHorizontal:2 }}>
-            <UserProfile data={apiData} userName={"ROhith msdipelly"} />
+          <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 2, }}>
 
-            {/* <View style={{
-              borderRadius: 20, marginTop: 20
-              , overflow: 'hidden', width: '100%', height: 200,
-              // backgroundColor:'red'
-            }}> */}
-            {/* <ImageBackground source={} */}
 
+            <UserProfile/>
             <ImageBackground source={require('../../assets/RewardsBg.png')} resizeMode="cover" style={{
               borderRadius: 20, marginTop: 20
               , overflow: 'hidden', width: '100%', height: 200,
@@ -138,6 +149,9 @@ const Wallet = () => {
 
 
             </CustomButton1>
+
+
+           
           </View>
         </View>
 
@@ -168,5 +182,18 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 17,
 
 
-  }
+  },
+  outerCircle: {
+    width: 79,
+    height: 79,
+    overflow: 'hidden',
+    // borderRadius:'50%',
+    // backgroundColor: 'black'
+  },
+
+  innerCircle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

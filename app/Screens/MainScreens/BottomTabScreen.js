@@ -31,6 +31,7 @@ import WalletIconActive from '../../assets/BottomTabsIcons/WalletIconActive';
 import ProfileIcon from '../../assets/BottomTabsIcons/ProfileIcon';
 import DotIcon from '../../assets/BottomTabsIcons/DotIcon';
 import Test from './Test';
+import CustomBottomTabProfile from './useAbles/CustomBottomTabProfile';
 
 
 
@@ -62,7 +63,7 @@ const BottomTabScreen = ({ route }) => {
             size = focused ? size + 8 : size + 2;
             colour = focused ? "Black" : "White";
             return (
-              <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
+              <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%'}}>
                 {focused ? <ReelIconActive /> : <ReelIcon />}
                 {focused ? <View style={{
                   marginTop: 10
@@ -92,7 +93,8 @@ const BottomTabScreen = ({ route }) => {
               <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
                 {/* {focused ? <ProfileIcon /> : <ProfileIcon />}
                  */}
-                <ProfileIcon />
+                {/* <ProfileIcon /> */}
+                <CustomBottomTabProfile/>
                 {focused ? <View style={{
                   marginTop: 10
                 }}><DotIcon /></View> : ""}
@@ -105,7 +107,7 @@ const BottomTabScreen = ({ route }) => {
       })}>
 
 
-      {/* <Tab.Screen name="Reels" component={Reels} options={{
+      <Tab.Screen name="Reels" component={Reels} options={{
         headerShown: false, // Show the header
         // headerShown: false, // Show the header
         headerBackVisible: true, // Hide the back button
@@ -122,7 +124,7 @@ const BottomTabScreen = ({ route }) => {
         //   <AntDesign name="arrowleft" size={24} color="black" />
         // </TouchableOpacity>
         // ),
-      }} /> */}
+      }} />
 
       <Tab.Screen name="Wallet" component={Wallet} options={{
         headerShown: false, // Show the header

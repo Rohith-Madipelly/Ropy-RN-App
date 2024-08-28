@@ -8,11 +8,11 @@ const StatusBarComponent = ({ children,barStyle,barBackgroundColor }) => {
     return (
         // <SafeAreaView style={{ flex: 1, backgroundColor: {barBackgroundColor} }}>
         <SafeAreaView style={[{ flex: 1, backgroundColor: barBackgroundColor},GlobalStyles.androidSafeArea]}>
-            <StatusBar
+            {/* <StatusBar
                 barStyle={barStyle}
                 animated={true}
                 backgroundColor={barBackgroundColor}
-            />
+            /> */}
             {children}
         
         </SafeAreaView>

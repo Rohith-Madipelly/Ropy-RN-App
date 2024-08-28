@@ -15,6 +15,7 @@ import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import { UserLoginApi } from '../../ApiCalls'
 import ASO from '../../Utils/AsyncStorage_Calls'
 import { setToken } from '../../redux/actions/loginAction'
+import { ASYNC_STORAGE_NAME } from '../../Utils/AppConts'
 
 
 
@@ -73,7 +74,7 @@ const Login = () => {
         const token = res.data.token
 
 
-        ASO.setTokenJWT("Token", JSON.stringify(res.data.token), function (res, status) {
+        ASO.setTokenJWT(ASYNC_STORAGE_NAME, JSON.stringify(res.data.token), function (res, status) {
           if (status) {
             // console.warn(status, " status>>>>>.")
             // ToasterSender({ Message: `${Message}` })

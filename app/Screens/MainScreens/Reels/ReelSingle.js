@@ -2,10 +2,10 @@ import { View, Text, Dimensions, Touchable, TouchableOpacity, } from 'react-nati
 import React, { useRef, useState, useEffect } from 'react'
 import { Video, ResizeMode } from 'expo-av';
 import { ActivityIndicator } from 'react-native';
-// import ReelsBtns from "./ReelsBtns";
 // import ReelDescription from './ReelDescription';
 import { useSelector } from 'react-redux';
 import { rewardedAPI } from '../../../ApiCalls';
+import ReelsBtns from './ReelsBtns';
 // import { rewardedAPI } from '../utils/API_Calls';
 // import { ToasterSender } from '../utils/Toaster';
 
@@ -173,7 +173,7 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
             onPressIn={PauseVideo}
             onPressOut={PlayVideo}
         >
-            <View style={{ width: windoWidth, height: windowHeight, position: 'relative' }}>
+            <View style={{ width: windoWidth, height: windowHeight * 0.94, position: 'relative' }}>
 
                 <>
 
@@ -207,16 +207,16 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
 
                         {/* <ReelDescription description={item.description} /> */}
 
-                        {/* <ReelsBtns
-              isLiked={item.liked}
-              likes={item.likes}
-              shares={item.shares}
-              comments={item.comments}
-              dateVideoId={dateVideorewardedAPI}
-              urlLink={ `${AWSBaseUrl}/${item.videoUrl}` }
-            // UploaderthumbnailUrl="https://ezewin-files.s3.ap-south-1.amazonaws.com/MTU1XzE3MDI0NjU2MTExOThfNjgz.jpeg"
-            // index={currentIndex}
-            /> */}
+                        <ReelsBtns
+                            isLiked={item.liked}
+                            likes={item.likes}
+                            shares={item.shares}
+                            comments={item.comments}
+                            dateVideoId={dateVideorewardedAPI}
+                            urlLink={`${AWSBaseUrl}/${item.videoUrl}`}
+                        // UploaderthumbnailUrl="https://ezewin-files.s3.ap-south-1.amazonaws.com/MTU1XzE3MDI0NjU2MTExOThfNjgz.jpeg"
+                        // index={currentIndex}
+                        />
 
 
                     </View>

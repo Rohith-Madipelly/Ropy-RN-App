@@ -74,6 +74,7 @@ const CustomTextInput2 = ({
                     onEndEditing={validate}
                     multiline={numLines > 1 ? true : false}
                     numberOfLines={numLines}
+                    // disabled={disabled ? disabled : false}
                     editable={editable}
                     style={{ flex: 4, height: '130%' }}
 

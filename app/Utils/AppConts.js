@@ -1,4 +1,6 @@
+export const SERVICE_PROVIDER_WEBSITE = 'https://analogueitsolutions.com';
 
+export const ASYNC_STORAGE_NAME = 'Token';
 
 export const STANDARD_SCREEN_HEIGHT = 740;
 
@@ -23,7 +25,7 @@ export const EXTRA_LARGE_FONT_SIZE_3 = 26;
 
 export const WHITE_COLOR = "white";
 export const BLACK_COLOR = "black";
-export const THEME_COLOR = "#03C4CB"
+export const THEME_COLOR = "#03C4CB" 
 
 export const THEME_COLOR_2 = "#148be2";
 export const THEME_COLOR_3 = "#148be2db";

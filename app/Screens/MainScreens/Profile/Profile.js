@@ -13,6 +13,9 @@ import { UserGetProfileDetails } from '../../../ApiCalls.js';
 import LoadingImage from '../../../Components/UI/ImageConatiners/LoadingImage.js';
 import CommonCss from '../../../Components/UI/CommonCss.js';
 import { setProfileData } from '../../../redux/actions/ProfileDataAction.js';
+import { SERVICE_PROVIDER_WEBSITE, THEME_COLOR } from '../../../Utils/AppConts.js';
+import { MaterialIcons } from '@expo/vector-icons';
+import { CustomLinking } from '../../../Utils/CustomLinking.js';
 // import Wapper from '../../ShareScreens/Wapper';
 
 
@@ -27,8 +30,8 @@ const renderItem1 = ({ item }) => {
       <View style={styles.menuItem}>
         <TouchableOpacity onPress={item.onPress}>
           <Text style={styles.menuTitle}>{item.title}</Text>
-          <View style={{ marginTop: 80 }}>
-          </View>
+          {/* <View style={{ marginTop: 80 }}>
+          </View> */}
         </TouchableOpacity>
       </View>
     )
@@ -88,6 +91,27 @@ const renderItem1 = ({ item }) => {
 }
 
 
+const renderHeader = () => (
+  <View style={{ marginRight: 10, }}>
+    <UserProfile />
+  </View>
+);
+
+const renderFooter = () => (
+  <View style={{ marginRight: 10, marginVertical: 5 }}>
+
+    <Text style={{ color: '#001F2099', textAlign: 'center' }}>Version 1.0</Text>
+    <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }} onPress={()=>{CustomLinking(SERVICE_PROVIDER_WEBSITE)}}>
+      <MaterialIcons name="copyright" size={15} color={THEME_COLOR} />
+      <Text style={{ color: THEME_COLOR, fontWeight: '600', textAlign: 'center', marginVertical: 10,marginLeft:5,fontSize:15 }}>
+        Analogue IT Solutions
+      </Text>
+    </TouchableOpacity>
+
+
+  </View>
+);
+
 const Menu = ({ items }) => {
   const dispatch = useDispatch();
 
@@ -129,7 +153,7 @@ const Menu = ({ items }) => {
 
 
   useEffect(() => {
-    ApiCaller()
+    // ApiCaller()
   }, [])
 
 
@@ -157,36 +181,10 @@ const Menu = ({ items }) => {
 
 
 
-        {/* {profilepic ? <TouchableOpacity onPress={() => { }}>
-          <View style={styles.outerCircle}>
-
-          
-
-            <LoadingImage
-             source={{
-              uri: profilepic,
-            }}
-              // source={require('../../../../assets/Images/Food/Food1.png')}
-              style={{ width: '100%', height: 240, }}
-              loaderColor="#ff0000" // Optional: change loader color
-              resizeMode="contain"
-            />
-
-          </View></TouchableOpacity> : 
-          
-          <TouchableOpacity onPress={() => { }}>
-            
-            <View style={styles.outerCircle}>
-            <ImageBackground
-            style={styles.innerCircle}
-            source={require("../../../../assets/utilsImages/profile2.jpg")}
-            resizeMode="cover"
-          >
-          </ImageBackground>
-          </View>
-        </TouchableOpacity>} */}
 
 
+
+        {/* 
         <View style={[{ backgroundColor: "#FFFFFF", height: 100, flexDirection: 'row', marginRight: 10, borderRadius: 8 }, CommonCss.dropShadow]}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: "space-around", flexDirection: 'row' }}>
 
@@ -214,7 +212,7 @@ const Menu = ({ items }) => {
 
           </View>
 
-        </View>
+        </View> */}
 
 
 
@@ -225,6 +223,8 @@ const Menu = ({ items }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem1}
           style={{ marginBottom: 0 }}
+          ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderFooter}
         />
       </View>
 

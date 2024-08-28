@@ -17,31 +17,41 @@ const Reels = () => {
 
 
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // WalletAmountFunction()
+  //     <StatusBar style="light" />
+  //     return () => {
+  //       <StatusBar style="light" />
+  //     };
+  //   }, [])
+  // )
 
 
 
-  try {
-    if (tokenn != null) {
-      tokenn = tokenn.replaceAll('"', '');
-    }
-  }
-  catch (err) {
-    console.log("Error in token quotes", err)
-    if (err.response.status === 500) {
-      console.log("Internal Server Error", err.message)
-    }
-  }
+  // try {
+  //   if (tokenn != null) {
+  //     tokenn = tokenn.replaceAll('"', '');
+  //   }
+  // }
+  // catch (err) {
+  //   console.log("Error in token quotes", err)
+  //   if (err.response.status === 500) {
+  //     console.log("Internal Server Error", err.message)
+  //   }
+  // }
 
 
   // Use useFocusEffect to set SetReelPageActive when the screen is focused
   useFocusEffect(
     useCallback(() => {
-      // setSetReelPageActive(true);
+     
       console.log("nv")
+      setSetReelPageActive(true);
 
       // Cleanup function when the component loses focus
       return () => {
-        // setSetReelPageActive(false);
+        setSetReelPageActive(false);
         // Any cleanup logic if needed
       };
     }, [])
@@ -50,27 +60,10 @@ const Reels = () => {
       <View style={{
         marginTop:0,
         width: windoWidth,
-        height: windowHeight,
+        height: windowHeight*0.939,
         backgroundColor: 'black'
     }}>
-     {/* <View style={{ flex: 1 }}> */}
-      <StatusBar style="light" />
-      {/* Reels Header */}
-
-      {/* <View style={{
-        position: 'absolute',
-        top: 30,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        zIndex: 1,
-        padding: 10,
-      }}>
-        <Text>dcmn</Text>
-      </View> */}
-
-
+      {/* <StatusBar style="light" /> */}
       <ReelsComponent isReelPage={SetReelPageActive} />
 
 
