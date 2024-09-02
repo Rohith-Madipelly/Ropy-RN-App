@@ -24,6 +24,12 @@ import { setToken } from '../redux/actions/loginAction';
 import { UserGetProfileDetails } from '../ApiCalls';
 import { setProfileData } from '../redux/actions/ProfileDataAction';
 import { ASYNC_STORAGE_NAME } from '../Utils/AppConts';
+import SavedLocation from './MainScreens/Profile/SavedLocation';
+import ChangePassword from './MainScreens/Profile/ChangePassword';
+import AboutUs from './MainScreens/Profile/AboutUs';
+import Privacypolicy from './MainScreens/Profile/Privacypolicy';
+import Termsandcondition from './MainScreens/Profile/Termsandcondition';
+import ForgotPassword from './AuthScreens/ForgotPassword';
 
 
 
@@ -168,18 +174,26 @@ export default function Screens() {
         {!user ? (
           <>
             <Stack.Screen name="Login" component={Login} />
-            {/* <Stack.Screen name="SignUp" component={SignUp} /> */}
-            {/* <Stack.Screen name="VerificationCode" component={VerificationCode} /> */}
-            {/* <Stack.Screen name="CreatePassword" component={CreatePassword} /> */}
-            {/* <Stack.Screen name="Profile" component={Profile} /> */}
-            {/* <Stack.Screen name="InterestsForm" component={InterestsForm} /> */}
-            {/* <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} /> */}
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen name="VerificationCode" component={VerificationCode} />
+            <Stack.Screen name="CreatePassword" component={CreatePassword} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="InterestsForm" component={InterestsForm} />
+            <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} />
 
           </>) : (
           <>
             <Stack.Screen name="Home" component={BottomTabScreen} />
             <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} />
             <Stack.Screen name="Edit_Account" component={Edit_Account} />
+            <Stack.Screen name="SavedLocation" component={SavedLocation} />
+            <Stack.Screen name="ChangePassword" component={ChangePassword} />
+
+             <Stack.Screen name="AboutUs" component={AboutUs} />
+            <Stack.Screen name="Privacypolicy" component={Privacypolicy} />
+            <Stack.Screen name="Termsandcondition" component={Termsandcondition} />
+
             {/* <Stack.Screen name="Demo" component={Hello} /> */}
           </>
         )}

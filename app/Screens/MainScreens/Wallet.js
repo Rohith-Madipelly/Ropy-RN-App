@@ -114,7 +114,7 @@ const Wallet = () => {
 
 
             <UserProfile/>
-            <ImageBackground source={require('../../assets/RewardsBg.png')} resizeMode="cover" style={{
+            <ImageBackground source={require('../../assets/RewardsBg2.png')} resizeMode="cover" style={{
               borderRadius: 20, marginTop: 20
               , overflow: 'hidden', width: '100%', height: 200,
               // backgroundColor: 'red'

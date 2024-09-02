@@ -8,6 +8,7 @@ import StatusBarComponent from '../../../Components/StatusBar/StatusBarComponent
 import LoaderComponents from '../../../Components/Loaders/LoaderComponents.js';
 import ProfileIcon from '../../../assets/BottomTabsIcons/ProfileIcon.js';
 import UserProfile from '../useAbles/UserProfile.js';
+
 import { LogOutHandle } from '../../../Utils/LogOutHandle.js';
 import { UserGetProfileDetails } from '../../../ApiCalls.js';
 import LoadingImage from '../../../Components/UI/ImageConatiners/LoadingImage.js';
@@ -81,7 +82,6 @@ const renderItem1 = ({ item }) => {
               </View>
             </TouchableOpacity>
           )}
-
         />
       )}
 
@@ -247,7 +247,8 @@ const Profile = () => {
       title: 'Your account',
       subItems: [
         { title: 'Edit account', onPress: () => navigation.navigate('Edit_Account') },
-        { title: 'Change password', onPress: () => navigation.navigate('VerifiyPassword') },
+        { title: 'Change password', onPress: () => navigation.navigate('ChangePassword') },
+        { title: 'Save Location', onPress: () => navigation.navigate('SavedLocation') },
 
       ],
     },
@@ -262,14 +263,20 @@ const Profile = () => {
     //     // { title: 'Delete account', logo: require("../../../assets/Profile/trash_02.png"), onPress: () => console.log('Delete Account pressed') },
     //   ],
     // },
+
+
+    // Termsandcondition
+    // Privacypolicy
+    // AboutUs
     {
       title: 'Others',
       subItems: [
-        { title: 'Above us', onPress: () => navigation.navigate('AboveUs') },
+        { title: 'Above us', onPress: () => navigation.navigate('AboutUs') },
         { title: 'Bank details', onPress: () => navigation.navigate('BankdetailsProfile') },
-        { title: 'Privacy policy', onPress: () => console.log('Privacy and Policy pressed') },
-        { title: 'Terms and condition', onPress: () => console.log('Terms and condition pressed') },
-        { title: 'Share app', onPress: () => navigation.navigate('Share app') },
+        { title: 'Privacy policy', onPress: () => navigation.navigate('Privacypolicy') },
+        { title: 'Terms and condition', onPress: () => navigation.navigate('Termsandcondition') },
+
+        { title: 'Share app', onPress: () => console.log('Share app') },
 
         { title: 'Contact us', onPress: () => console.log('Contact us') },
         { title: 'Delete Account', onPress: () => console.log('Delete Account') },

@@ -1,4 +1,4 @@
-import {  ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponent from '../../Components/Loaders/LoaderComponents'
@@ -8,6 +8,7 @@ import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import { InterestsFormYupSchema } from '../../FormikYupSchema/InterestsFormYupSchema'
+import CustomCheckBox from '../../Components/UI/Inputs/CustomCheckBox'
 
 
 
@@ -49,7 +50,7 @@ const InterestsForm = () => {
 
 
   const submitHandler = async (values) => {
-    console.log("values ", values)
+    console.log("values ", values,selectedInterests)
     navigation.navigate("SuccessfullyScreen")
   }
 
@@ -78,6 +79,21 @@ const InterestsForm = () => {
   ]
 
 
+  const [selectedInterests, setSelectedInterests] = useState([]);
+
+  const handleCheckBoxChange = (interest) => {
+    if (selectedInterests.includes(interest)) {
+      // Remove interest if already selected
+      setSelectedInterests((prev) =>
+        prev.filter((item) => item !== interest)
+      );
+    } else {
+      // Add interest to the selected list
+      setSelectedInterests((prev) => [...prev, interest]);
+    }
+  };
+
+
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
       <LoaderComponent
@@ -100,15 +116,22 @@ const InterestsForm = () => {
 
 
 
-            <View style={{ alignItems: 'center', flex: 0.5 }}>
+            <View style={{ alignItems: 'start', flex: 0.5, marginLeft: 10 }}>
 
 
 
               {InterestsData.map((data, index) => (
                 <View style={{}} key={index}>
-                  <Text>{data}</Text>
+                  <CustomCheckBox
+                    value={selectedInterests.includes(data)}
+                    boxWidth={"95%"}
+                    content={<Text>{data}</Text>}
+                    onValueChange={() => handleCheckBoxChange(data)}
+                  />
                 </View>
               ))}
+
+
 
 
               <CustomButton1

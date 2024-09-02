@@ -39,7 +39,7 @@ const Login = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { phone_number: "9951072005",  password: "Rohith@7" },
+    initialValues: { phone_number: "9951072005", password: "Rohith@7" },
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -62,11 +62,11 @@ const Login = () => {
 
   const submitHandler = async (user) => {
 
-    console.log("Check Login",user)
+    console.log("Check Login", user)
 
     try {
       setSpinnerbool(true)
-      const res =  await UserLoginApi(user)
+      const res = await UserLoginApi(user)
 
       if (res) {
         console.log("fds", res)
@@ -98,7 +98,7 @@ const Login = () => {
         }
         else if (error.response.status === 404) {
           seterrorFormAPI({ phone_numberForm: `${error.response.data.message}` })
-        
+
         }
         else if (error.response.status === 500) {
           console.log("Internal Server Error", error.message)
@@ -267,7 +267,7 @@ const Login = () => {
               </TouchableWithoutFeedback>
             </View>
             <View style={{ alignItems: 'flex-end', marginBottom: 20 }}>
-              <TouchableOpacity onPress={() => { navigation.navigate("EmailVerificationForget") }}>
+              <TouchableOpacity onPress={() => { navigation.navigate("ForgotPassword") }}>
                 <Text style={[styles.paragraphy, { color: '#03C4CB', fontWeight: '500' }]}>Forgot password?</Text>
               </TouchableOpacity>
             </View>

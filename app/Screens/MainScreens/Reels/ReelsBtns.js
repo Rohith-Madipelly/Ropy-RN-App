@@ -73,6 +73,10 @@ const ReelsBtns = ({
     }
   }
 
+
+  const SaveLocation = () => {
+    console.log("Save Location ...........")
+  }
   const ReportBtn = async () => {
 
     setSpinnerbool(true)
@@ -85,9 +89,9 @@ const ReelsBtns = ({
       const res = await PostRepostAPI(ReportData, tokenn)
       console.log(res)
       ToasterSender({ Message: `${res.data.message}` })
-      setTimeout(()=>{
+      setTimeout(() => {
         bottomSheet2.current.hide();
-      },200)
+      }, 200)
       setReportMessage("")
     }
     catch (error) {
@@ -184,7 +188,7 @@ const ReelsBtns = ({
 
 
   return (
-    <View style={[styles.container, { marginBottom: 10 }]}>
+    <View style={[styles.container, { marginBottom: 10,right:10 }]}>
       <BottomSheet height={Metrics.rfv(150)} ref={bottomSheet}>
         <View style={{
           marginHorizontal: Metrics.rfv(15),
@@ -210,7 +214,7 @@ const ReelsBtns = ({
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => { handleDownload() }}
+            <TouchableOpacity onPress={() => { SaveLocation() }}
               style={{
                 flex: 0.4, justifyContent: 'center', alignItems: 'center',
                 borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
@@ -219,18 +223,18 @@ const ReelsBtns = ({
               <View style={{ display: 'flex', flexDirection: 'row', }}>
                 {/* <MaterialIcons name="save" size={24} color="black" /> */}
                 {/* <AntDesign name="download" size={24} color={"black"} style={styles.btnbtn} /> */}
+                {/* <View>
+                <Entypo name="location-pin" size={20} color="white" />
+                </View> */}
 
                 <Text style={[FontStyles.A1, {
                   // paddingTop: 2, paddingLeft: 10,
                   color: WHITE_COLOR,
                   fontWeight: '500'
-                }]}>Save</Text>
-
-
+                }]}>   
+                  Save Location</Text>
               </View>
             </TouchableOpacity>
-
-
           </View>
         </View>
       </BottomSheet>
@@ -363,7 +367,7 @@ const styles = StyleSheet.create({
 
   container: {
     position: 'absolute',
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     // bottom: -330,
     // bottom: -(windowHeight - 15),
     // top:(windowHeight-(windowHeight/3.10)),
@@ -374,7 +378,8 @@ const styles = StyleSheet.create({
       // web: 300, // width for Web
       // default: 100, // default width
     }),
-    left: 7,
+    // left: 7,
+    right:7,
     width: 65,
     zIndex: 20,
   },
