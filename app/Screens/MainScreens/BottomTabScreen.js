@@ -91,9 +91,7 @@ const BottomTabScreen = ({ route }) => {
             colour = focused ? "Black" : "White";
             return (
               <View style={{ flexDirection: 'column', alignItems: 'center', paddingTop: 10, width: '100%', height: '100%', }}>
-                {/* {focused ? <ProfileIcon /> : <ProfileIcon />}
-                 */}
-                {/* <ProfileIcon /> */}
+        
                 <CustomBottomTabProfile/>
                 {focused ? <View style={{
                   marginTop: 10

@@ -15,7 +15,8 @@ import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import { UserLoginApi } from '../../ApiCalls'
 import ASO from '../../Utils/AsyncStorage_Calls'
 import { setToken } from '../../redux/actions/loginAction'
-import { ASYNC_STORAGE_NAME } from '../../Utils/AppConts'
+import { ASYNC_STORAGE_NAME, ASYNC_STORAGE_PROFILE } from '../../Utils/AppConts'
+import { setProfileData } from '../../redux/actions/ProfileDataAction'
 
 
 
@@ -39,7 +40,7 @@ const Login = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { phone_number: "9951072005", password: "Rohith@7" },
+    initialValues: { phoneNumber: "7730086206", password: "Chinnu#143." },
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -68,11 +69,20 @@ const Login = () => {
       setSpinnerbool(true)
       const res = await UserLoginApi(user)
 
-      if (res) {
+      if (res.data) {
         console.log("fds", res)
         const Message = res.data.message
         const token = res.data.token
+        const ResponseData = res.data
 
+
+        ASO.setTokenJWT(ASYNC_STORAGE_PROFILE, JSON.stringify(ResponseData), function (res, status) {
+          if (status) {
+            // console.warn(status, " status>>>>>.")
+            // ToasterSender({ Message: `${Message}` })
+            dispatch(setProfileData(ResponseData))
+          }
+        })
 
         ASO.setTokenJWT(ASYNC_STORAGE_NAME, JSON.stringify(res.data.token), function (res, status) {
           if (status) {
@@ -97,7 +107,8 @@ const Login = () => {
           console.log("error.response.status login", error.response.data.message)
         }
         else if (error.response.status === 404) {
-          seterrorFormAPI({ phone_numberForm: `${error.response.data.message}` })
+          console.log("dhg", error.response.data.message)
+          seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
 
         }
         else if (error.response.status === 500) {
@@ -204,30 +215,30 @@ const Login = () => {
                     boxWidth={'95%'}
                     placeholder={'Mobile Number'}
                     label={'Mobile Number'}
-                    name='phone_number'
+                    name='phoneNumber'
                     keyboardType={'phone-pad'}
-                    value={values.phone_number}
+                    value={values.phoneNumber}
                     onChangeText={(e) => {
                       // Remove any non-numeric characters
                       const numericValue = e.replace(/[^0-9]/g, '');
                       // Update the state with the numeric value
                       const Only10digits = numericValue.slice(0, 10);
-                      // handleChange("phone_number")(Only10digits);
+                      // handleChange("phoneNumber")(Only10digits);
 
-                      // seterrorFormAPI({ phone_number: "" })
+                      // seterrorFormAPI({ phoneNumber: "" })
                       // if (Only10digits[0] < 6) {
-                      //   seterrorFormAPI({ phone_number: "Mobile number must start with 6, 7, 8, or 9" })
+                      //   seterrorFormAPI({ phoneNumber: "Mobile number must start with 6, 7, 8, or 9" })
                       // }
-                      handleChange("phone_number")(Only10digits);
+                      handleChange("phoneNumber")(Only10digits);
 
 
                     }}
-                    onBlur={handleBlur("phone_number")}
-                    // validate={handleBlur("phone_number")}
+                    onBlur={handleBlur("phoneNumber")}
+                    // validate={handleBlur("phoneNumber")}
 
                     eyboardType="numeric"
-                    borderColor={`${(errors.phone_number) || (errorFormAPI && errorFormAPI.phone_numberForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.phone_number) ? `${errors.phone_number}` : (errorFormAPI && errorFormAPI.phone_numberForm) ? `${errorFormAPI.phone_numberForm}` : ``}`}
+                    borderColor={`${(errors.phoneNumber) || (errorFormAPI && errorFormAPI.phoneNumberForm) ? "red" : "#48484A"}`}
+                    errorMessage={`${(errors.phoneNumber) ? `${errors.phoneNumber}` : (errorFormAPI && errorFormAPI.phoneNumberForm) ? `${errorFormAPI.phoneNumberForm}` : ``}`}
                     // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}

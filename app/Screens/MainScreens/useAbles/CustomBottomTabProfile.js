@@ -13,9 +13,10 @@ const CustomBottomTabProfile = () => {
         // onPress={()=>{navigation.navigate('Edit_Account')}}
         >
 
-            {!profileData.profilepic ? <LoadingImage
+            {profileData.profilePicture ? <LoadingImage
                 source={{
-                    uri: `https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profile_pic}`,
+                    uri: `${profileData.profilePicture}`,
+                    // uri: `https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profilePicture}`,
                 }}
                 style={{ width: '100%', height: '100%', borderRadius: 50 }}
                 loaderColor="#ff0000"

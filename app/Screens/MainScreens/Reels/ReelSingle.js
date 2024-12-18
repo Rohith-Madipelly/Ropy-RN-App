@@ -186,7 +186,8 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
                         resizeMode='cover'
                         // resizeMode="contain"
                         paused={false}
-                        source={{ uri: `${AWSBaseUrl}/${item.videoUrl}` }}
+                        source={{ uri: `${item.videoUrl}` }}
+                        // source={{ uri: `${AWSBaseUrl}/${item.videoUrl}` }}
                         // source={item.video}
                         // source={{
                         //   uri: 'https://ads-book-s3.s3.ap-south-1.amazonaws.com/NTNfMTcwMzY2NDQ3MDIwMl81OQ==.mp4',

@@ -71,10 +71,21 @@ const appReqData={
 // Main Screen API's
 
 
+//Home
+export const HomeAPI = async (ReqData,page,token) => {
+  return await axios.get(`${GUEST_URL}/user/home`,
+   {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+
+  });
+};
 
 
 //Video api  locations based
 export const GetVideoByLocationAPI = async (ReqData,page,token) => {
+  console.log("cs",ReqData,page,token)
   return await axios.post(`${GUEST_URL}/user/locationvideos?page=${page}`,
   ReqData,
    {
@@ -381,12 +392,3 @@ export const agreementAcceptAPI = async (token) => {
 
 
 
-
-// Home Page
-export const HomeAPI= async (token) => {
-  return await axios.get(`${GUEST_URL}/user/home`, {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-}

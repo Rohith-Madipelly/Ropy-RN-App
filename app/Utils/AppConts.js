@@ -1,6 +1,7 @@
 export const SERVICE_PROVIDER_WEBSITE = 'https://analogueitsolutions.com';
 
 export const ASYNC_STORAGE_NAME = 'Token';
+export const ASYNC_STORAGE_PROFILE = 'Token';
 
 export const STANDARD_SCREEN_HEIGHT = 740;
 

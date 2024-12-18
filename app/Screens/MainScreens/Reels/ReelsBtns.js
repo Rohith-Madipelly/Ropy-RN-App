@@ -54,8 +54,9 @@ const ReelsBtns = ({
   const [liked, setLiked] = useState(isLiked);
   // setLiked(isLiked)
   const [spinnerBool, setSpinnerbool] = useState(false)
-  const bottomSheet = useRef(null);
+  const HomeIcon = useRef(null);
   const bottomSheet2 = useRef(null);
+  const bottomSheet1 = useRef(null);
   // let tokenn = useSelector((state) => state.login.isLogin);
   const [ReportMessage, setReportMessage] = useState("")
   let tokenn = useSelector((state) => state.login.token);
@@ -189,7 +190,7 @@ const ReelsBtns = ({
 
   return (
     <View style={[styles.container, { marginBottom: 10,right:10 }]}>
-      <BottomSheet height={Metrics.rfv(150)} ref={bottomSheet}>
+      <BottomSheet height={Metrics.rfv(150)} ref={bottomSheet1}>
         <View style={{
           marginHorizontal: Metrics.rfv(15),
           marginVertical: Metrics.rfv(15)
@@ -199,7 +200,7 @@ const ReelsBtns = ({
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
 
 
-            <TouchableOpacity onPress={() => { bottomSheet.current.hide(); bottomSheet2.current.show(); }} style={{
+            <TouchableOpacity onPress={() => { bottomSheet1.current.hide(); bottomSheet2.current.show(); }} style={{
               flex: 0.4, justifyContent: 'center', alignItems: 'center',
               borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
               padding: Metrics.rfv(15), marginTop: Metrics.rfv(10), borderRadius: 10,
@@ -347,7 +348,7 @@ const ReelsBtns = ({
 
 
 
-      <TouchableOpacity style={styles.btn} onPress={() => { bottomSheet.current.show() }}>
+      <TouchableOpacity style={styles.btn} onPress={() => { bottomSheet1.current.show() }}>
         <MaterialCommunityIcons
           name="dots-horizontal"
           size={25}

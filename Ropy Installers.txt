@@ -8,14 +8,15 @@ navigation >>>
 npm install @react-navigation/native
 npx expo install react-native-screens react-native-safe-area-context
 npm install @react-navigation/native-stack
-
+npm install @react-navigation/bottom-tabs
 
 
 
 npx expo install expo-font
+npx expo install @expo/vector-icons
 npm install @react-native-async-storage/async-storage
 
-npx expo install @expo/vector-icons
+
 npm i formik
 npm i yup
 
@@ -23,7 +24,7 @@ npm i yup
 npm i react-native-select-dropdown
 
 
-npm install @react-navigation/bottom-tabs
+
 npx expo install react-native-svg
 
 npm i react-native-swiper-flatlist

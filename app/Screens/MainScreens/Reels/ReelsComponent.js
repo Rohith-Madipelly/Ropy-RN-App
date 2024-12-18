@@ -5,7 +5,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist'
 import { useSelector } from 'react-redux'
 
 import { Text, View } from 'react-native'
-import { GetVideoByLocationAPI } from '../../../ApiCalls'
+import { GetVideoByLocationAPI, HomeAPI } from '../../../ApiCalls'
 import ReelSingle from './ReelSingle'
 
 const ReelsComponent = ({ isReelPage }) => {
@@ -36,12 +36,14 @@ const ReelsComponent = ({ isReelPage }) => {
                 latitude: '17.444594',
             };
 
-            const res = await GetVideoByLocationAPI(Location, page, tokenn)
-
-            var Data = res.data.locationVideos
-            console.log("Copyed Data", res.data.locationVideos)
-            setvideoData((prevItems) => [...prevItems, ...Data]);
-            setSpinnerbool(false)
+            const res = await HomeAPI(Location, page, tokenn)
+if(res.data){
+    var Data = res.data.allVideos
+    // console.log("Copyed Data", res.data.locationVideos)
+    setvideoData((prevItems) => [...prevItems, ...Data]);
+    setSpinnerbool(false)
+}
+ 
         }
         catch (error) {
             console.log(error)

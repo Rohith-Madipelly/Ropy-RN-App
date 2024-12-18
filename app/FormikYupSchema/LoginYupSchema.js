@@ -13,7 +13,7 @@ const LoginYupSchema = Yup.object().shape({
   // ).required("Email is a Required Field "),
 
 
-  phone_number: Yup.string()
+  phoneNumber: Yup.string()
     .trim()
     // .matches(phoneRegExp, 'Phone number must start with 6, 7, 8, or 9 and have at least 6 digits')
     .test(

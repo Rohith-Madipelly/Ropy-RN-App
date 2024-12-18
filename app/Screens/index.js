@@ -30,6 +30,7 @@ import AboutUs from './MainScreens/Profile/AboutUs';
 import Privacypolicy from './MainScreens/Profile/Privacypolicy';
 import Termsandcondition from './MainScreens/Profile/Termsandcondition';
 import ForgotPassword from './AuthScreens/ForgotPassword';
+import SplashScreen from './SplashScreen/SplashScreen';
 
 
 
@@ -90,7 +91,7 @@ export default function Screens() {
 
   useEffect(() => {
     setUser(loginSelector)
-    ApiCaller(loginSelector)
+    // ApiCaller(loginSelector)
   }, [loginSelector])
 
 
@@ -171,6 +172,7 @@ export default function Screens() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
         {!user ? (
           <>
             <Stack.Screen name="Login" component={Login} />
@@ -184,7 +186,7 @@ export default function Screens() {
 
           </>) : (
           <>
-            <Stack.Screen name="Home" component={BottomTabScreen} />
+            <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
             <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} />
             <Stack.Screen name="Edit_Account" component={Edit_Account} />
             <Stack.Screen name="SavedLocation" component={SavedLocation} />
