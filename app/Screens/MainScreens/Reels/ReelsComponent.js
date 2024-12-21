@@ -37,7 +37,7 @@ const ReelsComponent = ({ isReelPage }) => {
         try {
 
 
-            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude,1,videosCount=3, tokenn)
+            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude,page,videosCount=3, tokenn)
             if (res.data) {
                 console.log("debgcbd",res.data.nearByVideos)
                 var Data = res.data.nearByVideos
@@ -105,8 +105,9 @@ const ReelsComponent = ({ isReelPage }) => {
             )}
             keyExtractor={(item, index) => index.toString()}
             // keyExtractor={(item, index) => index}
+            pagingEnabled={true}
             loop={true}
-            pagingEnabled
+            // pagingEnabled
             decelerationRate={0.1}
         />
 

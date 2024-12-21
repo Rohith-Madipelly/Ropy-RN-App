@@ -6,7 +6,7 @@ import CustomToolKitHeader from '../../../Components/UI/CustomToolKitHeader'
 
 import Metrics from '../../../Utils/ResposivesUtils/Metrics'
 import Saved from '../../../assets/Saved'
-import { ADD_SAVED_LOCATION, GET_SAVED_LOCATION, GET_SETTINGS_API } from '../../../ApiCalls'
+import { ADD_SAVED_LOCATION, GET_SAVED_LOCATION, GET_SETTINGS_API, REMOVE_SAVED_LOCATION } from '../../../ApiCalls'
 import { useSelector } from 'react-redux'
 import { FlashList } from '@shopify/flash-list'
 import { OpenMaps } from '../../../Utils/DeviceHelpers/Linking/OpenMaps'
@@ -44,11 +44,14 @@ const SavedLocation = () => {
     const RemoveLocation=async(id)=>{
 
         try {
-            const res = await ADD_SAVED_LOCATION(id,tokenn)
+            const res = await REMOVE_SAVED_LOCATION(id,tokenn)
             if (res.data) {
                 toast.hideAll()
                 toast.show(res.data.message)
-                ApiCaller()
+                setTimeout(() => {
+                    ApiCaller()
+                }, 1000);
+    
             }
         }    catch (error) {
             if (error.response) {

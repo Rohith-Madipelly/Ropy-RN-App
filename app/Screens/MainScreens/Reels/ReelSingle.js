@@ -148,6 +148,7 @@ const ReelSingle = ({ item, index, currentIndex, play }) => {
 
     const onPlaybackStatusUpdate = (status) => {
         // console.log(status)
+        console.log(status.isPlaying)
         // videoRef.current.replayAsync();
         // console.log("onPlaybackStatusUpdate",status.durationMillis==status.positionMillis)
 
@@ -217,7 +218,8 @@ const ReelSingle = ({ item, index, currentIndex, play }) => {
                             shares={item.shares}
                             comments={item.comments}
                             dateVideoId={item.videoId}
-                            urlLink={`${AWSBaseUrl}/${item.videoUrl}`}
+                            // urlLink={`${AWSBaseUrl}/${item.videoUrl}`}
+                            urlLink={`${item.videoUrl}`}
                         // UploaderthumbnailUrl="https://ezewin-files.s3.ap-south-1.amazonaws.com/MTU1XzE3MDI0NjU2MTExOThfNjgz.jpeg"
                         // index={currentIndex}
                         />

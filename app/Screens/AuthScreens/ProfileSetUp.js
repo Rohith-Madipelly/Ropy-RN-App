@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import TitleComponent from '../../Components/UI/TextUI/TitleComponent'
 import CustomTextInput2 from '../../Components/UI/Inputs/CustomTextInput2'
 
-import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 import { LoginYupSchema } from '../../FormikYupSchema/LoginYupSchema'
 import { useFormik } from 'formik'
@@ -16,6 +16,7 @@ import CustomDropdown from '../../Components/UI/Inputs/CustomDropdown'
 import { ProfileYupSchema } from '../../FormikYupSchema/ProfileYupSchema'
 import { UserLoginApi, UserProfileSetUpApi } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
+import CustomDateInput2 from '../../Components/UI/Inputs/CustomDateInput2'
 
 
 
@@ -265,28 +266,30 @@ const ProfileSetUp = ({ route }) => {
               // errorColor='magenta'
               />
 
-              <CustomTextInput2
+           
+
+              <CustomDateInput2
                 boxWidth={'95%'}
                 placeholder={'Date of birth'}
                 label={'Date of birth'}
-                name='area'
-                value={values.dob}
-                // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
-                // bgColor='#e1f3f8'
-                // bgColor="#B1B1B0"
-
-                onChangeText={(e) => { handleChange("dob")(e); seterrorFormAPI(); }}
+                date='date'
+                // value={values.dob}
+                // value={new Date(2001, 1, 13)}
+                containerStyle={{ elevation: 10 }}
+                rightIcon={<MaterialIcons name="date-range" size={20} color="black" />}
+                onChangeText={(e) => {
+                  console.log("oiuhgbn", e)
+                  handleChange("dob")(e); seterrorFormAPI();
+                }}
                 onBlur={handleBlur("dob")}
-
-
                 validate={handleBlur("dob")}
-
                 outlined
-
-                borderColor={`${(errors.dob && touched.dob) || (errorFormAPI && errorFormAPI.dobForm) ? "red" : "#48484A"}`}
-
-                errorMessage={`${(errors.dob && touched.dob) ? `${errors.dob}` : (errorFormAPI && errorFormAPI.dobForm) ? `${errorFormAPI.dobForm}` : ``}`}
-
+                backgroundColor={'white'}
+                labelStyle={{}}
+                // minimumDate={new Date}
+                maximumDate={new Date(2100, 10, 20)}
+                borderColor={`${(errors.dob && touched.dob) || (errorFormAPI && errorFormAPI.dateOfBirthForm) ? "red" : "#48484A"}`}
+                errorMessage={`${(errors.dob && touched.dob) ? `${errors.dob}` : (errorFormAPI && errorFormAPI.dateOfBirthForm) ? `${errorFormAPI.areaForm}` : ``}`}
               // errorColor='magenta'
               />
 

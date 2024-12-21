@@ -52,6 +52,7 @@ const ReelsBtns = ({
   index,
   dateVideoId, urlLink
 }) => {
+
   const [liked, setLiked] = useState(isLiked);
 
   console.log("isLiked", isLiked)
@@ -125,12 +126,8 @@ const ReelsBtns = ({
 
     setSpinnerbool(true)
     try {
-      const ReportData = {
-        videoId: dateVideoId,
-        description: ReportMessage,
-      };
 
-      const res = await REPORT_VIDEO_API(ReportData, tokenn)
+      const res = await REPORT_VIDEO_API(dateVideoId, ReportMessage, tokenn)
       console.log(res)
       ToasterSender({ Message: `${res.data.message}` })
       setTimeout(() => {
@@ -275,7 +272,11 @@ const ReelsBtns = ({
 
 
 
-      <TouchableOpacity style={styles.btn} onPress={() => { onShare(`This is the refern of video ${dateVideoId}`) }}>
+      <TouchableOpacity style={styles.btn} onPress={() => {
+        onShare(
+          `Check out this video on Ropy: ${urlLink} \n Video ID ${dateVideoId}`
+        )
+      }}>
         <Ionicons name="paper-plane-outline" size={30} color={"white"} style={styles.btnbtn} />
         <Text style={[styles.text,
           //  typographyStyles.md

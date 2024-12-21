@@ -522,7 +522,6 @@ const BankdetailsProfile = () => {
                     maximumDate={new Date(2100, 10, 20)}
                     borderColor={`${(errors.dob && touched.dob) || (errorFormAPI && errorFormAPI.dateOfBirthForm) ? "red" : "#48484A"}`}
                     errorMessage={`${(errors.dob && touched.dob) ? `${errors.dob}` : (errorFormAPI && errorFormAPI.dateOfBirthForm) ? `${errorFormAPI.areaForm}` : ``}`}
-
                   // errorColor='magenta'
                   />
 

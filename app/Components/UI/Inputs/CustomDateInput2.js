@@ -39,15 +39,12 @@ const CustomTextInput2 = ({
     maximumDate,
     disabled = false,
 }) => {
-    console.log("satrt value", value)
-
-
 
     const backgroundColor = bgColor || 'white';
     // const containerBorder = outlined ? styles.outlined : styles.standard;
     const containerBorder = outlined ? styles.outlined : styles.outlined;
 
-    const [datex, setDate] = useState(value); // Initialize date state with the provided value
+    const [date, setDate] = useState(value || ""); // Initialize date state with the provided value
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState("date");
     // const containerBorder = outlined ? styles.outlined : styles.standard;
@@ -56,10 +53,9 @@ const CustomTextInput2 = ({
 
 
 
-    const [convert, setConvert] = useState(new Date())
+    const [convert,setConvert]=useState()
 
 
-    console.log(convert)
     useEffect(() => {
         setBorderColor(borderColorDisplay)
         if (errorMessage) {
@@ -72,7 +68,7 @@ const CustomTextInput2 = ({
 
 
     const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || value;
+        const currentDate = selectedDate || date;
         // setShow(Platform.OS === 'ios');
         if (Platform.OS === 'ios') {
 
@@ -85,9 +81,53 @@ const CustomTextInput2 = ({
         onChangeText(formatToReadableDateDDMMYYYY(currentDate)); // Pass the formatted date to onChangeText
     };
 
+    const showMode = (modeToShow) => {
+        // setShow(true);
+        setMode(modeToShow);
+    };
+
+
+
+    const DateForm = (input) => {
+        if (!isNaN(Date.parse(input))) {
+
+            console.log(new Date(input).toLocaleDateString());
+            return new Date(input).toLocaleDateString()
+        } else {
+            console.log('none');
+            return input
+        }
+
+
+    }
+    // const parseDate = (date) => {
+    //     const [day, month, year] = date.split(/[-/]/).map(Number);
+    //     return new Date(year, month - 1, day); // month is 0-based
+    // };
+
+    // const parsedDate = parseDate("13-02-2001");
+    // console.log("yyyy", parsedDate.toISOString()); // Outputs: 2001-02-13T00:00:00.000Z
+
+
+    console.log("date >>", date, "dddd", new Date())
+
+
+    useEffect(() => {
+        const parseDate = (date) => {
+            const [day, month, year] = date.split(/[-/]/).map(Number);
+            return new Date(year, month - 1, day); // month is 0-based
+        };
+
+        setConvert(parseDate(date))
+
+    }, [date])
+
 
     return (
         <View style={[{ padding: 0, width: boxWidth }, style, styles.boxHeight]}>
+
+
+
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View>
@@ -100,8 +140,11 @@ const CustomTextInput2 = ({
 
 
 
+
+
             <TouchableOpacity
                 onPress={() => { setShow(!show) }}
+
                 style={[styles.container, containerBorder, { borderColor: borderColor }, { backgroundColor: backgroundColor }]}>
                 {leftIcon ? <View style={{ paddingRight: 8 }}>
                     {leftIcon}
@@ -110,8 +153,7 @@ const CustomTextInput2 = ({
                     {Platform.OS == "ios" ? (
                         <DateTimePicker
                             style={{}}
-                            // maximumDate={new Date(2100, 10, 20)}
-                            value={new Date()}// Pass date or current date if not provided
+                            value={convert || new Date()} // Pass date or current date if not provided
                             mode={mode}
                             // display={"spinner"}
                             display={"compact"}
@@ -125,7 +167,7 @@ const CustomTextInput2 = ({
                         {show ?
                             <DateTimePicker
                                 style={{}}
-                                value={datex || new Date()} // Pass date or current date if not provided
+                                value={date || new Date()} // Pass date or current date if not provided
                                 mode={mode}
                                 // display={"spinner"}
                                 display={"compact"}
