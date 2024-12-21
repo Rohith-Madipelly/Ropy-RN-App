@@ -8,10 +8,15 @@ import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import { InterestsFormYupSchema } from '../../FormikYupSchema/InterestsFormYupSchema'
+import { ASYNC_STORAGE_NAME } from '../../Utils/AppConts'
+import ASO from '../../Utils/AsyncStorage_Calls'
+import { setToken } from '../../redux/actions/loginAction'
 
 
+const SuccessfullyScreen = ({ route }) => {
 
-const SuccessfullyScreen = () => {
+  const { params } = route;
+  const TokenForSetUp = params?.TokenForSetUp || '';
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
@@ -23,9 +28,13 @@ const SuccessfullyScreen = () => {
 
 
 
-  const submitHandler = async (values) => {
-    console.log("values ", values)
-    // navigation.navigate("SuccessfullyScreen")
+  const submitHandler = async () => {
+
+    ASO.setTokenJWT(ASYNC_STORAGE_NAME, JSON.stringify(TokenForSetUp), function (res, status) {
+      if (status) {
+        dispatch(setToken(TokenForSetUp));
+      }
+    })
   }
 
 
@@ -68,8 +77,8 @@ const SuccessfullyScreen = () => {
 
             <CustomButton1
               boxWidth={'95%'}
-              onPress={() => { navigation.navigate("EmailVerification") }}
-              // onPress={handleSubmit}
+              // onPress={() => { navigation.navigate("EmailVerification") }}
+              onPress={()=>{submitHandler()}}
 
               // leftIcon={<Entypo
               //   // style={styles.icon}
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 0.4,
     overflow: 'hidden',
     paddingTop: 36,
-  
+
 
     paddingHorizontal: 17
   }

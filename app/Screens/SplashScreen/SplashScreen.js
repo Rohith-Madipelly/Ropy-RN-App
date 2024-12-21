@@ -3,16 +3,19 @@ import React, { useEffect } from 'react'
 import GlobalStyles from '../../Components/UI/GlobalStyles'
 import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
 import { Image } from 'expo-image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsSplashScreenAction } from '../../redux/actions/loginAction';
 
 
 const SplashScreen = ({navigation}) => {
     const loginSelector = useSelector((state) => state.login.isLogin);
-
+const dispatch=useDispatch()
 
     useEffect(() => {
         console.log(loginSelector)
+
         setTimeout(() => {
+            dispatch(setIsSplashScreenAction(false));
             if (!loginSelector) {
                 navigation.navigate("Login")
             } else {

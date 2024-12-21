@@ -28,9 +28,7 @@ import ReelIcon from '../../assets/BottomTabsIcons/ReelIcon';
 import ReelIconActive from '../../assets/BottomTabsIcons/ReelIconActive';
 import WalletIcon from '../../assets/BottomTabsIcons/WalletIcon';
 import WalletIconActive from '../../assets/BottomTabsIcons/WalletIconActive';
-import ProfileIcon from '../../assets/BottomTabsIcons/ProfileIcon';
 import DotIcon from '../../assets/BottomTabsIcons/DotIcon';
-import Test from './Test';
 import CustomBottomTabProfile from './useAbles/CustomBottomTabProfile';
 
 
@@ -103,6 +101,9 @@ const BottomTabScreen = ({ route }) => {
 
 
       })}>
+
+
+
 
 
       <Tab.Screen name="Reels" component={Reels} options={{

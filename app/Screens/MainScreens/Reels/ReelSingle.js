@@ -4,14 +4,17 @@ import { Video, ResizeMode } from 'expo-av';
 import { ActivityIndicator } from 'react-native';
 // import ReelDescription from './ReelDescription';
 import { useSelector } from 'react-redux';
-import { rewardedAPI } from '../../../ApiCalls';
+import { VIDEO_REWARD_API } from '../../../ApiCalls';
 import ReelsBtns from './ReelsBtns';
+import { useToast } from 'react-native-toast-notifications';
 // import { rewardedAPI } from '../utils/API_Calls';
 // import { ToasterSender } from '../utils/Toaster';
 
 
-const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
-
+const ReelSingle = ({ item, index, currentIndex, play }) => {
+    let tokenn = useSelector((state) => state.login.token);
+    console.log(item, "esdjh")
+    const toast = useToast();
     const [isBuffering, setIsBuffering] = useState(true);
     const AWSBaseUrl = "https://ads-book-s3.s3.ap-south-1.amazonaws.com"
 
@@ -93,22 +96,23 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
     }
 
     const HitAPi = async () => {
+        console.log("VIDEO_REWARD_API >>> start ")
         try {
-            const res = await rewardedAPI(dateVideorewardedAPI, tokenn)
-            if (res) {
-                const Message = res.data.message
-
-                if (res.status === 201) {
-                    console.log(Message)
+            const res = await VIDEO_REWARD_API(item.videoId, tokenn)
+            if (res.data) {
+                console.log("VIDEO_REWARD_API res ")
+                if (res.status === 200) {
+                    toast.hideAll()
+                    toast.show(res.data.message)
                 }
-                else {
-
-                    // ToasterSender({ Message: `${Message}` })
-
+                else if (res.status === 201) {
+                    toast.hideAll()
+                    toast.show(res.data.message)
                 }
             }
 
         } catch (error) {
+            console.log("VIDEO_REWARD_API end", error)
             if (error.response) {
                 const errorMessage = error.response.data.message;
                 // ToasterSender({ Message: `${errorMessage}` })
@@ -133,7 +137,7 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
 
         }
     }
-    const dateVideorewardedAPI = item._id;
+    const dateVideorewardedAPI = item.videoId;
     const Rewarder = async () => {
         HitAPi()
     }
@@ -143,22 +147,21 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
     // not a complete code look for full buffering data code
 
     const onPlaybackStatusUpdate = (status) => {
-        // console.error(status)
+        // console.log(status)
         // videoRef.current.replayAsync();
+        // console.log("onPlaybackStatusUpdate",status.durationMillis==status.positionMillis)
 
-
-        // Check if the video has just started playing
+        // // Check if the video has just started playing
         if (status.didJustFinish) {
-            // Video finished playing, seek to the beginning
-            videoRef.current.replayAsync();
-
-            Rewarder()
-            // console.log("Reel Single Page : 94 >> Video is replaying now again")
-            // const Amount = item.Price
-            // console.error("You Have Completed watching this reels.")
-            // console.error(" Your have earned ", item.Price)
-
+            // videoRef.current.replayAsync();
+            HitAPi()
         }
+
+        // if(status.durationMillis==status.positionMillis)
+        // {
+        //     HitAPi()
+        //     // Rewarder()
+        // }
 
         if (status.isLoaded && !status.isBuffering) {
             setIsBuffering(false);
@@ -209,11 +212,11 @@ const ReelSingle = ({ item, index, currentIndex, play, tokenn }) => {
                         {/* <ReelDescription description={item.description} /> */}
 
                         <ReelsBtns
-                            isLiked={item.liked}
-                            likes={item.likes}
+                            isLiked={item.userLikedOrNot}
+                            // likes={item.likes}
                             shares={item.shares}
                             comments={item.comments}
-                            dateVideoId={dateVideorewardedAPI}
+                            dateVideoId={item.videoId}
                             urlLink={`${AWSBaseUrl}/${item.videoUrl}`}
                         // UploaderthumbnailUrl="https://ezewin-files.s3.ap-south-1.amazonaws.com/MTU1XzE3MDI0NjU2MTExOThfNjgz.jpeg"
                         // index={currentIndex}

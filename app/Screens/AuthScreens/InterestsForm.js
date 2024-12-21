@@ -1,18 +1,27 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponent from '../../Components/Loaders/LoaderComponents'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import TitleComponent from '../../Components/UI/TextUI/TitleComponent'
 import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import { InterestsFormYupSchema } from '../../FormikYupSchema/InterestsFormYupSchema'
 import CustomCheckBox from '../../Components/UI/Inputs/CustomCheckBox'
+import { ADDINTERESTS_API, GetAllInterests_API } from '../../ApiCalls'
+import { useToast } from 'react-native-toast-notifications'
 
 
 
-const InterestsForm = () => {
+const InterestsForm = ({ route }) => {
+
+  const { params } = route;
+  const TokenForSetUp = params?.TokenForSetUp || '';
+
+  // console.log(TokenForSetUp,"TokenForSetUp")
+
+  // console.log(ParamData, "ParamData")
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
@@ -20,42 +29,112 @@ const InterestsForm = () => {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  const {
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    isSubmitting,
-    values,
-    touched,
-    errors,
-    isValid,
-    setValues,
-    resetForm,
-  } = useFormik({
-    initialValues: { InterestsData: "" },
-
-    onSubmit: values => {
-      { submitHandler(values) }
-    },
-
-    validationSchema: InterestsFormYupSchema,
-
-    validate: values => {
-      const errors = {};
-      return errors;
-    },
-
-  });
+  const toast = useToast();
 
 
-  const submitHandler = async (values) => {
-    console.log("values ", values,selectedInterests)
-    navigation.navigate("SuccessfullyScreen")
+  let tokenn = useSelector((state) => state.login.token);
+
+
+  try {
+    if (tokenn != null) {
+      tokenn = tokenn.replaceAll('"', '');
+    }
+  }
+  catch (err) {
+    console.log("Error in token quotes", err)
+    if (err.response.status === 500) {
+      console.log("Internal Server Error", err.message)
+    }
   }
 
+  const handleSubmit2 = async () => {
+    if (selectedInterests) {
 
-  const InterestsData = [
+      const interestsIds = selectedInterests.map(interest => interest.intrestId);
+
+      console.log("interestsIds: >>", interestsIds);
+      try {
+        setSpinnerbool(true)
+        const res = await ADDINTERESTS_API(interestsIds, TokenForSetUp)
+
+        if (res.data) {
+          // console.log(res.data.message)
+          toast.hideAll()
+          toast.show(res.data.message)
+
+
+          setTimeout(() => {
+            // SuccessfullyScreen
+            navigation.navigate("SuccessfullyScreen",{TokenForSetUp:TokenForSetUp})
+          }, 500);
+        }
+      }
+
+      catch (error) {
+        console.log("jhrgsjdf",error)
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.log("Error With 400.", error.response.data)
+            seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+          }
+          else if (error.response.status === 401) {
+            console.log(`${error.response.data.message}`)
+            seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+          }
+          else if (error.response.status === 403) {
+            console.log("error.response.status login", error.response.data.message)
+          }
+          else if (error.response.status === 404) {
+            console.log("dhg", error.response.data.message)
+            seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+
+          }
+          else if (error.response.status === 500) {
+            console.log("Internal Server Error", error.message)
+          }
+          else {
+            console.log("An error occurred response.>>")
+            ErrorResPrinter(`${error.message}`)
+          }
+        }
+        else if (error.code === 'ECONNABORTED') {
+          console.log('Request timed out. Please try again later.');
+        }
+        else if (error.request) {
+          console.log("No Response Received From the Server.")
+          if (error.request.status === 0) {
+            // console.log("error in request ",error.request.status)
+            Alert.alert("No Network Found", "Please Check your Internet Connection")
+          }
+        }
+
+        else {
+          console.log("Error in Setting up the Request.")
+        }
+
+        setSpinnerbool(false)
+
+        if (error) {
+
+          // message = error.message;
+          // seterrorFormAPI(message)
+          // "userEmail or Password does not match !"
+        }
+      }
+      finally {
+        // setLoading(false);
+        setSpinnerbool(false)
+      }
+
+    } else {
+
+    }
+
+
+
+  }
+  const [InterestsData, setInterestsData] = useState([])
+  const InterestsData2 = [
     "Art & Design",
     "Automotive",
     "Book & Literature",
@@ -79,6 +158,12 @@ const InterestsForm = () => {
   ]
 
 
+  useEffect(() => {
+    GetAllInterestsData()
+  }, [])
+
+
+
   const [selectedInterests, setSelectedInterests] = useState([]);
 
   const handleCheckBoxChange = (interest) => {
@@ -92,6 +177,76 @@ const InterestsForm = () => {
       setSelectedInterests((prev) => [...prev, interest]);
     }
   };
+
+
+
+  const GetAllInterestsData = async () => {
+    try {
+      setSpinnerbool(true)
+      const res = await GetAllInterests_API(TokenForSetUp)
+
+      if (res.data) {
+        setInterestsData(res.data.allInterests)
+      }
+    }
+
+    catch (error) {
+      console.log("dshgfadcv", error.response.data.message)
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.log("Error With 400.", error.response.data)
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+        }
+        else if (error.response.status === 401) {
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+        }
+        else if (error.response.status === 403) {
+          console.log("error.response.status login", error.response.data.message)
+        }
+        else if (error.response.status === 404) {
+          console.log("dhg", error.response.data.message)
+          seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+
+        }
+        else if (error.response.status === 500) {
+          console.log("Internal Server Error", error.message)
+        }
+        else {
+          console.log("An error occurred response.>>")
+          ErrorResPrinter(`${error.message}`)
+        }
+      }
+      else if (error.code === 'ECONNABORTED') {
+        console.log('Request timed out. Please try again later.');
+      }
+      else if (error.request) {
+        console.log("No Response Received From the Server.")
+        if (error.request.status === 0) {
+          // console.log("error in request ",error.request.status)
+          Alert.alert("No Network Found", "Please Check your Internet Connection")
+        }
+      }
+
+      else {
+        console.log("Error in Setting up the Request.")
+      }
+
+      setSpinnerbool(false)
+
+      if (error) {
+
+        // message = error.message;
+        // seterrorFormAPI(message)
+        // "userEmail or Password does not match !"
+      }
+    }
+    finally {
+      // setLoading(false);
+      setSpinnerbool(false)
+    }
+  }
+
+
 
 
   return (
@@ -125,7 +280,7 @@ const InterestsForm = () => {
                   <CustomCheckBox
                     value={selectedInterests.includes(data)}
                     boxWidth={"95%"}
-                    content={<Text>{data}</Text>}
+                    content={<Text>{data.interestName}</Text>}
                     onValueChange={() => handleCheckBoxChange(data)}
                   />
                 </View>
@@ -137,7 +292,8 @@ const InterestsForm = () => {
               <CustomButton1
                 boxWidth={'95%'}
                 // onPress={()=>{navigation.navigate("EmailVerification")}}
-                onPress={handleSubmit}
+                // onPress={handleSubmit}
+                onPress={handleSubmit2}
 
                 // leftIcon={<Entypo
                 //   // style={styles.icon}

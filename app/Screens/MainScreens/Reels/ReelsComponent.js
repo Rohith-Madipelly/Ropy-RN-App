@@ -7,45 +7,47 @@ import { useSelector } from 'react-redux'
 import { Text, View } from 'react-native'
 import { GetVideoByLocationAPI, HomeAPI } from '../../../ApiCalls'
 import ReelSingle from './ReelSingle'
-
+import * as Location from 'expo-location';
+import { useToast } from 'react-native-toast-notifications'
 const ReelsComponent = ({ isReelPage }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [playVideo, setPlayVideo] = useState(0);
     const [page, setpage] = useState(1)
     const [videoData, setvideoData] = useState([])
     const [spinnerBool, setSpinnerbool] = useState(false)
-    
-    
+    const [errorMsg, setErrorMsg] = useState(null);
+
     let tokenn = useSelector((state) => state.login.token);
 
 
-    try {
-        if (tokenn != null) {
-            tokenn = tokenn.replaceAll('"', '');
-        }
-    }
-    catch (err) {
-        console.log("Error in token quotes", err)
-    }
+    const toast = useToast();
 
     const GetVideos = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
+
+        // Get the current location
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        console.log("location", currentLocation)
+
         setSpinnerbool(true)
         try {
-            const Location = {
-                longitude: '78.384433',
-                latitude: '17.444594',
-            };
 
-            const res = await HomeAPI(Location, page, tokenn)
-if(res.data){
-    var Data = res.data.allVideos
-    // console.log("Copyed Data", res.data.locationVideos)
-    setvideoData((prevItems) => [...prevItems, ...Data]);
-    setSpinnerbool(false)
-}
- 
+
+            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude,1,videosCount=3, tokenn)
+            if (res.data) {
+                console.log("debgcbd",res.data.nearByVideos)
+                var Data = res.data.nearByVideos
+                setvideoData((prevItems) => [...prevItems, ...Data]);
+                // setSpinnerbool(false)
+            }
+
         }
         catch (error) {
+            console.log("dsjhcv",error.response.data.message)
             console.log(error)
             if (error.response) {
                 if (error.response.status === 400) {
@@ -99,7 +101,7 @@ if(res.data){
             // loadMinimal
             loadMinimalSize={5}
             renderItem={({ item, index }) => (
-                <ReelSingle item={item} index={index} currentIndex={currentIndex} play={isReelPage} tokenn={tokenn} />
+                <ReelSingle item={item} index={index} currentIndex={currentIndex} play={isReelPage}  />
             )}
             keyExtractor={(item, index) => index.toString()}
             // keyExtractor={(item, index) => index}

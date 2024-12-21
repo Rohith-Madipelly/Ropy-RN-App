@@ -6,7 +6,7 @@ var ASO = function () { };
 ASO.prototype.setTokenJWT = function (key, value, callBack) {
     AsyncStorage.setItem('Ropy$:' + key, JSON.stringify(value), (err) => {
         if (err) {
-            callBack('Error setting token', false);
+            callBack('Error setting token', false); 
         }
         else {
             callBack(null, true);

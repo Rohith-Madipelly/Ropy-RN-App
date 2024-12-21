@@ -13,11 +13,10 @@ import Login from './AuthScreens/Login';
 import SignUp from './AuthScreens/SignUp';
 import VerificationCode from './AuthScreens/VerificationCode';
 import CreatePassword from './AuthScreens/CreatePassword';
-import Profile from './AuthScreens/Profile';
 import InterestsForm from './AuthScreens/InterestsForm';
 import SuccessfullyScreen from './AuthScreens/SuccessfullyScreen';
 import BottomTabScreen from './MainScreens/BottomTabScreen';
-import Hello from './Hello';
+
 import BankdetailsProfile from './MainScreens/Profile/BankdetailsProfile';
 import Edit_Account from './MainScreens/Profile/Edit_Account';
 import { setToken } from '../redux/actions/loginAction';
@@ -31,6 +30,7 @@ import Privacypolicy from './MainScreens/Profile/Privacypolicy';
 import Termsandcondition from './MainScreens/Profile/Termsandcondition';
 import ForgotPassword from './AuthScreens/ForgotPassword';
 import SplashScreen from './SplashScreen/SplashScreen';
+import ProfileSetUp from './AuthScreens/ProfileSetUp';
 
 
 
@@ -48,7 +48,7 @@ export default function Screens() {
     'DMSans-Regular': require('../Components/Fonts/DMSans-Regular.ttf'),
   });
 
-
+  const isSplashSelector = useSelector((state) => state.login.isSplash);
   const loginSelector = useSelector((state) => state.login.isLogin);
   console.log("index.js login State>", loginSelector)
 
@@ -59,8 +59,6 @@ export default function Screens() {
         console.error('Error getting token:', error);
       } else {
         if (token != null) {
-          dispatch(setToken(token));
-
           try {
             if (token != null) {
               token = token.replaceAll('"', '');
@@ -72,7 +70,7 @@ export default function Screens() {
               console.log("Internal Server Error", err.message)
             }
           }
-
+          dispatch(setToken(token));
 
           // ApiCaller(token)
           setTimeout(() => {
@@ -96,32 +94,22 @@ export default function Screens() {
 
 
   const ApiCaller = async (tokenn) => {
-    if(!tokenn=="")
-    {
-    console.log(">",tokenn)
-    try {
-      const res = await UserGetProfileDetails(tokenn)
-      if (res.status === 200) {
-        // setUserProfileData(res.data)
-        dispatch(setProfileData(res.data))
-
-        console.log("nhjshvfj")
-
-
-        // if (res.data.profile_pic == "") {
-
-        // } else {
-        //   setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${res.data.profile_pic}`)
-        // }
+    if (!tokenn == "") {
+      console.log(">", tokenn)
+      try {
+        const res = await UserGetProfileDetails(tokenn)
+        if (res.status === 200) {
+          // setUserProfileData(res.data)
+          dispatch(setProfileData(res.data))
+        }
+      } catch (error) {
+        console.log(error)
+        console.log("nhjshvfj error", error.response.data.message)
       }
-    } catch (error) {
-      console.log(error)
-      console.log("nhjshvfj error", error.response.data.message)
     }
-  }
-  else{
-    console.log("No Token ")
-  }
+    else {
+      console.log("No Token ")
+    }
   }
 
 
@@ -168,22 +156,34 @@ export default function Screens() {
     return null;
   }
 
+  console.log(isSplashSelector, "isSplashSelector")
+
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
+
+        {isSplashSelector && <Stack.Screen name="SplashScreen" component={SplashScreen}
+          options={{
+            headerShown: false,
+          }}
+        />}
+
+
+
         {!user ? (
           <>
+            {/* <Stack.Screen name="Login" component={InterestsForm} /> */}
+
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="VerificationCode" component={VerificationCode} />
             <Stack.Screen name="CreatePassword" component={CreatePassword} />
-            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="ProfileSetUp" component={ProfileSetUp} />
             <Stack.Screen name="InterestsForm" component={InterestsForm} />
             <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} />
-
           </>) : (
           <>
             <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
@@ -192,7 +192,7 @@ export default function Screens() {
             <Stack.Screen name="SavedLocation" component={SavedLocation} />
             <Stack.Screen name="ChangePassword" component={ChangePassword} />
 
-             <Stack.Screen name="AboutUs" component={AboutUs} />
+            <Stack.Screen name="AboutUs" component={AboutUs} />
             <Stack.Screen name="Privacypolicy" component={Privacypolicy} />
             <Stack.Screen name="Termsandcondition" component={Termsandcondition} />
 

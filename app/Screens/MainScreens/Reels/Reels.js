@@ -13,34 +13,6 @@ const Reels = () => {
 
 
 
-  let tokenn = useSelector((state) => state.login.token);
-
-
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // WalletAmountFunction()
-  //     <StatusBar style="light" />
-  //     return () => {
-  //       <StatusBar style="light" />
-  //     };
-  //   }, [])
-  // )
-
-
-
-  // try {
-  //   if (tokenn != null) {
-  //     tokenn = tokenn.replaceAll('"', '');
-  //   }
-  // }
-  // catch (err) {
-  //   console.log("Error in token quotes", err)
-  //   if (err.response.status === 500) {
-  //     console.log("Internal Server Error", err.message)
-  //   }
-  // }
-
 
   // Use useFocusEffect to set SetReelPageActive when the screen is focused
   useFocusEffect(

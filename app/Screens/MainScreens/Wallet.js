@@ -13,6 +13,8 @@ import { useFocusEffect } from '@react-navigation/native'
 import CommonCss from '../../Components/UI/CommonCss'
 import LoadingImage from '../../Components/UI/ImageConatiners/LoadingImage'
 import BottomTabProfile from './useAbles/CustomBottomTabProfile'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 const Wallet = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
@@ -20,7 +22,7 @@ const Wallet = () => {
   const [apiData, setApiData] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
   const [walletAmount, setWalletAmount] = useState(0)
-  const [profilepic, setProfilepic] = useState(null)
+
 
   let tokenn = useSelector((state) => state.login.token);
 
@@ -83,24 +85,33 @@ const Wallet = () => {
   // }, [])
 
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     WalletAmountFunction()
+
+  //     if (profileData.profile_pic == "") {
+
+  //     } else {
+  //       setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profile_pic}`)
+  //     }
+  //     return () => {
+  //     };
+  //   }, [])
+  // )
+
+
+
   useFocusEffect(
     useCallback(() => {
-      WalletAmountFunction()
-
-      if (profileData.profile_pic == "") {
-
-      } else {
-        setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${profileData.profile_pic}`)
-      }
-      return () => {
-      };
-    }, [])
+      console.log("d", profileData?.wallet)
+      setWalletAmount(profileData?.wallet)
+    }, [profileData])
   )
-
 
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponents
         visible={spinnerBool}
         color={"#4A3AFF"}
@@ -113,7 +124,7 @@ const Wallet = () => {
           <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 2, }}>
 
 
-            <UserProfile/>
+            <UserProfile />
             <ImageBackground source={require('../../assets/RewardsBg2.png')} resizeMode="cover" style={{
               borderRadius: 20, marginTop: 20
               , overflow: 'hidden', width: '100%', height: 200,
@@ -151,7 +162,7 @@ const Wallet = () => {
             </CustomButton1>
 
 
-           
+
           </View>
         </View>
 

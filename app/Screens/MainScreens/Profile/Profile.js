@@ -17,6 +17,8 @@ import { setProfileData } from '../../../redux/actions/ProfileDataAction.js';
 import { SERVICE_PROVIDER_WEBSITE, THEME_COLOR } from '../../../Utils/AppConts.js';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CustomLinking } from '../../../Utils/CustomLinking.js';
+import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar.js';
+import GlobalStyles from '../../../Components/UI/GlobalStyles.js';
 // import Wapper from '../../ShareScreens/Wapper';
 
 
@@ -101,9 +103,9 @@ const renderFooter = () => (
   <View style={{ marginRight: 10, marginVertical: 5 }}>
 
     <Text style={{ color: '#001F2099', textAlign: 'center' }}>Version 1.0</Text>
-    <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }} onPress={()=>{CustomLinking(SERVICE_PROVIDER_WEBSITE)}}>
+    <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }} onPress={() => { CustomLinking(SERVICE_PROVIDER_WEBSITE) }}>
       <MaterialIcons name="copyright" size={15} color={THEME_COLOR} />
-      <Text style={{ color: THEME_COLOR, fontWeight: '600', textAlign: 'center', marginVertical: 10,marginLeft:5,fontSize:15 }}>
+      <Text style={{ color: THEME_COLOR, fontWeight: '600', textAlign: 'center', marginVertical: 10, marginLeft: 5, fontSize: 15 }}>
         Analogue IT Solutions
       </Text>
     </TouchableOpacity>
@@ -116,33 +118,21 @@ const Menu = ({ items }) => {
   const dispatch = useDispatch();
 
   const [UserProfileData, setUserProfileData] = useState("")
-  const [profilepic, setProfilepic] = useState(null)
+
   let tokenn = useSelector((state) => state.login.token);
-
-
-  try {
-    if (tokenn != null) {
-      tokenn = tokenn.replaceAll('"', '');
-    }
-  }
-  catch (err) {
-    console.log("Error in token quotes", err)
-    if (err.response.status === 500) {
-      console.log("Internal Server Error", err.message)
-    }
-  }
 
   const ApiCaller = async () => {
     try {
       const res = await UserGetProfileDetails(tokenn)
       if (res.status === 200) {
+
         setUserProfileData(res.data)
         dispatch(setProfileData(res.data))
 
         if (res.data.profile_pic == "") {
 
         } else {
-          setProfilepic(`https://ads-reels-pictures.s3.ap-south-1.amazonaws.com/${res.data.profile_pic}`)
+  
         }
       }
     } catch (error) {
@@ -153,30 +143,19 @@ const Menu = ({ items }) => {
 
 
   useEffect(() => {
-    // ApiCaller()
+    ApiCaller()
   }, [])
 
 
 
-  // useFocusEffect(
-  //   
-
-  //   React.useCallback(() => {
-  //     console.log("Hello Project")
-
-  //     // Cleanup function when the component loses focus
-  //     return () => {
-  //       console.log("Hello Project clse")
-  //         
-  //     };
-  // }, [])
-  // )
 
   return (
     // <Wapper>
 
     <View style={{ flex: 1 }}>
+       <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <CustomToolKitHeader componentName={"Profile"} />
+
       <View style={styles.container}>
 
 

@@ -1,6 +1,6 @@
 import { Feather, Entypo, FontAwesome } from '@expo/vector-icons';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Platform } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 
@@ -34,6 +34,11 @@ const CustomDropdown = ({
 }) => {
 
 
+    useEffect(()=>{
+        console.log("jdhgs",value)
+// if value is there then seelct that 
+    },[value])
+
     const backgroundColor = bgColor || 'white';
     const containerBorder = styles.outlined;
 
@@ -64,7 +69,7 @@ const CustomDropdown = ({
                                 ""
                             }
 
-                            <Text style={styles.dropdownButtonTxtStyle}>
+                            <Text style={styles.dropdownButtonTxtStyle}> 
                                 {(selectedItem && selectedItem.title) || placeholder}
                             </Text>
                             {/* <Feather name={isOpened ? 'chevron-up' : 'chevron-down'} style={styles.dropdownButtonArrowStyle} /> */}

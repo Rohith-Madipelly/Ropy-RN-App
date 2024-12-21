@@ -1,15 +1,20 @@
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import StatusBarComponent from '../../../Components/StatusBar/StatusBarComponent'
 import LoaderComponents from '../../../Components/Loaders/LoaderComponents'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { useFormik } from 'formik'
 import { LoginYupSchema } from '../../../FormikYupSchema/LoginYupSchema'
 import CustomTextInput2 from '../../../Components/UI/Inputs/CustomTextInput2'
 import CustomToolKitHeader from '../../../Components/UI/CustomToolKitHeader'
 import CustomButton1 from '../../../Components/UI/Buttons/CustomButton1'
-import { Bank_Details_on_IFSC } from '../../../ApiCalls'
+import { Bank_Details_on_IFSC, UserGetProfileDetails, UPDATE_PROFILE_API } from '../../../ApiCalls'
+import { BankYupSchema } from '../../../FormikYupSchema/BankYupSchema'
+import { setProfileData } from '../../../redux/actions/ProfileDataAction'
+import { useToast } from 'react-native-toast-notifications'
+import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../../Components/UI/GlobalStyles'
 
 const BankdetailsProfile = () => {
     const [edit, setEdit] = useState("")
@@ -20,6 +25,28 @@ const BankdetailsProfile = () => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const toast = useToast();
+    const [UserProfileData, setUserProfileData] = useState("")
+    let profileData = useSelector((state) => state.ProfileData.profileData);
+    const [profileInformation, setProfileInformation] = useState(profileData)
+
+    let tokenn = useSelector((state) => state.login.token);
+    try {
+        if (tokenn != null) {
+            tokenn = tokenn.replaceAll('"', '');
+        }
+    }
+    catch (err) {
+        console.log("Error in token quotes", err)
+        if (err.response.status === 500) {
+            console.log("Internal Server Error", err.message)
+        }
+    }
+
+
+
+    console.log(IFSC_CODE_REQ, "edg")
+
 
     const {
         handleChange,
@@ -34,13 +61,14 @@ const BankdetailsProfile = () => {
         setFieldValue,
         resetForm,
     } = useFormik({
-        initialValues: { bankName: "", accountNumber: "444401500514", accountType: "savings", branch: "", IFSC_CODE: "SBIN002110" },
+        initialValues: { bankName: "", accountNumber: "", accountType: "", branch: "", ifscCode: "" },
+        // initialValues: { bankName: "", accountNumber: "444401500514", accountType: "savings", branch: "", ifscCode: "SBIN002110" },
 
         onSubmit: values => {
             { submitHandler(values) }
         },
 
-        validationSchema: LoginYupSchema,
+        validationSchema: BankYupSchema,
 
         validate: values => {
             const errors = {};
@@ -49,7 +77,34 @@ const BankdetailsProfile = () => {
 
     });
 
-    // For Bank Name and Branch from IFSC Code 
+
+
+    const ApiCaller = async () => {
+        try {
+            const res = await UserGetProfileDetails(tokenn)
+            if (res.data) {
+                console.log("hvnas")
+                setUserProfileData(res.data)
+                console.log(res.data)
+
+                dispatch(setProfileData(res.data))
+
+                if (res.data.profile_pic == "") {
+
+                } else {
+
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    useEffect(() => {
+        ApiCaller()
+    }, [])
+
     useEffect(() => {
         const GetBankDetails = async () => {
             try {
@@ -70,11 +125,99 @@ const BankdetailsProfile = () => {
 
     }, [IFSC_CODE_REQ])
 
-    const submitHandler = async (values) => {
-        console.log("values ", values)
+
+
+    useEffect(() => {
+
+        if (UserProfileData) {
+            const timer = setTimeout(() => {
+                setValues({
+                    ...values,
+                    bankName: `${UserProfileData.bankName}`,
+                    accountNumber: `${UserProfileData.accountNumber}`,
+                    accountType: `${UserProfileData.accountType}`,
+                    branch: `${UserProfileData.branch}`,
+                    ifscCode: `${UserProfileData.ifscCode}`,
+                });
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [UserProfileData]);
+
+
+    const submitHandler = async (user) => {
+        try {
+            setSpinnerbool(true)
+            const res = await UPDATE_PROFILE_API(user, tokenn)
+            if (res.data) {
+                console.log("Hello >>>", res.data)
+
+                toast.hideAll()
+                toast.show(res.data.message)
+                setTimeout(() => {
+                    ApiCaller()
+                }, 200);
+            }
+        }
+
+        catch (error) {
+            if (error.response) {
+                console.log(error.response.data.message, "edkjwhghf")
+                if (error.response.status === 400) {
+                    console.log("Error With 400.", error.response.data)
+                    seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+                }
+                else if (error.response.status === 401) {
+                    seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+                }
+                else if (error.response.status === 403) {
+                    console.log("error.response.status login", error.response.data.message)
+                }
+                else if (error.response.status === 404) {
+                    console.log("dhg", error.response.data.message)
+                    seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+
+                }
+                else if (error.response.status === 500) {
+                    console.log("Internal Server Error", error.message)
+                }
+                else {
+                    console.log("An error occurred response.>>")
+          
+                }
+            }
+            else if (error.code === 'ECONNABORTED') {
+                console.log('Request timed out. Please try again later.');
+            }
+            else if (error.request) {
+                console.log("No Response Received From the Server.")
+                if (error.request.status === 0) {
+                    // console.log("error in request ",error.request.status)
+                    Alert.alert("No Network Found", "Please Check your Internet Connection")
+                }
+            }
+
+            else {
+                console.log("Error in Setting up the Request.")
+            }
+
+            setSpinnerbool(false)
+
+            if (error) {
+
+                // message = error.message;
+                // seterrorFormAPI(message)
+                // "userEmail or Password does not match !"
+            }
+        }
+        finally {
+            // setLoading(false);
+            setSpinnerbool(false)
+        }
     }
     return (
         <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+             <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
             <LoaderComponents
                 visible={spinnerBool}
                 color={"#4A3AFF"}
@@ -167,11 +310,11 @@ const BankdetailsProfile = () => {
                                         boxWidth={'95%'}
                                         placeholder={'Enter IFSC CODE'}
                                         label={'IFSC CODE'}
-                                        name='IFSC_CODE'
-                                        value={values.IFSC_CODE}
-                                        rightIcon={<Pressable onPress={() => setEdit({ IFSC_CODE: !edit?.IFSC_CODE })}>
+                                        name='ifscCode'
+                                        value={values.ifscCode}
+                                        rightIcon={<Pressable onPress={() => setEdit({ ifscCode: !edit?.ifscCode })}>
 
-                                            {!edit?.IFSC_CODE ? (
+                                            {!edit?.ifscCode ? (
                                                 <Text>Change</Text>) : (
 
                                                 <Text>Done</Text>)
@@ -179,24 +322,28 @@ const BankdetailsProfile = () => {
 
                                         </Pressable>
                                         }
-                                        maxLength={11}
-                                        editable={edit?.IFSC_CODE ? true : false}
-                                        onChangeText={(e) => { const sanitizedText = e.toUpperCase().replace(/[^A-Z0-9]/g, ''); const eToLowerCaseText = sanitizedText.toUpperCase(); handleChange("IFSC_CODE")(eToLowerCaseText); set_IFSC_CODE_REQ(e); seterrorFormAPI(); }}
-                                        onBlur={handleBlur("IFSC_CODE")}
+                                        // maxLength={11}
+                                        editable={edit?.ifscCode ? true : false}
+                                        onChangeText={(e) => {
+                                            const sanitizedText = e.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                                            console.log(e)
+                                            const eToLowerCaseText = sanitizedText.toUpperCase(); handleChange("ifscCode")(eToLowerCaseText); set_IFSC_CODE_REQ(eToLowerCaseText); seterrorFormAPI();
+                                        }}
+                                        onBlur={handleBlur("ifscCode")}
 
                                         // validate={() => {
                                         //     if (!values?.first) { setError({ ...error, first: 'Please enter your name' }) }
                                         //     else { setError({ ...error, first: null }) }
                                         // }}
 
-                                        validate={handleBlur("IFSC_CODE")}
+                                        validate={handleBlur("ifscCode")}
 
                                         outlined
                                         // bgColor={'#F7F7F7'}
 
-                                        borderColor={`${(errors.IFSC_CODE && touched.IFSC_CODE) || (errorFormAPI && errorFormAPI.IFSC_CODEForm) ? "red" : "#48484A"}`}
+                                        borderColor={`${(errors.ifscCode && touched.ifscCode) || (errorFormAPI && errorFormAPI.IFSC_CODEForm) ? "red" : "#48484A"}`}
 
-                                        errorMessage={`${(errors.IFSC_CODE && touched.IFSC_CODE) ? `${errors.IFSC_CODE}` : (errorFormAPI && errorFormAPI.IFSC_CODEForm) ? `${errorFormAPI.IFSC_CODEForm}` : ``}`}
+                                        errorMessage={`${(errors.ifscCode && touched.ifscCode) ? `${errors.ifscCode}` : (errorFormAPI && errorFormAPI.IFSC_CODEForm) ? `${errorFormAPI.IFSC_CODEForm}` : ``}`}
 
                                     // errorColor='magenta'
                                     />

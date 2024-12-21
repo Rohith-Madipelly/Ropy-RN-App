@@ -5,9 +5,7 @@ import LoaderComponent from '../../Components/Loaders/LoaderComponents'
 import { useDispatch } from 'react-redux'
 import TitleComponent from '../../Components/UI/TextUI/TitleComponent'
 import CustomTextInput2 from '../../Components/UI/Inputs/CustomTextInput2'
-
-import { Entypo, FontAwesome } from "@expo/vector-icons";
-
+import { Entypo } from "@expo/vector-icons";
 import { LoginYupSchema } from '../../FormikYupSchema/LoginYupSchema'
 import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
@@ -17,6 +15,7 @@ import ASO from '../../Utils/AsyncStorage_Calls'
 import { setToken } from '../../redux/actions/loginAction'
 import { ASYNC_STORAGE_NAME, ASYNC_STORAGE_PROFILE } from '../../Utils/AppConts'
 import { setProfileData } from '../../redux/actions/ProfileDataAction'
+import { useToast } from 'react-native-toast-notifications'
 
 
 
@@ -27,7 +26,7 @@ const Login = () => {
   const [errorFormAPI, seterrorFormAPI] = useState("")
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const toast = useToast();
   const {
     handleChange,
     handleBlur,
@@ -40,35 +39,24 @@ const Login = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { phoneNumber: "7730086206", password: "Chinnu#143." },
-
+    // initialValues: { phoneNumber: "7730086206", password: "Chinnu#143." },
+    initialValues: { phoneNumber: "", password: "" },
     onSubmit: values => {
       { submitHandler(values) }
     },
-
     validationSchema: LoginYupSchema,
-
     validate: values => {
       const errors = {};
       return errors;
     },
-
   });
 
 
-  const submitHandler2 = async (values) => {
-    console.log("values ", values)
-  }
-
 
   const submitHandler = async (user) => {
-
-    console.log("Check Login", user)
-
     try {
       setSpinnerbool(true)
       const res = await UserLoginApi(user)
-
       if (res.data) {
         console.log("fds", res)
         const Message = res.data.message
@@ -91,6 +79,10 @@ const Login = () => {
             dispatch(setToken(token));
           }
         })
+
+        toast.hideAll()
+        toast.show(res.data.message)
+        
       }
     }
 

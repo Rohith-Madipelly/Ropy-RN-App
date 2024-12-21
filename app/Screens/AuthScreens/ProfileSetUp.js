@@ -14,11 +14,19 @@ import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import CustomDropdown from '../../Components/UI/Inputs/CustomDropdown'
 import { ProfileYupSchema } from '../../FormikYupSchema/ProfileYupSchema'
+import { UserLoginApi, UserProfileSetUpApi } from '../../ApiCalls'
+import { useToast } from 'react-native-toast-notifications'
 
 
 
 
-const Profile = () => {
+const ProfileSetUp = ({ route }) => {
+
+  const { params } = route;
+  const TokenForSetUp = params?.TokenForSetUp || '';
+
+  console.log(TokenForSetUp, "TokenForSetUp")
+
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
@@ -26,7 +34,7 @@ const Profile = () => {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const toast = useToast();
   const {
     handleChange,
     handleBlur,
@@ -39,7 +47,8 @@ const Profile = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: {firstName:"",lastName:"",email:"",dateOfBirth:"",userAge:"",gender:"", occupation:"",otherOccupation:""},
+    initialValues: { firstName: "Rohith", lastName: "madipelly", email: "madipellyrohith@gmail.com", dob: "13/02/2001", age: "23", gender: "", occupation: "", otherOccupation: "" },
+    // initialValues: {firstName:"Rohith",lastName:"madipell",email:"",dob:"",age:"",gender:"", occupation:"",otherOccupation:""},
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -55,8 +64,81 @@ const Profile = () => {
   });
 
 
-  const submitHandler = async (values) => {
-    console.log("values ", values)
+  const submitHandler = async (user) => {
+
+    console.log("Check Login", user)
+
+    try {
+      setSpinnerbool(true)
+      const res = await UserProfileSetUpApi(user, TokenForSetUp)
+
+      if (res.data) {
+        console.log("fds >>>>", res.data)
+        var toScreen = res.data.screenStatus
+        toast.hideAll()
+        toast.show(res.data.message)
+
+        setTimeout(() => {
+          { navigation.navigate('InterestsForm', { TokenForSetUp: TokenForSetUp }); }
+          setSpinnerbool(false)
+        }, 50);
+      }
+    }
+
+    catch (error) {
+      console.log("dshgfadcv", error.response.data.message)
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.log("Error With 400.", error.response.data)
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+        }
+        else if (error.response.status === 401) {
+          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+        }
+        else if (error.response.status === 403) {
+          console.log("error.response.status login", error.response.data.message)
+        }
+        else if (error.response.status === 404) {
+          console.log("dhg", error.response.data.message)
+          seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+
+        }
+        else if (error.response.status === 500) {
+          console.log("Internal Server Error", error.message)
+        }
+        else {
+          console.log("An error occurred response.>>")
+          ErrorResPrinter(`${error.message}`)
+        }
+      }
+      else if (error.code === 'ECONNABORTED') {
+        console.log('Request timed out. Please try again later.');
+      }
+      else if (error.request) {
+        console.log("No Response Received From the Server.")
+        if (error.request.status === 0) {
+          // console.log("error in request ",error.request.status)
+          Alert.alert("No Network Found", "Please Check your Internet Connection")
+        }
+      }
+
+      else {
+        console.log("Error in Setting up the Request.")
+      }
+
+      setSpinnerbool(false)
+
+      if (error) {
+
+        // message = error.message;
+        // seterrorFormAPI(message)
+        // "userEmail or Password does not match !"
+      }
+    }
+    finally {
+      // setLoading(false);
+      setSpinnerbool(false)
+    }
   }
 
   const genderData = [
@@ -64,18 +146,18 @@ const Profile = () => {
     { title: 'Female' },
     { title: 'Other' },
     // { title: 'Home appliences', image: require('../../../assets/opitionsImages/Categories/Home appliences.png') },
-]
+  ]
 
 
-const OccupationData = [
-  { title: 'Arts/Entertainment' },
-  { title: 'Healthcare' },
-  { title: 'Homemaker' },
-  { title: 'IT/Technology' },
-  { title: 'Student' },
-  { title: 'Unemployed' },
-  { title: 'Other (custom entry)' },
-]
+  const OccupationData = [
+    { title: 'Arts/Entertainment' },
+    { title: 'Healthcare' },
+    { title: 'Homemaker' },
+    { title: 'IT/Technology' },
+    { title: 'Student' },
+    { title: 'Unemployed' },
+    { title: 'Other (custom entry)' },
+  ]
 
 
   return (
@@ -93,7 +175,7 @@ const OccupationData = [
 
 
           <View style={styles.ContentBox}>
-            <View style={{ marginLeft: 10,marginBottom:20 }}>
+            <View style={{ marginLeft: 10, marginBottom: 20 }}>
               <TitleComponent TitleName="Profile Setup" style={{ color: '#001F20CC' }}></TitleComponent>
             </View>
 
@@ -188,22 +270,22 @@ const OccupationData = [
                 placeholder={'Date of birth'}
                 label={'Date of birth'}
                 name='area'
-                value={values.dateOfBirth}
+                value={values.dob}
                 // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
                 // bgColor='#e1f3f8'
                 // bgColor="#B1B1B0"
 
-                onChangeText={(e) => { handleChange("dateOfBirth")(e); seterrorFormAPI(); }}
-                onBlur={handleBlur("dateOfBirth")}
+                onChangeText={(e) => { handleChange("dob")(e); seterrorFormAPI(); }}
+                onBlur={handleBlur("dob")}
 
 
-                validate={handleBlur("dateOfBirth")}
+                validate={handleBlur("dob")}
 
                 outlined
 
-                borderColor={`${(errors.dateOfBirth && touched.dateOfBirth) || (errorFormAPI && errorFormAPI.dateOfBirthForm) ? "red" : "#48484A"}`}
+                borderColor={`${(errors.dob && touched.dob) || (errorFormAPI && errorFormAPI.dobForm) ? "red" : "#48484A"}`}
 
-                errorMessage={`${(errors.dateOfBirth && touched.dateOfBirth) ? `${errors.dateOfBirth}` : (errorFormAPI && errorFormAPI.dateOfBirthForm) ? `${errorFormAPI.areaForm}` : ``}`}
+                errorMessage={`${(errors.dob && touched.dob) ? `${errors.dob}` : (errorFormAPI && errorFormAPI.dobForm) ? `${errorFormAPI.dobForm}` : ``}`}
 
               // errorColor='magenta'
               />
@@ -212,8 +294,8 @@ const OccupationData = [
                 boxWidth={'95%'}
                 placeholder={'Enter age'}
                 label={'Age'}
-                name='userAge'
-                value={values.userAge}
+                name='age'
+                value={values.age}
                 // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
                 // bgColor='#e1f3f8'
                 // bgColor="#B1B1B0"
@@ -222,15 +304,15 @@ const OccupationData = [
                   // Remove any non-numeric characters
                   const numericValue = e.replace(/[^0-9]/g, '');
                   // Update the state with the numeric value
-                  handleChange("userAge")(numericValue);
+                  handleChange("age")(numericValue);
                   seterrorFormAPI();
                 }}
-                onBlur={handleBlur("userAge")}
-                validate={handleBlur("userAge")}
+                onBlur={handleBlur("age")}
+                validate={handleBlur("age")}
                 keyboardType="numeric"
                 outlined
-                borderColor={`${(errors.userAge && touched.userAge) || (errorFormAPI && errorFormAPI.userAgeForm) ? "red" : "#48484A"}`}
-                errorMessage={`${(errors.userAge && touched.userAge) ? `${errors.userAge}` : (errorFormAPI && errorFormAPI.userAgeForm) ? `${errorFormAPI.userAgeForm}` : ``}`}
+                borderColor={`${(errors.age && touched.age) || (errorFormAPI && errorFormAPI.ageForm) ? "red" : "#48484A"}`}
+                errorMessage={`${(errors.age && touched.age) ? `${errors.age}` : (errorFormAPI && errorFormAPI.ageForm) ? `${errorFormAPI.ageForm}` : ``}`}
               // errorColor='magenta'
               />
 
@@ -255,10 +337,10 @@ const OccupationData = [
                 errorMessage={`${(errors.gender && touched.gender) ? `${errors.gender}` : (errorFormAPI && errorFormAPI.genderForm) ? `${errorFormAPI.genderForm}` : ``}`}
               // errorColor='magenta'
               />
-             
 
 
-             <CustomDropdown
+
+              <CustomDropdown
                 boxWidth={'95%'}
                 label={"Occupation"}
                 placeholder={'Select'}
@@ -278,32 +360,32 @@ const OccupationData = [
                 errorMessage={`${(errors.occupation && touched.occupation) ? `${errors.occupation}` : (errorFormAPI && errorFormAPI.occupationForm) ? `${errorFormAPI.occupationForm}` : ``}`}
               // errorColor='magenta'
               />
-             
-             {values.occupation=='Other (custom entry)'?
-              <CustomTextInput2
-                boxWidth={'95%'}
-                placeholder={'Enter Occupation'}
-                label={'Other Occupation'}
-                name='area'
-                value={values.otherOccupation}
-                // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
-                // bgColor='#e1f3f8'
-                // bgColor="#B1B1B0"
 
-                onChangeText={(e) => { handleChange("otherOccupation")(e); seterrorFormAPI(); }}
-                onBlur={handleBlur("otherOccupation")}
+              {values.occupation == 'Other (custom entry)' ?
+                <CustomTextInput2
+                  boxWidth={'95%'}
+                  placeholder={'Enter Occupation'}
+                  label={'Other Occupation'}
+                  name='area'
+                  value={values.otherOccupation}
+                  // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
+                  // bgColor='#e1f3f8'
+                  // bgColor="#B1B1B0"
+
+                  onChangeText={(e) => { handleChange("otherOccupation")(e); seterrorFormAPI(); }}
+                  onBlur={handleBlur("otherOccupation")}
 
 
-                validate={handleBlur("otherOccupation")}
+                  validate={handleBlur("otherOccupation")}
 
-                outlined
+                  outlined
 
-                borderColor={`${(errors.otherOccupation && touched.otherOccupation) || (errorFormAPI && errorFormAPI.otherOccupationForm) ? "red" : "#48484A"}`}
+                  borderColor={`${(errors.otherOccupation && touched.otherOccupation) || (errorFormAPI && errorFormAPI.otherOccupationForm) ? "red" : "#48484A"}`}
 
-                errorMessage={`${(errors.otherOccupation && touched.otherOccupation) ? `${errors.otherOccupation}` : (errorFormAPI && errorFormAPI.otherOccupationForm) ? `${errorFormAPI.otherOccupationForm}` : ``}`}
+                  errorMessage={`${(errors.otherOccupation && touched.otherOccupation) ? `${errors.otherOccupation}` : (errorFormAPI && errorFormAPI.otherOccupationForm) ? `${errorFormAPI.otherOccupationForm}` : ``}`}
 
-              // errorColor='magenta'
-              />:""}
+                // errorColor='magenta'
+                /> : ""}
               <CustomButton1
                 boxWidth={'95%'}
                 // onPress={()=>{navigation.navigate("EmailVerification")}}
@@ -329,7 +411,7 @@ const OccupationData = [
   )
 }
 
-export default Profile
+export default ProfileSetUp
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -342,7 +424,7 @@ const styles = StyleSheet.create({
     flex: 0.4,
     overflow: 'hidden',
     paddingTop: 36,
-   
+
     paddingHorizontal: 17
   }
 })

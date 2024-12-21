@@ -33,3 +33,9 @@ npx expo install expo-av
 
 
 npx expo install expo-image-picker
+
+npx expo install lottie-react-native
+
+npx expo install expo-location
+
+npx expo install @shopify/flash-list
