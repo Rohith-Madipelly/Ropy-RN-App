@@ -25,7 +25,7 @@ import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../../Components/UI/GlobalStyles'
 
 
-const BankdetailsProfile = () => {
+const TestScreen = () => {
   const [edit, setEdit] = useState("")
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
@@ -53,7 +53,7 @@ const BankdetailsProfile = () => {
     setFieldValue,
     resetForm,
   } = useFormik({
-    initialValues: { firstName: "", lastName: "", email: "", dob: "", age: "", gender: "", occupation: "", otherOccupation: "" },
+    initialValues: { firstName: "", lastName: "", email: "", dob: "13/02/2002", age: "", gender: "", occupation: "", otherOccupation: "" },
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -292,7 +292,9 @@ const BankdetailsProfile = () => {
 
 
 
-
+var year=2001
+var DAY=24
+var MONTH=1
 
 
   return (
@@ -391,123 +393,13 @@ const BankdetailsProfile = () => {
 
 
 
-                  <CustomTextInput2
-                    boxWidth={'95%'}
-                    placeholder={'Enter first name'}
-                    label={'First name'}
-                    name='firstName'
-                    value={values.firstName}
-                    // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
-                    // bgColor='#e1f3f8'
-                    // bgColor="#B1B1B0"
-
-                    onChangeText={(e) => { handleChange("firstName")(e); seterrorFormAPI(); }}
-                    onBlur={handleBlur("firstName")}
-
-                    // validate={() => {
-                    //     if (!values?.first) { setError({ ...error, first: 'Please enter your name' }) }
-                    //     else { setError({ ...error, first: null }) }
-                    // }}
-
-
-                    rightIcon={<Pressable onPress={() => setEdit({ firstName: !edit?.firstName })}>
-                      {!edit?.firstName ? (
-                        <Text>Change</Text>) : (
-                        <Text>Done</Text>)
-                      }
-                    </Pressable>
-                    }
-                    editable={edit?.firstName ? true : false}
-
-                    validate={handleBlur("firstName")}
-
-                    outlined
-
-                    borderColor={`${(errors.firstName && touched.firstName) || (errorFormAPI && errorFormAPI.firstNameForm) ? "red" : "#48484A"}`}
-
-                    errorMessage={`${(errors.firstName && touched.firstName) ? `${errors.firstName}` : (errorFormAPI && errorFormAPI.firstNameForm) ? `${errorFormAPI.firstNameForm}` : ``}`}
-
-                  // errorColor='magenta'
-                  />
-
-
-
-                  <CustomTextInput2
-                    boxWidth={'95%'}
-                    placeholder={'Enter last name'}
-                    label={'Last name'}
-                    name='lastName'
-                    value={values.lastName}
-                    // leftIcon={<FontAwesome name="envelope" size={20} color="black" />}
-                    // bgColor='#e1f3f8'
-                    // bgColor="#B1B1B0"
-
-                    onChangeText={(e) => { handleChange("lastName")(e); seterrorFormAPI(); }}
-                    onBlur={handleBlur("lastName")}
-
-                    // validate={() => {
-                    //     if (!values?.first) { setError({ ...error, first: 'Please enter your name' }) }
-                    //     else { setError({ ...error, first: null }) }
-                    // }}
-
-                    rightIcon={<Pressable onPress={() => setEdit({ lastName: !edit?.lastName })}>
-                      {!edit?.lastName ? (
-                        <Text>Change</Text>) : (
-                        <Text>Done</Text>)
-                      }
-                    </Pressable>
-                    }
-                    editable={edit?.lastName ? true : false}
-
-                    validate={handleBlur("lastName")}
-
-                    outlined
-
-                    borderColor={`${(errors.lastName && touched.lastName) || (errorFormAPI && errorFormAPI.lastNameForm) ? "red" : "#48484A"}`}
-
-                    errorMessage={`${(errors.lastName && touched.lastName) ? `${errors.lastName}` : (errorFormAPI && errorFormAPI.lastNameForm) ? `${errorFormAPI.lastNameForm}` : ``}`}
-
-                  // errorColor='magenta'
-                  />
-
-                  <CustomTextInput2
-                    boxWidth={'95%'}
-                    label={'Email address'}
-                    placeholder={'Enter email address'}
-                    name='email'
-                    value={values.email}
-                    // bgColor='#e1f3f8'
-                    // bgColor="#B1B1B0"
-
-                    onChangeText={(e) => { const eToLowerCaseText = e.toLowerCase(); handleChange("email")(eToLowerCaseText); seterrorFormAPI(); }}
-                    onBlur={handleBlur("email")}
-                    // validate={handleBlur("email")}
-
-                    rightIcon={<Pressable onPress={() => setEdit({ email: !edit?.email })}>
-                      {!edit?.email ? (
-                        <Text>Change</Text>) : (
-                        <Text>Done</Text>)
-                      }
-                    </Pressable>
-                    }
-                    editable={edit?.email ? true : false}
-
-                    outlined
-                    // bgColor={'#F6F8FE'}
-                    borderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.email && touched.email) ? `${errors.email}` : (errorFormAPI && errorFormAPI.emailForm) ? `${errorFormAPI.emailForm}` : ``}`}
-                  // errorColor='magenta'
-                  />
-
-
-
                   <CustomDateInput2
                     boxWidth={'95%'}
                     placeholder={'Date of birth'}
                     label={'Date of birth'}
                     date='date'
-                    // value={values.dob}
-                    // value={new Date(2001, 1, 13)}
+                    value={values.dob}
+                    // value={new Date(year, MONTH, DAY)}
                     containerStyle={{ elevation: 10 }}
                     rightIcon={<MaterialIcons name="date-range" size={20} color="black" />}
                     onChangeText={(e) => {
@@ -661,7 +553,7 @@ const BankdetailsProfile = () => {
   )
 }
 
-export default BankdetailsProfile
+export default TestScreen
 
 const styles = StyleSheet.create({
   container: {

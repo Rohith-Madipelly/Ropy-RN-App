@@ -7,3 +7,9 @@ export const setToken = (token) => {
 export const setIsSplashScreenAction = (isSplash) => {
   return { type: "SET_SplashScreen", isSplash };
 };
+
+
+
+export const setPlayIndex = (index) => {
+  return { type: "SET_INDEX", index };
+};

@@ -11,6 +11,8 @@ import { InterestsFormYupSchema } from '../../FormikYupSchema/InterestsFormYupSc
 import { ASYNC_STORAGE_NAME } from '../../Utils/AppConts'
 import ASO from '../../Utils/AsyncStorage_Calls'
 import { setToken } from '../../redux/actions/loginAction'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 const SuccessfullyScreen = ({ route }) => {
@@ -42,6 +44,7 @@ const SuccessfullyScreen = ({ route }) => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}

@@ -7,7 +7,7 @@ import UserProfile from './useAbles/UserProfile'
 import Redeem from '../../assets/Redeem'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import GiftIcon from '../../assets/GiftIcon'
-import { GetWalletAmountAPI } from '../../ApiCalls'
+import { GetWalletAmountAPI, POST_WITHDRAW_API } from '../../ApiCalls'
 import { useSelector } from 'react-redux'
 import { useFocusEffect } from '@react-navigation/native'
 import CommonCss from '../../Components/UI/CommonCss'
@@ -46,18 +46,21 @@ const Wallet = () => {
     }
   }
 
-  const WalletAmountFunction = async () => {
+  const REQUEST_WITHDRAW_API = async (amount) => {
+    console.log("ddd",amount)
     setSpinnerbool(true)
     try {
-      const res = await GetWalletAmountAPI(tokenn)
-      console.log("scas", res.data)
-      setApiData(res.data)
-      setWalletAmount(res.data.Amount)
+      const res = await POST_WITHDRAW_API(amount, tokenn)
+      if (res.data) {
+        console.log("Hello",res.data)
+      }
     }
     catch (error) {
+      console.log(error)
       if (error.response) {
         if (error.response.status === 400) {
           console.log("Error With 400.")
+          console.log("d",error.response.data.message)
         }
         else if (error.response.status === 500) {
           console.log("Internal Server Error", error.message)
@@ -146,6 +149,9 @@ const Wallet = () => {
               boxWidth={'95%'}
               // onPress={()=>{navigation.navigate("EmailVerification")}}
               // onPress={handleSubmit}
+              onPress={()=>{
+                REQUEST_WITHDRAW_API(20)
+              }}
               RightIcon={<View style={{ marginLeft: 10 }}>
                 <GiftIcon />
               </View>}

@@ -37,10 +37,11 @@ const UserProfile = () => {
         console.log("hvnas", res.data)
         setUserProfileData(res.data)
         dispatch(setProfileData(res.data))
-
+        console.log("dd",res.data.profilePicture)
         if (res.data.profile_pic == "") {
 
-        } else {
+        } 
+        else {
           setProfilepic(`${res.data.profilePicture}`)
         }
       }

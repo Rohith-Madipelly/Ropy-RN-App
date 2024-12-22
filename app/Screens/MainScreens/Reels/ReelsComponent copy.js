@@ -18,8 +18,6 @@ const ReelsComponent = ({ isReelPage }) => {
     const [spinnerBool, setSpinnerbool] = useState(false)
     const [errorMsg, setErrorMsg] = useState(null);
 
-    const [message,setMessage]=useState("Loading ......")
-    const videoRefs = useRef([]);
     let tokenn = useSelector((state) => state.login.token);
 
 
@@ -40,18 +38,16 @@ const ReelsComponent = ({ isReelPage }) => {
         try {
 
 
-            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude, page, videosCount = 7, tokenn)
+            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude, page, videosCount = 3, tokenn)
             if (res.data) {
                 console.log("debgcbd", res.data)
                 var Data = res.data.nearByVideos
                 setvideoData((prevItems) => [...prevItems, ...Data]);
                 setSpinnerbool(false)
-                setMessage("No Video found in this location ")
             }
 
         }
         catch (error) {
-            setMessage("No Video found in this location ")
             console.log("dsjhcv", error.response.data.message)
             console.log(error)
             if (error.response) {
@@ -84,50 +80,32 @@ const ReelsComponent = ({ isReelPage }) => {
         GetVideos()
     }, [])
 
-
-    const dispatch = useDispatch();
-
-    // const handleChangeIndexValue = ({ index }) => {
-    //     setCurrentIndex(index)
-    // }
-
-
-
-    const handleChangeIndexValue = ({ index }) => {
-        // Pause the previous video
-        if (videoRefs.current[currentIndex]) {
-            videoRefs.current[currentIndex].pauseAsync();
-        }
-
-        // Update the current index
-        setCurrentIndex(index);
-
-        // Play the new video
-        if (videoRefs.current[index]) {
-            videoRefs.current[index].playAsync();
-        }
-    };
-
     const handleEndReached = () => {
         setpage(a => a + 1)
+        // console.warn(page)
         GetVideos()
     };
+    const dispatch = useDispatch();
+
+    const handleChangeIndexValue = ({ index }) => {
+        // setPlayIndex(index)
+        dispatch(setPlayIndex(index))
+        setCurrentIndex(index)
+    }
+
     return (
         <>
             {videoData && videoData.length > 0 ? <SwiperFlatList
                 vertical={true}
                 data={videoData}
-                onChangeIndex={handleChangeIndexValue}
+                onChangeIndex={() => { setCurrentIndex(index) }}
                 // onMomentumScrollEnd={handleEndReached()}
                 onEndReached={() => { handleEndReached() }}
                 onEndReachedThreshold={0.1}
                 // loadMinimal
                 loadMinimalSize={5}
-         
                 renderItem={({ item, index }) => (
-                    <ReelSingle 
-                    ref={(ref) => (videoRefs.current[index] = ref)}
-                    item={item} index={index} currentIndex={currentIndex} play={isReelPage} />
+                    <ReelSingle item={item} index={index} currentIndex={currentIndex} play={isReelPage} />
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 pagingEnabled={true}
@@ -136,7 +114,7 @@ const ReelsComponent = ({ isReelPage }) => {
                 decelerationRate="fast"
                 nestedScrollEnabled={true}
             /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: 'white', fontWeight: 700 }}>{message}</Text>
+                <Text style={{ color: 'white', fontWeight: 700 }}>No Video found in this location </Text>
             </View>}
         </>
     )

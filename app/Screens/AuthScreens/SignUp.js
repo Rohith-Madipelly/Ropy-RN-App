@@ -16,6 +16,8 @@ import { PhoneNumberValidation } from '../../FormikYupSchema/PhoneNumberValidati
 import CustomCheckBox from '../../Components/UI/Inputs/CustomCheckBox'
 import { UserLoginApi, UserRegisterApi } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -148,6 +150,7 @@ const SignUp = () => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}

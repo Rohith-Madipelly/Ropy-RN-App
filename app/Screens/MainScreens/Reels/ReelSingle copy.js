@@ -1,5 +1,5 @@
 import { View, Text, Dimensions, Touchable, TouchableOpacity, } from 'react-native'
-import React, { useRef, useState, useEffect, useImperativeHandle, forwardRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Video, ResizeMode } from 'expo-av';
 import { ActivityIndicator } from 'react-native';
 // import ReelDescription from './ReelDescription';
@@ -11,39 +11,46 @@ import { useToast } from 'react-native-toast-notifications';
 // import { ToasterSender } from '../utils/Toaster';
 
 
-// const ReelSingle = ({ item, index, currentIndex, play }) => {
-
-    const ReelSingle = forwardRef(({ item, isPlaying,play,currentIndex,index }, ref) => {
-
-
-    const windoWidth = Dimensions.get('window').width
-    const windowHeight = Dimensions.get('window').height
+const ReelSingle = ({ item, index, currentIndex, play }) => {
     let tokenn = useSelector((state) => state.login.token);
+    let indexplayer = useSelector((state) => state.PlayerIndex.playIndex);
 
-    const [isBuffering, setIsBuffering] = useState(true);
+
+    console.log("indexplayer", indexplayer)
+
     const toast = useToast();
+    const [isBuffering, setIsBuffering] = useState(true);
+    const AWSBaseUrl = "https://ads-book-s3.s3.ap-south-1.amazonaws.com"
+
     const videoRef = useRef(null)
 
+    useEffect(() => {
+        console.log("sdhva", currentIndex === index, currentIndex)
+        if (currentIndex === index) {
+            // videoRef.current.replayAsync();
+            // PlayVideo()
+
+            if (videoRef.current !== null) {
+                videoRef.current.playAsync()
+            }
+        }
+        else if (currentIndex != index) {
+            // PauseVideo()
+            if (videoRef.current !== null) {
+                videoRef.current.pauseAsync()
+            }
+        }
+
+        else {
+            // cons
+            // PauseVideo()
+            if (videoRef.current !== null) {
+                videoRef.current.pauseAsync()
+            }
+        }
 
 
-    useImperativeHandle(ref, () => ({
-        playAsync: () => videoRef.current?.playAsync(),
-        pauseAsync: () => videoRef.current?.pauseAsync(),
-    }));
-
-    // useEffect(() => {
-
-    //     if (currentIndex != index) {
-    //         PauseVideo()
-    //     }
-    //     else if (currentIndex === index) {
-    //         videoRef.current.replayAsync();
-    //         PlayVideo()
-    //     }
-    //     else {
-    //         PauseVideo()
-    //     }
-    // }, [currentIndex])
+    }, [currentIndex])
 
 
     useEffect(() => {
@@ -51,13 +58,13 @@ import { useToast } from 'react-native-toast-notifications';
 
         }
         else {
-            PauseVideo()
+            // PauseVideo()
+            if (videoRef.current !== null) {
+                videoRef.current.pauseAsync()
+            }
         }
 
     }, [play])
-
-
-
 
     const PlayVideo = async () => {
         try {
@@ -93,6 +100,10 @@ import { useToast } from 'react-native-toast-notifications';
             setLoading(false);
         }
     }
+
+    const windoWidth = Dimensions.get('window').width
+    const windowHeight = Dimensions.get('window').height
+
 
 
     const onBuffer = buffer => {
@@ -180,14 +191,12 @@ import { useToast } from 'react-native-toast-notifications';
 
     return (
         <TouchableOpacity
+
             activeOpacity={1}
             onPressIn={PauseVideo}
             onPressOut={PlayVideo}
         >
-            <View style={{ 
-                 
-                width: '100%', height: '100%',
-                width: windoWidth,height: windowHeight * 0.94, position: 'relative' }}>
+            <View style={{ width: windoWidth, height: windowHeight * 0.94, position: 'relative' }}>
 
                 <>
 
@@ -197,7 +206,7 @@ import { useToast } from 'react-native-toast-notifications';
                         onBuffer={onBuffer}
                         onError={onError}
                         repeat={true}
-                          resizeMode="cover"
+                        resizeMode='cover'
                         // resizeMode="contain"
                         paused={false}
                         source={{ uri: `${item.videoUrl}` }}
@@ -257,7 +266,6 @@ import { useToast } from 'react-native-toast-notifications';
         </TouchableOpacity>
 
     )
+}
 
-});
-
-export default ReelSingle;
+export default ReelSingle

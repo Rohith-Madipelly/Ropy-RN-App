@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
 import CustomSpan from '../../Components/UI/TextUI/CustomSpan'
 import { PhoneNumberValidation } from '../../FormikYupSchema/PhoneNumberValidation'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -64,6 +66,7 @@ const ForgotPassword = () => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}

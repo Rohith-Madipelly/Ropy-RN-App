@@ -40,21 +40,38 @@ const CustomTextInput2 = ({
     disabled = false,
 }) => {
 
-    const backgroundColor = bgColor || 'white';
-    // const containerBorder = outlined ? styles.outlined : styles.standard;
-    const containerBorder = outlined ? styles.outlined : styles.outlined;
 
-    const [date, setDate] = useState(value || ""); // Initialize date state with the provided value
+    const containerBorder = outlined ? styles.outlined : styles.standard;
+    const [date, setDate] = useState(value); // Initialize date state with the provided value
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState("date");
+
+    const [DateX, setDateX] = useState()
+    const [MonthX, setMonthX] = useState()
+    const [YearX, setYearX] = useState()
+
+    useEffect(() => {
+        console.log("c", value)
+        if (value) {
+            console.log("kkkk", date instanceof Date)
+            if (date instanceof Date) {
+
+            } else {
+                const parseDate = (date) => {
+                    const [day, month, year] = date.split(/[-/]/).map(Number);
+                    return new Date(year, month - 1, day); // month is 0-based
+                };
+
+                setDateX(parseDate(value))
+            }
+        }
+
+    }, [value])
+
+    const backgroundColor = bgColor || 'white';
     // const containerBorder = outlined ? styles.outlined : styles.standard;
     const [errorData, setErrorData] = useState()
     const [borderColorDisplay, setBorderColor] = useState(borderColor)
-
-
-
-    const [convert,setConvert]=useState()
-
 
     useEffect(() => {
         setBorderColor(borderColorDisplay)
@@ -76,51 +93,10 @@ const CustomTextInput2 = ({
             setShow(false)
         }
         setDate(currentDate);
-        // console.log("currentDate",formatToReadableDateDDMMYYYY(currentDate))
-        // // onChangeText(currentDate.toLocaleDateString()); // Pass the formatted date to onChangeText
-        onChangeText(formatToReadableDateDDMMYYYY(currentDate)); // Pass the formatted date to onChangeText
-    };
-
-    const showMode = (modeToShow) => {
-        // setShow(true);
-        setMode(modeToShow);
+        onChangeText(formatToReadableDateDDMMYYYY(currentDate));
     };
 
 
-
-    const DateForm = (input) => {
-        if (!isNaN(Date.parse(input))) {
-
-            console.log(new Date(input).toLocaleDateString());
-            return new Date(input).toLocaleDateString()
-        } else {
-            console.log('none');
-            return input
-        }
-
-
-    }
-    // const parseDate = (date) => {
-    //     const [day, month, year] = date.split(/[-/]/).map(Number);
-    //     return new Date(year, month - 1, day); // month is 0-based
-    // };
-
-    // const parsedDate = parseDate("13-02-2001");
-    // console.log("yyyy", parsedDate.toISOString()); // Outputs: 2001-02-13T00:00:00.000Z
-
-
-    console.log("date >>", date, "dddd", new Date())
-
-
-    useEffect(() => {
-        const parseDate = (date) => {
-            const [day, month, year] = date.split(/[-/]/).map(Number);
-            return new Date(year, month - 1, day); // month is 0-based
-        };
-
-        setConvert(parseDate(date))
-
-    }, [date])
 
 
     return (
@@ -146,14 +122,12 @@ const CustomTextInput2 = ({
                 onPress={() => { setShow(!show) }}
 
                 style={[styles.container, containerBorder, { borderColor: borderColor }, { backgroundColor: backgroundColor }]}>
-                {leftIcon ? <View style={{ paddingRight: 8 }}>
-                    {leftIcon}
-                </View> : ""}
+
                 <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'flex-start', alignItems: "flex-start" }}>
                     {Platform.OS == "ios" ? (
                         <DateTimePicker
                             style={{}}
-                            value={convert || new Date()} // Pass date or current date if not provided
+                            value={DateX || new Date()} // Pass date or current date if not provided
                             mode={mode}
                             // display={"spinner"}
                             display={"compact"}
@@ -167,7 +141,7 @@ const CustomTextInput2 = ({
                         {show ?
                             <DateTimePicker
                                 style={{}}
-                                value={date || new Date()} // Pass date or current date if not provided
+                                value={DateX || new Date()} // Pass date or current date if not provided
                                 mode={mode}
                                 // display={"spinner"}
                                 display={"compact"}

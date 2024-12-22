@@ -17,6 +17,8 @@ import { ProfileYupSchema } from '../../FormikYupSchema/ProfileYupSchema'
 import { UserLoginApi, UserProfileSetUpApi } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
 import CustomDateInput2 from '../../Components/UI/Inputs/CustomDateInput2'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -163,6 +165,7 @@ const ProfileSetUp = ({ route }) => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}
@@ -273,7 +276,7 @@ const ProfileSetUp = ({ route }) => {
                 placeholder={'Date of birth'}
                 label={'Date of birth'}
                 date='date'
-                // value={values.dob}
+                value={values.dob}
                 // value={new Date(2001, 1, 13)}
                 containerStyle={{ elevation: 10 }}
                 rightIcon={<MaterialIcons name="date-range" size={20} color="black" />}

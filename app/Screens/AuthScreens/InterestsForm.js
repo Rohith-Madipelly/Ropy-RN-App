@@ -11,6 +11,8 @@ import { InterestsFormYupSchema } from '../../FormikYupSchema/InterestsFormYupSc
 import CustomCheckBox from '../../Components/UI/Inputs/CustomCheckBox'
 import { ADDINTERESTS_API, GetAllInterests_API } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -251,6 +253,7 @@ const InterestsForm = ({ route }) => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}

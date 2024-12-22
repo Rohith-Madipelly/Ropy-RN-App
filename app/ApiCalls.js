@@ -254,6 +254,19 @@ export const GET_SETTINGS_API = async (id, token) => {
 };
 
 
+// WITHDRAW
+export const POST_WITHDRAW_API = async (amount, token) => {
+  const reqData={
+    amount:amount
+  }
+  return await axios.post(`${GUEST_URL}/user/redeem`,reqData, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+};
+
+
 //Upload Profile Pic api 
 export const UPDATE_PROFILE_PIC_API = async (image, token) => {
   const formData = new FormData();

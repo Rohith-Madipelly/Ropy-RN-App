@@ -15,6 +15,8 @@ import CustomSpan from '../../Components/UI/TextUI/CustomSpan'
 import { PhoneNumberValidation } from '../../FormikYupSchema/PhoneNumberValidation'
 import { otpValidationSchema } from '../../FormikYupSchema/OtpValidationSchema'
 import OtpInput from '../../Components/Functionality/OTP/OtpInput 4digits'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -68,6 +70,7 @@ const VerificationCode = ({ route }) => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}

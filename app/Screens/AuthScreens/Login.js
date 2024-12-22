@@ -16,6 +16,8 @@ import { setToken } from '../../redux/actions/loginAction'
 import { ASYNC_STORAGE_NAME, ASYNC_STORAGE_PROFILE } from '../../Utils/AppConts'
 import { setProfileData } from '../../redux/actions/ProfileDataAction'
 import { useToast } from 'react-native-toast-notifications'
+import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
+import GlobalStyles from '../../Components/UI/GlobalStyles'
 
 
 
@@ -144,6 +146,7 @@ const Login = () => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
+       <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}
