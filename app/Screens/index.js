@@ -31,7 +31,7 @@ import Termsandcondition from './MainScreens/Profile/Termsandcondition';
 import ForgotPassword from './AuthScreens/ForgotPassword';
 import SplashScreen from './SplashScreen/SplashScreen';
 import ProfileSetUp from './AuthScreens/ProfileSetUp';
-import App2 from '../app2/App2';
+
 
 
 
@@ -178,7 +178,7 @@ export default function Screens() {
         {!user ? (
           <>
 
-            {/* <Stack.Screen name="Login" component={App2} /> */}
+   
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

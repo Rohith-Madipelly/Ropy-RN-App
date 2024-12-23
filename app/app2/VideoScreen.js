@@ -8,13 +8,13 @@ const { height } = Dimensions.get('window');
 const VideoScreen = ({ coins, trigger }) => {
   return (
     <View style={styles.container}>
-      <Video
+      {/* <Video
         source={require('./assest/Test.mp4')} // Replace with your video URL
         style={{ height: height, width: '100%' }}
         resizeMode="cover"
         shouldPlay
         isLooping={true}
-      />
+      /> */}
       {coins.map((coin, index) => (
         <>
   
