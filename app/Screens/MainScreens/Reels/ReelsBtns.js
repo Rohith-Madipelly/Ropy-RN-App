@@ -36,6 +36,7 @@ import FontStyles from "../../../Components/UI/FontStyles";
 import { THEME_COLOR, WHITE_COLOR } from "../../../Utils/AppConts";
 import { ToasterSender } from "../../../Utils/Toaster";
 import { useToast } from "react-native-toast-notifications";
+import LottieView from "lottie-react-native";
 // import { ToasterSender } from "../utils/Toaster";
 
 const windoWidth = Dimensions.get('window').width
@@ -50,13 +51,12 @@ const ReelsBtns = ({
   comments,
   UploaderthumbnailUrl,
   index,
-  dateVideoId, urlLink
+  dateVideoId, urlLink,
+  CallBackTOLike
 }) => {
 
   const [liked, setLiked] = useState(isLiked);
 
-  console.log("isLiked", isLiked)
-  // setLiked(isLiked)
   const [spinnerBool, setSpinnerbool] = useState(false)
   const HomeIcon = useRef(null);
   const bottomSheet2 = useRef(null);
@@ -65,7 +65,7 @@ const ReelsBtns = ({
   const [ReportMessage, setReportMessage] = useState("")
   let tokenn = useSelector((state) => state.login.token);
 
-
+  const [shouldLike, setShouldLike] = useState(false)
   const toast = useToast();
 
 
@@ -117,11 +117,6 @@ const ReelsBtns = ({
     }
   }
 
-
-
-
-
-
   const ReportBtn = async () => {
 
     setSpinnerbool(true)
@@ -167,9 +162,6 @@ const ReelsBtns = ({
     }
   }
 
-
-
-
   const LikesFuncationly = async () => {
     setSpinnerbool(true)
     try {
@@ -180,6 +172,12 @@ const ReelsBtns = ({
           toast.hideAll()
           toast.show(res.data.message)
           setLiked(true)
+          setShouldLike(true)
+
+          setTimeout(() => {
+            setShouldLike(false)
+          }, 1000);
+
         } else if (res.data.message === "Like removed") {
           toast.hideAll()
           setLiked(false)
@@ -218,193 +216,182 @@ const ReelsBtns = ({
 
 
 
-
-
-
-  const handleDownload = async () => {
-    console.log("implement videro download here", urlLink)
-  };
-
-
-
-
-
-
-
-
-
-
   return (
-    <View style={[styles.container, { marginBottom: 10, right: 10 }]}>
+    <View style={{
+      position: 'absolute',
+      width: windoWidth, height: windowHeight * 0.94,
+      justifyContent:'center',alignItems:"center"
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => {
+    }}>
 
-          LikesFuncationly()
+
+
+
+      {shouldLike && <LottieView
+        autoPlay loop
+        style={{
+          width: '50%',
+          height: '50%',
+          alignSelf:'center'
         }}
-      >
-        {liked ? (
-          <Entypo name="heart" size={30} color="red" />
-        ) : (
-          <Entypo name="heart-outlined" size={30} color="white" />
-        )}
+        source={require('../../../assets/LikeH.json')}
+      />}
 
-        {/* <Text style={[styles.text,]}>
-          {liked ? formatNumber(likes + 1) : formatNumber(likes)}
-        </Text> */}
-      </TouchableOpacity>
 
-      {/* <TouchableOpacity style={styles.btn}> */}
-      {/* <Feather name="message-circle" size={35} color="white" /> */}
-      {/* <Entypo name="thumbs-up" size={35} color="white" /> */}
-
-      {/* {liked ? (
-          <FontAwesome name="thumbs-down" size={30} color="white" />
-        ) : (
-          <FontAwesome name="thumbs-down" size={30} color="lightblue" />
-        )}
-        <Text style={[styles.text, typographyStyles.md]}>
-          DisLike 
-        </Text>
-      </TouchableOpacity> */}
+      <View style={[styles.container, { marginBottom: 10, right: 10 }]}>
 
 
 
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
 
-      <TouchableOpacity style={styles.btn} onPress={() => {
-        onShare(
-          `Check out this video on Ropy: ${urlLink} \n Video ID ${dateVideoId}`
-        )
-      }}>
-        <Ionicons name="paper-plane-outline" size={30} color={"white"} style={styles.btnbtn} />
-        <Text style={[styles.text,
-          //  typographyStyles.md
-        ]}>
-          {/* {formatNumber(shares)}  */}
-          Share
-        </Text>
+            LikesFuncationly()
+          }}
+        >
+          {liked ? (
+            <Entypo name="heart" size={30} color="red" />
+          ) : (
+            <Entypo name="heart-outlined" size={30} color="white" />
+          )}
 
-      </TouchableOpacity>
+        </TouchableOpacity>
 
-
-
-
-
-      <TouchableOpacity style={styles.btn} onPress={() => { bottomSheet1.current.show() }}>
-        <MaterialCommunityIcons
-          name="dots-horizontal"
-          size={25}
-          color="white"
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.btn}>
-        {/* <Image source={{ uri: UploaderthumbnailUrl }} style={styles.image} /> */}
-
-      </TouchableOpacity>
-
-
-
-      <BottomSheet height={Metrics.rfv(150)} ref={bottomSheet1}>
-        <View style={{
-          marginHorizontal: Metrics.rfv(15),
-          marginVertical: Metrics.rfv(15)
+        <TouchableOpacity style={styles.btn} onPress={() => {
+          onShare(
+            `Check out this video on Ropy: ${urlLink} \n Video ID ${dateVideoId}`
+          )
         }}>
-          <Text style={[FontStyles.A1, { marginHorizontal: Metrics.rfv(15) }]}>Options</Text>
+          <Ionicons name="paper-plane-outline" size={30} color={"white"} style={styles.btnbtn} />
+          <Text style={[styles.text,
+            //  typographyStyles.md
+          ]}>
+            {/* {formatNumber(shares)}  */}
+            Share
+          </Text>
 
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+        </TouchableOpacity>
 
 
-            <TouchableOpacity onPress={() => { bottomSheet1.current.hide(); bottomSheet2.current.show(); }} style={{
-              flex: 0.4, justifyContent: 'center', alignItems: 'center',
-              borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
-              padding: Metrics.rfv(15), marginTop: Metrics.rfv(10), borderRadius: 10,
-            }}>
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <MaterialIcons name="report" size={24} color={THEME_COLOR} />
-                <Text style={[FontStyles.A1, {
-                  paddingTop: 2, paddingLeft: 10,
-                  color: THEME_COLOR,
-                  fontWeight: '500'
-                }]}>Report</Text>
-              </View>
-            </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => { SaveLocation() }}
-              style={{
+
+
+        <TouchableOpacity style={styles.btn} onPress={() => { bottomSheet1.current.show() }}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={25}
+            color="white"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btn}>
+          {/* <Image source={{ uri: UploaderthumbnailUrl }} style={styles.image} /> */}
+
+        </TouchableOpacity>
+
+
+
+        <BottomSheet height={Metrics.rfv(150)} ref={bottomSheet1}>
+          <View style={{
+            marginHorizontal: Metrics.rfv(15),
+            marginVertical: Metrics.rfv(15)
+          }}>
+            <Text style={[FontStyles.A1, { marginHorizontal: Metrics.rfv(15) }]}>Options</Text>
+
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+
+
+              <TouchableOpacity onPress={() => { bottomSheet1.current.hide(); bottomSheet2.current.show(); }} style={{
                 flex: 0.4, justifyContent: 'center', alignItems: 'center',
                 borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
-                padding: Metrics.rfv(15), marginTop: Metrics.rfv(10), borderRadius: 10, backgroundColor: THEME_COLOR
+                padding: Metrics.rfv(15), marginTop: Metrics.rfv(10), borderRadius: 10,
               }}>
-              <View style={{ display: 'flex', flexDirection: 'row', }}>
-                {/* <MaterialIcons name="save" size={24} color="black" /> */}
-                {/* <AntDesign name="download" size={24} color={"black"} style={styles.btnbtn} /> */}
-                {/* <View>
+                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                  <MaterialIcons name="report" size={24} color={THEME_COLOR} />
+                  <Text style={[FontStyles.A1, {
+                    paddingTop: 2, paddingLeft: 10,
+                    color: THEME_COLOR,
+                    fontWeight: '500'
+                  }]}>Report</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => { SaveLocation() }}
+                style={{
+                  flex: 0.4, justifyContent: 'center', alignItems: 'center',
+                  borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
+                  padding: Metrics.rfv(15), marginTop: Metrics.rfv(10), borderRadius: 10, backgroundColor: THEME_COLOR
+                }}>
+                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                  {/* <MaterialIcons name="save" size={24} color="black" /> */}
+                  {/* <AntDesign name="download" size={24} color={"black"} style={styles.btnbtn} /> */}
+                  {/* <View>
                 <Entypo name="location-pin" size={20} color="white" />
                 </View> */}
 
-                <Text style={[FontStyles.A1, {
-                  // paddingTop: 2, paddingLeft: 10,
-                  color: WHITE_COLOR,
-                  fontWeight: '500'
-                }]}>
-                  Save Location</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </BottomSheet>
-
-      <BottomSheet height={Metrics.rfv(270)} ref={bottomSheet2}>
-        <View style={{
-          marginHorizontal: Metrics.rfv(15),
-          marginVertical: Metrics.rfv(15)
-        }}>
-          <Text style={[FontStyles.A1, { marginHorizontal: Metrics.rfv(15) }]}>Help us understand the problem</Text>
-          <View style={[styles.inputContainer,]}>
-            <View
-              style={[
-                styles.input,
-                { borderColor: "#ccc", height: 100 },
-              ]}
-            >
-              <TextInput
-                placeholderTextColor={"#444"}
-                placeholder="Report Message"
-                onChangeText={(e) => { setReportMessage(e) }}
-                value={ReportMessage}
-                multiline={true}
-                numberOfLines={4}
-                keyboardType="default"
-                autoCapitalize="none"
-                style={{ color: "black" }}
-              />
+                  <Text style={[FontStyles.A1, {
+                    // paddingTop: 2, paddingLeft: 10,
+                    color: WHITE_COLOR,
+                    fontWeight: '500'
+                  }]}>
+                    Save Location</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-            <TouchableOpacity onPress={() => { ReportBtn() }}
-              style={{
-                flex: 0.4, justifyContent: 'center', alignItems: 'center',
-                borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
-                padding: 15, backgroundColor: THEME_COLOR
-              }}>
-              <View style={{ display: 'flex', flexDirection: 'row', }}>
-                {/* <MaterialIcons name="save" size={24} color="black" /> */}
-                {/* <AntDesign name="download" size={24} color={"black"} style={styles.btnbtn} /> */}
+        </BottomSheet>
 
-                <Text style={[FontStyles.A1, {
-                  // paddingTop: 2, paddingLeft: 10,
-                  color: WHITE_COLOR,
-                  fontWeight: '500'
-                }]}>Send Report</Text>
-
-
+        <BottomSheet height={Metrics.rfv(270)} ref={bottomSheet2}>
+          <View style={{
+            marginHorizontal: Metrics.rfv(15),
+            marginVertical: Metrics.rfv(15)
+          }}>
+            <Text style={[FontStyles.A1, { marginHorizontal: Metrics.rfv(15) }]}>Help us understand the problem</Text>
+            <View style={[styles.inputContainer,]}>
+              <View
+                style={[
+                  styles.input,
+                  { borderColor: "#ccc", height: 100 },
+                ]}
+              >
+                <TextInput
+                  placeholderTextColor={"#444"}
+                  placeholder="Report Message"
+                  onChangeText={(e) => { setReportMessage(e) }}
+                  value={ReportMessage}
+                  multiline={true}
+                  numberOfLines={4}
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  style={{ color: "black" }}
+                />
               </View>
-            </TouchableOpacity>
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+              <TouchableOpacity onPress={() => { ReportBtn() }}
+                style={{
+                  flex: 0.4, justifyContent: 'center', alignItems: 'center',
+                  borderRadius: 10, borderColor: THEME_COLOR, borderWidth: 2,
+                  padding: 15, backgroundColor: THEME_COLOR
+                }}>
+                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                  {/* <MaterialIcons name="save" size={24} color="black" /> */}
+                  {/* <AntDesign name="download" size={24} color={"black"} style={styles.btnbtn} /> */}
+
+                  <Text style={[FontStyles.A1, {
+                    // paddingTop: 2, paddingLeft: 10,
+                    color: WHITE_COLOR,
+                    fontWeight: '500'
+                  }]}>Send Report</Text>
+
+
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </BottomSheet>
+        </BottomSheet>
+
+      </View>
 
     </View>
   );
@@ -419,12 +406,21 @@ const styles = StyleSheet.create({
     // bottom: -(windowHeight - 15),
     // top:(windowHeight-(windowHeight/3.10)),
 
-    bottom: Platform.select({
-      ios: -(windowHeight - windowHeight * 0.07), // width for iOS
-      android: -(windowHeight - windowHeight * 0.07), // width for Android
-      // web: 300, // width for Web
-      // default: 100, // default width
-    }),
+    // bottom: Platform.select({
+    //   ios: -(windowHeight - windowHeight * 0.07), // width for iOS
+    //   android: -(windowHeight - windowHeight * 0.07), // width for Android
+    //   // web: 300, // width for Web
+    //   // default: 100, // default width
+    // }),
+
+
+    //     bottom: Platform.select({
+    //   ios: -(windowHeight - windowHeight * 0.07), // width for iOS
+    //   android: -(windowHeight - windowHeight * 0.07), // width for Android
+    //   // web: 300, // width for Web
+    //   // default: 100, // default width
+    // }),
+    bottom: 10,
     // left: 7,
     right: 7,
     width: 65,

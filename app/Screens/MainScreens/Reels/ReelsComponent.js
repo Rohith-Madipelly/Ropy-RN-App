@@ -122,7 +122,7 @@ const ReelsComponent = ({ isReelPage }) => {
                 onEndReached={() => { handleEndReached() }}
                 onEndReachedThreshold={0.1}
                 // loadMinimal
-                loadMinimalSize={5}
+                loadMinimalSize={10}
          
                 renderItem={({ item, index }) => (
                     <ReelSingle 

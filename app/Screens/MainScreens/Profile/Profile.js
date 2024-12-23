@@ -227,7 +227,7 @@ const Profile = () => {
       subItems: [
         { title: 'Edit account', onPress: () => navigation.navigate('Edit_Account') },
         { title: 'Change password', onPress: () => navigation.navigate('ChangePassword') },
-        { title: 'Save Location', onPress: () => navigation.navigate('SavedLocation') },
+        { title: 'Saved Location', onPress: () => navigation.navigate('SavedLocation') },
 
       ],
     },
@@ -250,7 +250,7 @@ const Profile = () => {
     {
       title: 'Others',
       subItems: [
-        { title: 'Above us', onPress: () => navigation.navigate('AboutUs') },
+        { title: 'About us', onPress: () => navigation.navigate('AboutUs') },
         { title: 'Bank details', onPress: () => navigation.navigate('BankdetailsProfile') },
         { title: 'Privacy policy', onPress: () => navigation.navigate('Privacypolicy') },
         { title: 'Terms and condition', onPress: () => navigation.navigate('Termsandcondition') },

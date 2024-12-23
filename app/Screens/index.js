@@ -31,7 +31,8 @@ import Termsandcondition from './MainScreens/Profile/Termsandcondition';
 import ForgotPassword from './AuthScreens/ForgotPassword';
 import SplashScreen from './SplashScreen/SplashScreen';
 import ProfileSetUp from './AuthScreens/ProfileSetUp';
-import TestScreen from './MainScreens/Profile/TestScreen';
+import App2 from '../app2/App2';
+
 
 
 
@@ -176,9 +177,9 @@ export default function Screens() {
 
         {!user ? (
           <>
-            {/* <Stack.Screen name="Login" component={InterestsForm} /> */}
-            {/* <Stack.Screen name="Login" component={TestScreen} /> */}
-            <Stack.Screen name="Logindd" component={Login} />
+
+            <Stack.Screen name="Loginxx" component={App2} />
+            <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="VerificationCode" component={VerificationCode} />

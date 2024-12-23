@@ -10,11 +10,10 @@ import { useToast } from 'react-native-toast-notifications';
 // import { rewardedAPI } from '../utils/API_Calls';
 // import { ToasterSender } from '../utils/Toaster';
 
-
+import LottieView from "lottie-react-native";
 // const ReelSingle = ({ item, index, currentIndex, play }) => {
 
-    const ReelSingle = forwardRef(({ item, isPlaying,play,currentIndex,index }, ref) => {
-
+const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, ref) => {
 
     const windoWidth = Dimensions.get('window').width
     const windowHeight = Dimensions.get('window').height
@@ -24,26 +23,33 @@ import { useToast } from 'react-native-toast-notifications';
     const toast = useToast();
     const videoRef = useRef(null)
 
+    useEffect(() => {
+        videoRef.current.pauseAsync()
 
+    }, [index, currentIndex])
 
-    useImperativeHandle(ref, () => ({
-        playAsync: () => videoRef.current?.playAsync(),
-        pauseAsync: () => videoRef.current?.pauseAsync(),
-    }));
+    // useImperativeHandle(ref, () => ({
+    //     playAsync: () => videoRef.current?.playAsync(),
+    //     pauseAsync: () => videoRef.current?.pauseAsync(),
+    // }));
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     if (currentIndex != index) {
-    //         PauseVideo()
-    //     }
-    //     else if (currentIndex === index) {
-    //         videoRef.current.replayAsync();
-    //         PlayVideo()
-    //     }
-    //     else {
-    //         PauseVideo()
-    //     }
-    // }, [currentIndex])
+        if (currentIndex != index) {
+            PauseVideo()
+        }
+        else if (currentIndex === index) {
+            videoRef.current.replayAsync();
+
+            setTimeout(() => {
+                videoRef.current.replayAsync();
+                // PlayVideo()
+            }, 10);
+        }
+        else {
+            PauseVideo()
+        }
+    }, [currentIndex])
 
 
     useEffect(() => {
@@ -55,6 +61,9 @@ import { useToast } from 'react-native-toast-notifications';
         }
 
     }, [play])
+
+
+
 
 
 
@@ -97,10 +106,17 @@ import { useToast } from 'react-native-toast-notifications';
 
     const onBuffer = buffer => {
         setIsBuffering(buffer.isBuffering);
+        //    videoRef.current.pauseAsync()
     }
 
     const onError = onError => {
         console.log("error i am buffering", onError);
+        // videoRef.current.pauseAsync()
+
+        // setTimeout(() => {
+        //     PlayVideo()
+        // }, 10);
+
     }
 
     const HitAPi = async () => {
@@ -183,21 +199,23 @@ import { useToast } from 'react-native-toast-notifications';
             activeOpacity={1}
             onPressIn={PauseVideo}
             onPressOut={PlayVideo}
+            
         >
-            <View style={{ 
-                 
+            <View style={{
+
                 width: '100%', height: '100%',
-                width: windoWidth,height: windowHeight * 0.94, position: 'relative' }}>
+                width: windoWidth, height: windowHeight * 0.94, position: 'relative'
+            }}>
 
                 <>
-
+        
 
                     <Video
                         ref={videoRef}
                         onBuffer={onBuffer}
                         onError={onError}
                         repeat={true}
-                          resizeMode="cover"
+                        resizeMode="cover"
                         // resizeMode="contain"
                         paused={false}
                         source={{ uri: `${item.videoUrl}` }}

@@ -290,6 +290,9 @@ export const UPDATE_PROFILE_PIC_API = async (image, token) => {
 export const UserProfilePicUploadAPI2 = async (data, token) => {
   const formData = new FormData();
 
+  console.log("Test>>",data)
+
+
   formData.append("firstName", data.firstName);
   formData.append("lastName", data.lastName);
   formData.append("dob", data.dob);

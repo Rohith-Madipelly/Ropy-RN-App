@@ -15,6 +15,7 @@ import LoadingImage from '../../Components/UI/ImageConatiners/LoadingImage'
 import BottomTabProfile from './useAbles/CustomBottomTabProfile'
 import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../Components/UI/GlobalStyles'
+import { useToast } from 'react-native-toast-notifications'
 
 const Wallet = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
@@ -22,7 +23,7 @@ const Wallet = () => {
   const [apiData, setApiData] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
   const [walletAmount, setWalletAmount] = useState(0)
-
+  const toast = useToast();
 
   let tokenn = useSelector((state) => state.login.token);
 
@@ -53,6 +54,8 @@ const Wallet = () => {
       const res = await POST_WITHDRAW_API(amount, tokenn)
       if (res.data) {
         console.log("Hello",res.data)
+        toast.hideAll()
+        toast.show(res.data.message)
       }
     }
     catch (error) {
@@ -61,9 +64,13 @@ const Wallet = () => {
         if (error.response.status === 400) {
           console.log("Error With 400.")
           console.log("d",error.response.data.message)
+          toast.hideAll()
+          toast.show(error.response.data.message)
         }
         else if (error.response.status === 500) {
           console.log("Internal Server Error", error.message)
+          toast.hideAll()
+          toast.show(error.response.data.message)
         }
         else {
           console.log("An error occurred response.")

@@ -32,13 +32,6 @@ const CustomDropdown = ({
     DropDownData,
     DropDownHeigth,
 }) => {
-
-
-    useEffect(()=>{
-        console.log("jdhgs",value)
-// if value is there then seelct that 
-    },[value])
-
     const backgroundColor = bgColor || 'white';
     const containerBorder = styles.outlined;
 
@@ -48,10 +41,9 @@ const CustomDropdown = ({
 
             <SelectDropdown
                 data={DropDownData}
-
+                defaultValue={{"title": value}}
                 onSelect={(selectedItem, index) => {
                     onChange(selectedItem.title)
-                    // console.log("selected item", selectedItem, index);
                 }}
 
                 renderButton={(selectedItem, isOpened) => {
@@ -72,10 +64,7 @@ const CustomDropdown = ({
                             <Text style={styles.dropdownButtonTxtStyle}> 
                                 {(selectedItem && selectedItem.title) || placeholder}
                             </Text>
-                            {/* <Feather name={isOpened ? 'chevron-up' : 'chevron-down'} style={styles.dropdownButtonArrowStyle} /> */}
-
                             <FontAwesome name={isOpened ? 'caret-up' : 'caret-down'} style={styles.dropdownButtonArrowStyle} />
-
                         </View>
                     );
                 }}

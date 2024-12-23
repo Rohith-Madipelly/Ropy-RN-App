@@ -20,10 +20,22 @@ const ProfileYupSchema = Yup.object().shape({
   // gender:Yup.string(),
   occupation: Yup.string(),
 
+  otherOccupation: Yup.string()
+  .when(['occupation'], ([occupation], schema) => {
 
-  // gender: Yup.string()
-  //   .required("Gender is a required field")
-  //   .oneOf(["Male", "Female", "Other"], "Invalid Gender"),
+    console.log("ddw",occupation)
+      if (occupation == "Other (custom entry)")
+        
+          return schema
+          console.log("ddwddd",occupation)
+              .required('Other occupation is required')
+      return
+  }),
+
+
+  gender: Yup.string()
+    .required("Gender is a required field")
+    .oneOf(["Male", "Female", "Other"], "Invalid Gender"),
 
 });
 export { ProfileYupSchema }

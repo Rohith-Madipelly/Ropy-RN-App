@@ -506,7 +506,7 @@ const BankdetailsProfile = () => {
                     placeholder={'Date of birth'}
                     label={'Date of birth'}
                     date='date'
-                    // value={values.dob}
+                    value={values.dob}
                     // value={new Date(2001, 1, 13)}
                     containerStyle={{ elevation: 10 }}
                     rightIcon={<MaterialIcons name="date-range" size={20} color="black" />}
@@ -633,7 +633,7 @@ const BankdetailsProfile = () => {
                     // errorColor='magenta'
                     /> : ""}
 
-
+<Text>{errors.otherOccupation}</Text>
 
 
 
