@@ -11,6 +11,7 @@ import { useToast } from 'react-native-toast-notifications';
 // import { ToasterSender } from '../utils/Toaster';
 
 import LottieView from "lottie-react-native";
+import Coin from './Coins/Coin';
 // const ReelSingle = ({ item, index, currentIndex, play }) => {
 
 const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, ref) => {
@@ -22,9 +23,18 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
     const [isBuffering, setIsBuffering] = useState(true);
     const toast = useToast();
     const videoRef = useRef(null)
+    const [trigger, setTrigger] = useState(false);
+    const coins = [
+        { imageSource: require('./Coins/Coin (1).png') },
+        { imageSource: require('./Coins/Coin (1).png') },
+        { imageSource: require('./Coins/Coin (1).png') },
+        { imageSource: require('./Coins/Coin (1).png') },
+        { imageSource: require('./Coins/Coin (1).png') },
+    ];
 
     useEffect(() => {
         videoRef.current.pauseAsync()
+        setTrigger(false)
 
     }, [index, currentIndex])
 
@@ -128,10 +138,16 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
                 if (res.status === 200) {
                     toast.hideAll()
                     toast.show(res.data.message)
+                    setTrigger(true)
+
+                    setTimeout(() => {
+                        setTrigger(false)
+                    }, 2000);
                 }
                 else if (res.status === 201) {
                     toast.hideAll()
                     toast.show(res.data.message)
+                    // setTrigger(true)
                 }
             }
 
@@ -199,7 +215,7 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
             activeOpacity={1}
             onPressIn={PauseVideo}
             onPressOut={PlayVideo}
-            
+
         >
             <View style={{
 
@@ -208,7 +224,7 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
             }}>
 
                 <>
-        
+
 
                     <Video
                         ref={videoRef}
@@ -254,6 +270,18 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
 
 
                     </View>
+
+                    {trigger&&<View>
+                        {coins.map((coin, index) => (
+                            <Coin
+                                key={index}
+                                imageSource={coin.imageSource}
+                                delay={index * 100} // Delay each coin's animation by 300ms
+                                trigger={trigger}
+                                index={index} // Pass the index to adjust the size
+                            />
+                        ))}
+                    </View>}
 
                 </>
 

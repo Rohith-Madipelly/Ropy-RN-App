@@ -89,14 +89,14 @@ const ProfileSetUp = ({ route }) => {
     }
 
     catch (error) {
-      console.log("dshgfadcv", error.response.data.message)
+      console.log("dshgfadcv", error.response.data.message,error.response.status)
       if (error.response) {
         if (error.response.status === 400) {
           console.log("Error With 400.", error.response.data)
-          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
         }
         else if (error.response.status === 401) {
-          seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
         }
         else if (error.response.status === 403) {
           console.log("error.response.status login", error.response.data.message)

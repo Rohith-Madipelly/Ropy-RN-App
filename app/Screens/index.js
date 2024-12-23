@@ -178,7 +178,7 @@ export default function Screens() {
         {!user ? (
           <>
 
-            <Stack.Screen name="Loginxx" component={App2} />
+            {/* <Stack.Screen name="Login" component={App2} /> */}
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

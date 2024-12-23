@@ -23,11 +23,11 @@ const ProfileYupSchema = Yup.object().shape({
   otherOccupation: Yup.string()
   .when(['occupation'], ([occupation], schema) => {
 
-    console.log("ddw",occupation)
+
       if (occupation == "Other (custom entry)")
         
           return schema
-          console.log("ddwddd",occupation)
+       
               .required('Other occupation is required')
       return
   }),

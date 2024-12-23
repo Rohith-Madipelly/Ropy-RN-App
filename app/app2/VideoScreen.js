@@ -16,13 +16,16 @@ const VideoScreen = ({ coins, trigger }) => {
         isLooping={true}
       />
       {coins.map((coin, index) => (
-        <Coin
+        <>
+  
+        {trigger&&<Coin
           key={index}
           imageSource={coin.imageSource}
           delay={index * 100} // Delay each coin's animation by 300ms
           trigger={trigger}
           index={index} // Pass the index to adjust the size
-        />
+        />}
+              </>
       ))}
     </View>
   );

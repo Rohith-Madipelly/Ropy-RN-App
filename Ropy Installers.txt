@@ -39,3 +39,8 @@ npx expo install lottie-react-native
 npx expo install expo-location
 
 npx expo install @shopify/flash-list
+
+
+
+
+npx expo install react-native-reanimated
