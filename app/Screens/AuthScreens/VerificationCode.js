@@ -24,7 +24,9 @@ import GlobalStyles from '../../Components/UI/GlobalStyles'
 const VerificationCode = ({ route }) => {
   const { params } = route;
   const Mobile_Number = params?.Mobile_Number || 'nan';
+  const TokenForSetUp = params?.TokenForSetUp || 'nan';
   console.log("Mobile_Number", Mobile_Number)
+  console.log("Mobile_Number", TokenForSetUp)
 
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [errorFormAPI, seterrorFormAPI] = useState("")

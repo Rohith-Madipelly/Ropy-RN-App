@@ -19,9 +19,12 @@ export const UserLoginApi = async (loginFormReq) => {
 
 // Register API  ff
 export const UserRegisterApi = async (loginFormReq) => {
-  return await axios.post(`${GUEST_URL}/register`, loginFormReq)
+  return await axios.post(`${GUEST_URL}/send_register_otp`, loginFormReq)
 }
 
+export const UserRegisterApix = async (loginFormReq) => {
+  return await axios.post(`${GUEST_URL}/register`, loginFormReq)
+}
 //  API  ff
 export const UserProfileSetUpApi = async (loginFormReq, TokenForSetUp) => {
   return await axios.post(`${GUEST_URL}/user/profile`, loginFormReq, {

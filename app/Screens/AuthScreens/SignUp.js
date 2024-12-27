@@ -82,7 +82,9 @@ const SignUp = () => {
           toast.hideAll()
           toast.show(res.data.message)
           setTimeout(() => {
-            { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
+            
+            { navigation.navigate('VerificationCode', { TokenForSetUp: res.data.token,Mobile_Number:values.phoneNumber }); }
+            // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
             setSpinnerbool(false)
           }, 50);
         }
