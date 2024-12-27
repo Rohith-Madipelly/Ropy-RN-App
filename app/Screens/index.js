@@ -31,6 +31,7 @@ import Termsandcondition from './MainScreens/Profile/Termsandcondition';
 import ForgotPassword from './AuthScreens/ForgotPassword';
 import SplashScreen from './SplashScreen/SplashScreen';
 import ProfileSetUp from './AuthScreens/ProfileSetUp';
+import Testing from './Testing';
 
 
 
@@ -132,7 +133,7 @@ export default function Screens() {
         // setUser(loginSelector)
 
       } catch (e) {
-        console.warn("ERROR in index prepare",e);
+        console.warn("ERROR in index prepare", e);
       } finally {
         setAppIsReady(true);
       }
@@ -177,8 +178,6 @@ export default function Screens() {
 
         {!user ? (
           <>
-
-   
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
@@ -189,7 +188,7 @@ export default function Screens() {
             <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} />
           </>) : (
           <>
-          
+            {/* <Stack.Screen name="BottomTabScreen2" component={Testing} /> */}
             <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} />
             <Stack.Screen name="BankdetailsProfile" component={BankdetailsProfile} />
             <Stack.Screen name="Edit_Account" component={Edit_Account} />
@@ -199,7 +198,6 @@ export default function Screens() {
             <Stack.Screen name="Privacypolicy" component={Privacypolicy} />
             <Stack.Screen name="Termsandcondition" component={Termsandcondition} />
 
-            {/* <Stack.Screen name="Demo" component={Hello} /> */}
           </>
         )}
       </Stack.Navigator>

@@ -6,26 +6,29 @@ import CustomToolKitHeader from '../../../Components/UI/CustomToolKitHeader'
 
 import Metrics from '../../../Utils/ResposivesUtils/Metrics'
 import Saved from '../../../assets/Saved'
-import { ADD_SAVED_LOCATION, GET_SAVED_LOCATION } from '../../../ApiCalls'
+import { ADD_SAVED_LOCATION, GET_SAVED_LOCATION, GET_SETTINGS_API } from '../../../ApiCalls'
 import { useSelector } from 'react-redux'
 import { FlashList } from '@shopify/flash-list'
 import { OpenMaps } from '../../../Utils/DeviceHelpers/Linking/OpenMaps'
 import { useToast } from 'react-native-toast-notifications'
 import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../../Components/UI/GlobalStyles'
+import WebView from 'react-native-webview'
 
 
 const Privacypolicy = () => {
   const [spinnerBool, setSpinnerbool] = useState(false)
-  const [savedData, setSavedData] = useState([])
+  const [pageData, setPageData] = useState("")
   let tokenn = useSelector((state) => state.login.token);
   const toast = useToast();
   const ApiCaller = async () => {
     try {
-      const res = await ADD_SAVED_LOCATION(tokenn)
+      const res = await GET_SETTINGS_API()
       if (res.data) {
-        toast.hideAll()
-        toast.show(res.data.message)
+        // console.log("wedbhj", res.data.allSettings)
+        setPageData(res.data.allSettings.privacyPolicy)
+        // toast.hideAll()
+        // toast.show(res.data.message)
       }
     } catch (error) {
       if (error.response) {
@@ -92,7 +95,7 @@ const Privacypolicy = () => {
 
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
-       <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponents
         visible={spinnerBool}
         color={"#4A3AFF"}
@@ -106,7 +109,21 @@ const Privacypolicy = () => {
           // {backgroundColor:'#F7F7F7'}
         ]}>
           <CustomToolKitHeader componentName={"Privacy Policy"} />
-          <View>
+          <View style={{ flex: 1 }}>
+
+            <WebView
+              style={styles.container}
+              originWhitelist={['*']}
+              source={{ html: `${pageData}` }}
+              injectedJavaScript={`
+                        document.body.style.fontSize = '40px';
+                        document.body.style.padding = '30px';
+                        document.body.style.marginBottom = '30px';
+                        document.body.style.lineHeight = '1.6';
+                        true; // Note: This is required for the injected JS to execute properly
+                      `}
+            />
+
 
           </View>
         </View>

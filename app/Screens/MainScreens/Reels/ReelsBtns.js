@@ -37,6 +37,8 @@ import { THEME_COLOR, WHITE_COLOR } from "../../../Utils/AppConts";
 import { ToasterSender } from "../../../Utils/Toaster";
 import { useToast } from "react-native-toast-notifications";
 import LottieView from "lottie-react-native";
+import GiftIcon from "../../../assets/GiftIcon";
+import FloatingButton from "./FloatingButton";
 // import { ToasterSender } from "../utils/Toaster";
 
 const windoWidth = Dimensions.get('window').width
@@ -44,7 +46,7 @@ const windowHeight = Dimensions.get('window').height
 
 
 const ReelsBtns = ({
-
+  gift=false,
   isLiked,
   likes,
   shares,
@@ -52,6 +54,7 @@ const ReelsBtns = ({
   UploaderthumbnailUrl,
   index,
   dateVideoId, urlLink,
+  Data,
   CallBackTOLike
 }) => {
 
@@ -220,7 +223,7 @@ const ReelsBtns = ({
     <View style={{
       position: 'absolute',
       width: windoWidth, height: windowHeight * 0.94,
-      justifyContent:'center',alignItems:"center"
+      justifyContent: 'center', alignItems: "center"
 
     }}>
 
@@ -232,10 +235,21 @@ const ReelsBtns = ({
         style={{
           width: '50%',
           height: '50%',
-          alignSelf:'center'
+          alignSelf: 'center'
         }}
         source={require('../../../assets/LikeH.json')}
       />}
+      <View style={[styles.container, { marginBottom: 50, width: '95%', alignSelf: 'center' }]}>
+
+      {gift &&<View style={{ width: "80%" }}>
+          {/* <TouchableOpacity style={{ maxWidth: Metrics.rfv(40), backgroundColor: '#03C4CB', borderRadius: 15, padding: 10, flexDirection: 'row' }}>
+            <GiftIcon />
+          </TouchableOpacity> */}
+          {/* <Text style={{textAlignVertical:'center',backgroundColor: '#03C4CB',width:'auto'}}>{Data?.description}</Text> */}
+          {Data?.description&&<FloatingButton Data={Data?.description}/>}
+        </View>}
+
+      </View>
 
 
       <View style={[styles.container, { marginBottom: 10, right: 10 }]}>

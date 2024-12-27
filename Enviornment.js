@@ -1,4 +1,4 @@
-export const APP_NAME = "BuyKeys"
+export const APP_NAME = "Ropy"
 //  // AWS SERVER
 export const GUEST_URL = "https://ropy.app"
 export const BASE_URL = "https://ropy.app"

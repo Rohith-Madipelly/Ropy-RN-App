@@ -41,7 +41,10 @@
     "yup": "^1.4.0",
     "@shopify/flash-list": "1.6.4",
     "expo-location": "~17.0.1",
-    "react-native-reanimated": "~3.10.1"
+    "react-native-reanimated": "~3.10.1",
+    "react-native-webview": "13.8.6",
+    "expo-linking": "~6.3.1",
+    "expo-clipboard": "~6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

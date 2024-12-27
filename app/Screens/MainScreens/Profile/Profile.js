@@ -19,6 +19,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { CustomLinking } from '../../../Utils/CustomLinking.js';
 import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar.js';
 import GlobalStyles from '../../../Components/UI/GlobalStyles.js';
+import { OpenPhoneCall } from '../../../Utils/DeviceHelpers/Linking/OpenPhoneCall.js';
+import onShare from '../../../Utils/ShareBtn.js';
 // import Wapper from '../../ShareScreens/Wapper';
 
 
@@ -132,7 +134,7 @@ const Menu = ({ items }) => {
         if (res.data.profile_pic == "") {
 
         } else {
-  
+
         }
       }
     } catch (error) {
@@ -153,7 +155,7 @@ const Menu = ({ items }) => {
     // <Wapper>
 
     <View style={{ flex: 1 }}>
-       <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
+      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <CustomToolKitHeader componentName={"Profile"} />
 
       <View style={styles.container}>
@@ -255,10 +257,15 @@ const Profile = () => {
         { title: 'Privacy policy', onPress: () => navigation.navigate('Privacypolicy') },
         { title: 'Terms and condition', onPress: () => navigation.navigate('Termsandcondition') },
 
-        { title: 'Share app', onPress: () => console.log('Share app') },
+        { title: 'Share app', onPress: () => { onShare("https://play.google.com/store/apps/details?id=com.aits.ropy") }  },
 
-        { title: 'Contact us', onPress: () => console.log('Contact us') },
-        { title: 'Delete Account', onPress: () => console.log('Delete Account') },
+        {
+          title: 'Contact us', onPress: () => {
+            OpenPhoneCall("9951072005")
+            console.log('Contact us')
+          }
+        },
+        { title: 'Delete Account Policy', onPress: () => {}},
       ],
     },
     { title: 'Logout', onPress: () => { LogOutHandle(dispatch); console.log('Logout pressed') } },

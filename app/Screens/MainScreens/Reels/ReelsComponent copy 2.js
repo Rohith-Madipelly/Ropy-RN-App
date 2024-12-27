@@ -4,7 +4,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist'
 // import ReelSingle from './ReelSingle'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Text, View } from 'react-native'
+import { Dimensions, FlatList, Text, View } from 'react-native'
 import { GetVideoByLocationAPI, HomeAPI } from '../../../ApiCalls'
 import ReelSingle from './ReelSingle'
 import * as Location from 'expo-location';
@@ -18,11 +18,12 @@ const ReelsComponent = ({ isReelPage }) => {
     const [spinnerBool, setSpinnerbool] = useState(false)
     const [errorMsg, setErrorMsg] = useState(null);
 
-    const [message,setMessage]=useState("Loading ......")
+    const [message, setMessage] = useState("Loading ......")
     const videoRefs = useRef([]);
     let tokenn = useSelector((state) => state.login.token);
 
 
+    const { height, width } = Dimensions.get("window");
     const toast = useToast();
 
     const GetVideos = async () => {
@@ -40,7 +41,7 @@ const ReelsComponent = ({ isReelPage }) => {
         try {
 
 
-            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude, page, videosCount = 7, tokenn)
+            const res = await GetVideoByLocationAPI(currentLocation?.coords?.latitude, currentLocation?.coords?.longitude, page, videosCount = 20, tokenn)
             if (res.data) {
                 console.log("debgcbd", res.data)
                 var Data = res.data.nearByVideos
@@ -112,30 +113,54 @@ const ReelsComponent = ({ isReelPage }) => {
         setpage(a => a + 1)
         GetVideos()
     };
+
+    const handleScroll = (event) => {
+        const index = Math.round(event.nativeEvent.contentOffset.y / height);
+        videoRefs.current.forEach((video, i) => {
+            if (video) {
+                i === index ? video.playAsync() : video.pauseAsync();
+            }
+        });
+    };
     return (
         <>
-            {videoData && videoData.length > 0 ? <SwiperFlatList
-                vertical={true}
-                data={videoData}
-                onChangeIndex={handleChangeIndexValue}
-                // onMomentumScrollEnd={handleEndReached()}
-                onEndReached={() => { handleEndReached() }}
-                // onEndReachedThreshold={0.1}
-                // loadMinimal
-                loadMinimalSize={10}
-         
-                renderItem={({ item, index }) => (
-                    <ReelSingle 
-                    ref={(ref) => (videoRefs.current[index] = ref)}
-                    item={item} index={index} currentIndex={currentIndex} play={isReelPage} />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                pagingEnabled={true}
-                loop={true}
-                // decelerationRate={0.1}
-                decelerationRate="fast"
-                nestedScrollEnabled={true}
-            /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            {videoData && videoData.length > 0 ? <>
+                {/* <SwiperFlatList
+                    vertical={true}
+                    data={videoData}
+                    onChangeIndex={handleChangeIndexValue}
+                    // onMomentumScrollEnd={handleEndReached()}
+                    onEndReached={() => { handleEndReached() }}
+                    onEndReachedThreshold={0.1}
+                    // loadMinimal
+                    loadMinimalSize={10}
+
+                    renderItem={({ item, index }) => (
+                        <ReelSingle
+                            ref={(ref) => (videoRefs.current[index] = ref)}
+                            item={item} index={index} currentIndex={currentIndex} play={isReelPage} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    pagingEnabled={true}
+                    loop={true}
+                    // decelerationRate={0.1}
+                    decelerationRate="fast"
+                    nestedScrollEnabled={true}
+                /> */}
+
+                <FlatList
+                    data={videoData}
+                    renderItem={({ item, index }) => (
+                        <ReelSingle
+                            ref={(ref) => (videoRefs.current[index] = ref)}
+                            item={item} index={index} currentIndex={currentIndex} play={isReelPage} />
+                    )}
+                    keyExtractor={(item) => item.videoId.toString()}
+                    pagingEnabled
+                    onScroll={handleScroll}
+                    showsVerticalScrollIndicator={false}
+                />
+            </> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontWeight: 700 }}>{message}</Text>
             </View>}
         </>

@@ -12,6 +12,8 @@ import { useToast } from 'react-native-toast-notifications';
 
 import LottieView from "lottie-react-native";
 import Coin from './Coins/Coin';
+import Metrics from '../../../Utils/ResposivesUtils/Metrics';
+import GiftIcon from '../../../assets/GiftIcon';
 // const ReelSingle = ({ item, index, currentIndex, play }) => {
 
 const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, ref) => {
@@ -73,7 +75,7 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
     }, [play])
 
 
-
+    const [gift, setGift] = useState(false);
 
 
 
@@ -135,10 +137,12 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
             const res = await VIDEO_REWARD_API(item.videoId, tokenn)
             if (res.data) {
                 console.log("VIDEO_REWARD_API res ")
+                setGift(true)
                 if (res.status === 200) {
                     toast.hideAll()
                     toast.show(res.data.message)
                     setTrigger(true)
+                    // setGift(true)
 
                     setTimeout(() => {
                         setTrigger(false)
@@ -198,17 +202,13 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
             HitAPi()
         }
 
-        // if(status.durationMillis==status.positionMillis)
-        // {
-        //     HitAPi()
-        //     // Rewarder()
-        // }
-
         if (status.isLoaded && !status.isBuffering) {
             setIsBuffering(false);
         }
     };
 
+
+    // console.log(videoRef.current.props.source.uri)
 
     return (
         <TouchableOpacity
@@ -250,13 +250,15 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
                         onPlaybackStatusUpdate={(status) => onPlaybackStatusUpdate(status)}
 
                     />
-                    {/* <Text>{item.videoId}</Text> */}
+
                     <View>
+
 
 
                         {/* <ReelDescription description={item.description} /> */}
 
                         <ReelsBtns
+                            gift={gift}
                             isLiked={item.userLikedOrNot}
                             // likes={item.likes}
                             shares={item.shares}
@@ -264,6 +266,7 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
                             dateVideoId={item.videoId}
                             // urlLink={`${AWSBaseUrl}/${item.videoUrl}`}
                             urlLink={`${item.videoUrl}`}
+                            Data={item}
                         // UploaderthumbnailUrl="https://ezewin-files.s3.ap-south-1.amazonaws.com/MTU1XzE3MDI0NjU2MTExOThfNjgz.jpeg"
                         // index={currentIndex}
                         />
@@ -271,7 +274,7 @@ const ReelSingle = forwardRef(({ item, isPlaying, play, currentIndex, index }, r
 
                     </View>
 
-                    {trigger&&<View>
+                    {trigger && <View>
                         {coins.map((coin, index) => (
                             <Coin
                                 key={index}

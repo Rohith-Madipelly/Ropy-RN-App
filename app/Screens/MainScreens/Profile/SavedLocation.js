@@ -13,6 +13,7 @@ import { OpenMaps } from '../../../Utils/DeviceHelpers/Linking/OpenMaps'
 import { useToast } from 'react-native-toast-notifications'
 import CustomStatusBar from '../../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../../Components/UI/GlobalStyles'
+import FloatingButton from '../Reels/FloatingButton'
 
 
 const SavedLocation = () => {
@@ -24,6 +25,7 @@ const SavedLocation = () => {
 
 
     const ApiCaller = async () => {
+        console.log("Hgcfdadsa 123")
         try {
             const res = await GET_SAVED_LOCATION(tokenn)
             if (res.data) {
@@ -41,78 +43,78 @@ const SavedLocation = () => {
     }, [])
 
 
-    const RemoveLocation=async(id)=>{
+    const RemoveLocation = async (id) => {
 
         try {
-            const res = await REMOVE_SAVED_LOCATION(id,tokenn)
+            const res = await REMOVE_SAVED_LOCATION(id, tokenn)
             if (res.data) {
                 toast.hideAll()
                 toast.show(res.data.message)
                 setTimeout(() => {
                     ApiCaller()
                 }, 1000);
-    
+
             }
-        }    catch (error) {
+        } catch (error) {
             if (error.response) {
-              console.log(error.response.data.message, "edkjwhghf")
-              if (error.response.status === 400) {
-                console.log("Error With 400.", error.response.data)
+                console.log(error.response.data.message, "edkjwhghf")
+                if (error.response.status === 400) {
+                    console.log("Error With 400.", error.response.data)
 
-              }
-              else if (error.response.status === 401) {
-     
-              }
-              else if (error.response.status === 403) {
-                console.log("error.response.status login", error.response.data.message)
-              }
-              else if (error.response.status === 404) {
-                console.log("dhg", error.response.data.message)
-    
-      
-              }
-              else if (error.response.status === 500) {
-                console.log("Internal Server Error", error.message)
-              }
-              else {
-                console.log("An error occurred response.>>")
+                }
+                else if (error.response.status === 401) {
 
-              }
+                }
+                else if (error.response.status === 403) {
+                    console.log("error.response.status login", error.response.data.message)
+                }
+                else if (error.response.status === 404) {
+                    console.log("dhg", error.response.data.message)
+
+
+                }
+                else if (error.response.status === 500) {
+                    console.log("Internal Server Error", error.message)
+                }
+                else {
+                    console.log("An error occurred response.>>")
+
+                }
             }
             else if (error.code === 'ECONNABORTED') {
-              console.log('Request timed out. Please try again later.');
+                console.log('Request timed out. Please try again later.');
             }
             else if (error.request) {
-              console.log("No Response Received From the Server.")
-              if (error.request.status === 0) {
-                // console.log("error in request ",error.request.status)
-                Alert.alert("No Network Found", "Please Check your Internet Connection")
-              }
+                console.log("No Response Received From the Server.")
+                if (error.request.status === 0) {
+                    // console.log("error in request ",error.request.status)
+                    Alert.alert("No Network Found", "Please Check your Internet Connection")
+                }
             }
-      
+
             else {
-              console.log("Error in Setting up the Request.")
+                console.log("Error in Setting up the Request.")
             }
-      
+
             setSpinnerbool(false)
-      
+
             if (error) {
-      
-              // message = error.message;
-              // seterrorFormAPI(message)
-              // "userEmail or Password does not match !"
+
+                // message = error.message;
+                // seterrorFormAPI(message)
+                // "userEmail or Password does not match !"
             }
-          }
-          finally {
+        }
+        finally {
             // setLoading(false);
             setSpinnerbool(false)
-          }
+        }
     }
 
 
     return (
         <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
-                   <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
+            <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
             <LoaderComponents
                 visible={spinnerBool}
                 color={"#4A3AFF"}
@@ -131,15 +133,17 @@ const SavedLocation = () => {
                         renderItem={({ item, index }) => (
                             <View style={styles.ContentBox} key={index}>
                                 <View style={{ borderRadius: 7, backgroundColor: '#F7F7F7', alignItems: 'center', marginTop: 20, height: Metrics.rfv(95), flexDirection: 'row' }}>
-
-                                    <View style={{ padding: 15, width: '90%' }}>
+                                <View style={{ width: '20%',padding: 15, }}>
+                                        {item?.description&&<FloatingButton Data={item?.description} />}
+                                    </View>
+                                    <View style={{ padding: 15, width: '70%',paddingLeft:1}}>
                                         <Text style={{ color: '#001F2099', fontSize: Metrics.rfv(18), width: '90%' }} numberOfLines={1}>{item.title || 'Reel Name'}</Text>
                                         <TouchableOpacity style={{ marginTop: 5 }}
-                                            onPress={() => { OpenMaps(item.latitude,item.longitude) }}
+                                            onPress={() => { OpenMaps(item.latitude, item.longitude) }}
                                         ><Text style={{ color: '#03C4CB', fontSize: Metrics.rfv(18), textDecorationLine: 'underline', }}>View Location</Text></TouchableOpacity>
                                     </View>
 
-                                    <TouchableOpacity style={{ width: '10%' }} onPress={()=>{RemoveLocation(item.locationId)}}>
+                                    <TouchableOpacity style={{ width: '10%' }} onPress={() => { RemoveLocation(item.locationId) }}>
                                         <Saved />
                                     </TouchableOpacity>
                                 </View>

@@ -42,6 +42,9 @@ export const GetAllInterests_API = async (TokenForSetUp) => {
 }
 
 
+
+
+
 //ADD INTERESTS  ff
 export const ADDINTERESTS_API = async (interestsIds, TokenForSetUp) => {
   return await axios.post(`${GUEST_URL}/user/interests`, { interestsIds }, {
@@ -152,7 +155,7 @@ export const PutLikeAPI = async (dateVideoId, token) => {
 
 //Profile rewarded
 export const VIDEO_REWARD_API = async (videoId, tokenn) => {
-console.log("videoId",videoId)
+  console.log("videoId", videoId)
 
   return await axios.get(`${GUEST_URL}/user/wallet/${videoId}`, {
     headers: {
@@ -163,9 +166,9 @@ console.log("videoId",videoId)
 
 
 // Repost API Call
-export const REPORT_VIDEO_API = async (id,description, token) => {
-  const ReqData={
-    description:description
+export const REPORT_VIDEO_API = async (id, description, token) => {
+  const ReqData = {
+    description: description
   }
   return await axios.post(`${GUEST_URL}/user/report/${id}`,
     ReqData,
@@ -245,8 +248,17 @@ export const REMOVE_SAVED_LOCATION = async (id, token) => {
 
 
 //GET SEttingsAPI
-export const GET_SETTINGS_API = async (id, token) => {
-  return await axios.get(`${GUEST_URL}/user/location/${id}`, {
+export const GET_SETTINGS_API = async () => {
+  return await axios.get(`${GUEST_URL}/settings`);
+};
+
+
+// WITHDRAW
+export const POST_WITHDRAW_API = async (amount, token) => {
+  const reqData = {
+    amount: amount
+  }
+  return await axios.post(`${GUEST_URL}/user/redeem`, reqData, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -255,11 +267,9 @@ export const GET_SETTINGS_API = async (id, token) => {
 
 
 // WITHDRAW
-export const POST_WITHDRAW_API = async (amount, token) => {
-  const reqData={
-    amount:amount
-  }
-  return await axios.post(`${GUEST_URL}/user/redeem`,reqData, {
+export const GET_ALL_WITHDRAWS_API = async (token) => {
+
+  return await axios.get(`${GUEST_URL}/user/withdrawhistory`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -290,17 +300,19 @@ export const UPDATE_PROFILE_PIC_API = async (image, token) => {
 export const UserProfilePicUploadAPI2 = async (data, token) => {
   const formData = new FormData();
 
-  console.log("Test>>",data)
-
 
   formData.append("firstName", data.firstName);
   formData.append("lastName", data.lastName);
   formData.append("dob", data.dob);
   formData.append("age", data.age);
   formData.append("gender", data.gender);
-  formData.append("occupation", data.occupation);
 
-  console.log('FormData:', formData);
+  if (data.occupation == "Other (custom entry)") {
+    formData.append("occupation", data.otherOccupation);
+  } else {
+    formData.append("occupation", data.occupation);
+  }
+
 
 
   return await axios.put(`${GUEST_URL}/user/profile`, formData, {
@@ -328,6 +340,8 @@ export const UPDATE_PROFILE_API = async (user, token) => {
   });
 }
 
+
+// 
 
 
 

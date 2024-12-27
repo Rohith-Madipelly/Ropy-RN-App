@@ -621,19 +621,17 @@ const BankdetailsProfile = () => {
                       onChangeText={(e) => { handleChange("otherOccupation")(e); seterrorFormAPI(); }}
                       onBlur={handleBlur("otherOccupation")}
 
-
+                      
                       validate={handleBlur("otherOccupation")}
 
                       outlined
-
                       borderColor={`${(errors.otherOccupation && touched.otherOccupation) || (errorFormAPI && errorFormAPI.otherOccupationForm) ? "red" : "#48484A"}`}
-
                       errorMessage={`${(errors.otherOccupation && touched.otherOccupation) ? `${errors.otherOccupation}` : (errorFormAPI && errorFormAPI.otherOccupationForm) ? `${errorFormAPI.otherOccupationForm}` : ``}`}
-
                     // errorColor='magenta'
+                   
                     /> : ""}
 
-<Text>{errors.otherOccupation}</Text>
+                  <Text>{errors.otherOccupation}</Text>
 
 
 

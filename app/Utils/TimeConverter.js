@@ -19,7 +19,17 @@ export const formatTo12Hour = (isoDate) => {
     };
     return date.toLocaleString("en-US", options);
   };
+ 
 
+  export const formatToReadableOnlyDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return date.toLocaleString("en-US", options);
+  };
 
 
   export const formatToReadableDate = (isoDate) => {
@@ -56,7 +66,7 @@ export const formatTo12Hour = (isoDate) => {
   };
   
 
-
+ 
 // For DD/MM/YYYY
 export const formatToReadableDateDDMMYYYY2 = (isoDate) => {
   const date = new Date(isoDate);
