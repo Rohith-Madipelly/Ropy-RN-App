@@ -43,7 +43,7 @@ const SignUp = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { phoneNumber: "", password: "", retypePassword: "" },
+    initialValues: {email:"", phoneNumber: "", password: "", retypePassword: "" },
 
     onSubmit: values => {
       { submitHandler(values) }
@@ -59,21 +59,11 @@ const SignUp = () => {
   });
 
 
-  // const submitHandlerw = async (values) => {
-  //   console.log("values ", values)
-  //   setTimeout(() => {
-  //     { navigation.navigate('VerificationCode', { phoneNumber: values.phoneNumber, password: "", retypePassword: "" }); }
-  //     setSpinnerbool(false)
-  //   }, 50);
-
-  // }
-
-
 
   const submitHandler = async (values) => {
-    console.log("uytfvbnm")
+
     if (isChecked) {
-      console.log("values ", values)
+
       try {
         setSpinnerbool(true)
         const res = await UserRegisterApi(values)
@@ -82,8 +72,8 @@ const SignUp = () => {
           toast.hideAll()
           toast.show(res.data.message)
           setTimeout(() => {
-            
-            { navigation.navigate('VerificationCode', { TokenForSetUp: res.data.token,Mobile_Number:values.phoneNumber }); }
+
+            { navigation.navigate('VerificationCode', { TokenForSetUp: res.data.token, Mobile_Number: values.phoneNumber,email:values.email }); }
             // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
             setSpinnerbool(false)
           }, 50);
@@ -94,7 +84,12 @@ const SignUp = () => {
         if (error.response) {
           if (error.response.status === 400) {
             console.log("Error With 400.", error.response.data)
-            seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+            if(error.response.data.message="Email already exists"){
+              seterrorFormAPI({ emailForm: `${error.response.data.message}` })
+            }
+            else{
+              seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+            }
           }
           else if (error.response.status === 401) {
             seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
@@ -178,9 +173,9 @@ const SignUp = () => {
           </View>
           <View style={styles.ContentBox}>
             <View style={{ marginLeft: 10 }}>
-              <TitleComponent TitleName="Phone Number Verification"></TitleComponent>
-              <CustomSpan TextLine='Enter your Phone number below.'></CustomSpan>
-              <CustomSpan TextLine='We will send a 4 digit verification code to verify your Phone number.'></CustomSpan>
+              <TitleComponent TitleName="Email Verification"></TitleComponent>
+              <CustomSpan TextLine='Enter your email below.'></CustomSpan>
+              <CustomSpan TextLine='We will send a 4 digit verification code to verify your email.'></CustomSpan>
             </View>
 
 
@@ -195,6 +190,25 @@ const SignUp = () => {
 
 
 
+                  <CustomTextInput2
+                    boxWidth={'95%'}
+                    label={'Email address'}
+                    placeholder={'Enter email address'}
+                    name='email'
+                    value={values.email}
+                    // bgColor='#e1f3f8'
+                    // bgColor="#B1B1B0"
+                    onChangeText={(e) => { const eToLowerCaseText = e.toLowerCase(); handleChange("email")(eToLowerCaseText); seterrorFormAPI(); }}
+                    onBlur={handleBlur("email")}
+                    // validate={handleBlur("email")}
+
+                    outlined
+                    // bgColor={'#F6F8FE'}
+                    borderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
+                    errorMessage={`${(errors.email && touched.email) ? `${errors.email}` : (errorFormAPI && errorFormAPI.emailForm) ? `${errorFormAPI.emailForm}` : ``}`}
+                  // errorColor='magenta'
+                  bgColor={'#F6F8FE'}
+                  />
 
                   <CustomTextInput2
                     boxWidth={'95%'}
@@ -208,19 +222,11 @@ const SignUp = () => {
                       const numericValue = e.replace(/[^0-9]/g, '');
                       // Update the state with the numeric value
                       const Only10digits = numericValue.slice(0, 10);
-                      // handleChange("phoneNumber")(Only10digits);
-
                       seterrorFormAPI()
-                      // if (Only10digits[0] < 6) {
-                      //   seterrorFormAPI({ phoneNumber: "Mobile number must start with 6, 7, 8, or 9" })
-                      // }
                       handleChange("phoneNumber")(Only10digits);
-
-
                     }}
                     onBlur={handleBlur("phoneNumber")}
                     // validate={handleBlur("phoneNumber")}
-
                     eyboardType="numeric"
                     borderColor={`${(errors.phoneNumber) || (errorFormAPI && errorFormAPI.phoneNumberForm) ? "red" : "#48484A"}`}
                     errorMessage={`${(errors.phoneNumber) ? `${errors.phoneNumber}` : (errorFormAPI && errorFormAPI.phoneNumberForm) ? `${errorFormAPI.phoneNumberForm}` : ``}`}
@@ -262,7 +268,7 @@ const SignUp = () => {
 
                   <CustomTextInput2
                     boxWidth={'95%'}
-                    style={{ marginTop: 10 }}
+                    style={{ marginTop: 5 }}
                     placeholder={'Re-enter password'}
                     label={'Re-enter password'}
                     name='Retype Password'

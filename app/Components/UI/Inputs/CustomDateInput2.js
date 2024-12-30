@@ -40,33 +40,11 @@ const CustomTextInput2 = ({
     disabled = false,
 }) => {
 
-
     const containerBorder = outlined ? styles.outlined : styles.standard;
     const [date, setDate] = useState(value); // Initialize date state with the provided value
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState("date");
 
-    const [DateX, setDateX] = useState()
-    const [MonthX, setMonthX] = useState()
-    const [YearX, setYearX] = useState()
-
-    useEffect(() => {
-        console.log("c", value)
-        if (value) {
-            console.log("kkkk", date instanceof Date)
-            if (date instanceof Date) {
-
-            } else {
-                const parseDate = (date) => {
-                    const [day, month, year] = date.split(/[-/]/).map(Number);
-                    return new Date(year, month - 1, day); // month is 0-based
-                };
-
-                setDateX(parseDate(value))
-            }
-        }
-
-    }, [value])
 
     const backgroundColor = bgColor || 'white';
     // const containerBorder = outlined ? styles.outlined : styles.standard;
@@ -87,14 +65,39 @@ const CustomTextInput2 = ({
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         // setShow(Platform.OS === 'ios');
-        if (Platform.OS === 'ios') {
+        if(Platform.OS === 'ios'){
 
-        } else {
+        }else{
             setShow(false)
         }
         setDate(currentDate);
-        onChangeText(formatToReadableDateDDMMYYYY(currentDate));
+        // console.log("currentDate",formatToReadableDateDDMMYYYY(currentDate))
+        // // onChangeText(currentDate.toLocaleDateString()); // Pass the formatted date to onChangeText
+        onChangeText(formatToReadableDateDDMMYYYY(currentDate)); // Pass the formatted date to onChangeText
     };
+
+    const showMode = (modeToShow) => {
+        // setShow(true);
+        setMode(modeToShow);
+    };
+
+
+
+    const DateForm = (input) => {
+        if (!isNaN(Date.parse(input))) {
+
+            console.log(new Date(input).toLocaleDateString());
+            return new Date(input).toLocaleDateString()
+        } else {
+            console.log('none');
+            return input
+        }
+
+
+    }
+
+
+    console.log("date", date)
 
 
 
@@ -124,10 +127,10 @@ const CustomTextInput2 = ({
                 style={[styles.container, containerBorder, { borderColor: borderColor }, { backgroundColor: backgroundColor }]}>
 
                 <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'flex-start', alignItems: "flex-start" }}>
-                    {Platform.OS == "ios" ? (
+                {Platform.OS == "ios" ? (
                         <DateTimePicker
                             style={{}}
-                            value={DateX || new Date()} // Pass date or current date if not provided
+                            value={date || new Date()} // Pass date or current date if not provided
                             mode={mode}
                             // display={"spinner"}
                             display={"compact"}
@@ -141,7 +144,7 @@ const CustomTextInput2 = ({
                         {show ?
                             <DateTimePicker
                                 style={{}}
-                                value={DateX || new Date()} // Pass date or current date if not provided
+                                value={date || new Date()} // Pass date or current date if not provided
                                 mode={mode}
                                 // display={"spinner"}
                                 display={"compact"}
@@ -150,17 +153,17 @@ const CustomTextInput2 = ({
                                 minimumDate={minimumDate}
                                 maximumDate={maximumDate}
                                 onChange={onChange}
-                            /> : <TextInput
-                                placeholder={placeholder ? placeholder : label ? `Enter ${label}` : ''}
-                                value={value}
-                                onChangeText={(e) => {
-                                    onChangeText(e); // Pass the formatted text back
-                                }}
-                                ellipsizeMode="tail" // Adds ellipsis at the end
-                                editable={false}
-                                style={{ flex: 1, height: '80%', paddingStart: 5 }}
-
-                            />}
+                            /> :    <TextInput
+                            placeholder={placeholder ? placeholder : label ? `Enter ${label}` : ''}
+                            value={value}
+                            onChangeText={(e) => {
+                                onChangeText(e); // Pass the formatted text back
+                            }}
+                            ellipsizeMode="tail" // Adds ellipsis at the end
+                            editable={false}
+                            style={{ flex: 1, height: '80%',paddingStart:5 }}
+        
+                        />}
                     </>}
                 </View>
                 <View style={{ paddingLeft: 5 }}>

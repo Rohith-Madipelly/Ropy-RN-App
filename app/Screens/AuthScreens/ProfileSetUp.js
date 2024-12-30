@@ -50,7 +50,8 @@ const ProfileSetUp = ({ route }) => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { firstName: "Rohith", lastName: "madipelly", email: "madipellyrohith@gmail.com", dob: "13/02/2001", age: "23", gender: "", occupation: "", otherOccupation: "" },
+    // initialValues: { firstName: "Rohith", lastName: "madipelly", email: "madipellyrohith@gmail.com", dob: "13/02/2001", age: "23", gender: "", occupation: "", otherOccupation: "" },
+    initialValues: { firstName: "", lastName: "", email: "", dob: "", age: "", gender: "", occupation: "", otherOccupation: "" },
     // initialValues: {firstName:"Rohith",lastName:"madipell",email:"",dob:"",age:"",gender:"", occupation:"",otherOccupation:""},
 
     onSubmit: values => {

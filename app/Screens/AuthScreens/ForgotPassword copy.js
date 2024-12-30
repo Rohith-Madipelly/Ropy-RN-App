@@ -1,4 +1,4 @@
-import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import StatusBarComponent from '../../Components/StatusBar/StatusBarComponent'
 import LoaderComponent from '../../Components/Loaders/LoaderComponents'
@@ -15,9 +15,6 @@ import CustomSpan from '../../Components/UI/TextUI/CustomSpan'
 import { PhoneNumberValidation } from '../../FormikYupSchema/PhoneNumberValidation'
 import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../Components/UI/GlobalStyles'
-import { useToast } from 'react-native-toast-notifications'
-import { FORGOT_PASSWORD_API, Verify_Register_otp_API } from '../../ApiCalls'
-import { EmailYupSchema } from '../../FormikYupSchema/EmailYupSchema'
 
 
 
@@ -42,13 +39,13 @@ const ForgotPassword = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { Mobile_Number: "" },
+    initialValues: {  Mobile_Number: ""},
 
     onSubmit: values => {
       { submitHandler(values) }
     },
 
-    validationSchema: EmailYupSchema,
+    validationSchema: PhoneNumberValidation,
 
     validate: values => {
       const errors = {};
@@ -57,83 +54,13 @@ const ForgotPassword = () => {
 
   });
 
-  const toast = useToast();
+
   const submitHandler = async (values) => {
-    console.log("fsd ..", values)
-    try {
-      setSpinnerbool(true)
-      const res = await FORGOT_PASSWORD_API(values)
-      if (res.data) {
-        console.log("fds", res.data)
-        toast.hideAll()
-        toast.show(res.data.message)
-        setTimeout(() => {
-          { navigation.navigate('VerificationCodeForgot', { TokenForSetUp: res.data.token, Mobile_Number: values.phoneNumber, email: values.email }); }
-          // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
-          setSpinnerbool(false)
-        }, 50);
-      }
-    }
-
-    catch (error) {
-      if (error.response) {
-        if (error.response.status === 400) {
-          console.log("Error With 400.", error.response.data)
-          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
-        }
-        else if (error.response.status === 401) {
-          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
-        }
-        else if (error.response.status === 403) {
-          console.log("error.response.status login", error.response.data.message)
-        }
-        else if (error.response.status === 404) {
-          console.log("dhg", error.response.data.message)
-          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
-
-        }
-        else if (error.response.status === 406) {
-          console.log("dhg", error.response.data.message)
-          seterrorFormAPI({ emailForm: `${error.response.data.message}` })
-
-        }
-        else if (error.response.status === 500) {
-          console.log("Internal Server Error", error.message)
-        }
-        else {
-          console.log("An error occurred response.>>", error.response.data.message)
-          // ErrorResPrinter(`${error.message}`)
-        }
-      }
-      else if (error.code === 'ECONNABORTED') {
-        console.log('Request timed out. Please try again later.');
-      }
-      else if (error.request) {
-        console.log("No Response Received From the Server.")
-        if (error.request.status === 0) {
-          // console.log("error in request ",error.request.status)
-          Alert.alert("No Network Found", "Please Check your Internet Connection")
-        }
-      }
-
-      else {
-        console.log("Error in Setting up the Request.",error)
-      }
-
+    console.log("values ", values)
+    setTimeout(() => {
+      { navigation.navigate('VerificationCode', { Mobile_Number: values.Mobile_Number }); }
       setSpinnerbool(false)
-
-      if (error) {
-
-        // message = error.message;
-        // seterrorFormAPI(message)
-        // "userEmail or Password does not match !"
-      }
-    }
-    finally {
-      // setLoading(false);
-      setSpinnerbool(false)
-    }
-
+    }, 50);
 
   }
 
@@ -165,9 +92,9 @@ const ForgotPassword = () => {
           </View>
           <View style={styles.ContentBox}>
             <View style={{ marginLeft: 10 }}>
-              <TitleComponent TitleName="Forgot password ?"></TitleComponent>
-              <CustomSpan TextLine='Enter your email below.'></CustomSpan>
-              <CustomSpan TextLine='We will send a 4 digit verification code to verify your email.'></CustomSpan>
+              <TitleComponent TitleName="Phone Number Verification"></TitleComponent>
+              <CustomSpan TextLine='Enter your Phone number below.'></CustomSpan>
+              <CustomSpan TextLine='We will send a 4 digit verification code to verify your Phone number.'></CustomSpan>
             </View>
 
 
@@ -181,30 +108,9 @@ const ForgotPassword = () => {
                 >
 
 
+
+
                   <CustomTextInput2
-                    boxWidth={'95%'}
-                    label={'Email address'}
-                    placeholder={'Enter email address'}
-                    name='email'
-                    value={values.email}
-                    // bgColor='#e1f3f8'
-                    // bgColor="#B1B1B0"
-
-                    onChangeText={(e) => { const eToLowerCaseText = e.toLowerCase(); handleChange("email")(eToLowerCaseText); seterrorFormAPI(); }}
-                    onBlur={handleBlur("email")}
-                    // validate={handleBlur("email")}
-
-                    outlined
-                    // bgColor={'#F6F8FE'}
-                    borderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.email && touched.email) ? `${errors.email}` : (errorFormAPI && errorFormAPI.emailForm) ? `${errorFormAPI.emailForm}` : ``}`}
-                  // errorColor='magenta'
-                  />
-
-
-
-
-                  {/* <CustomTextInput2
                     boxWidth={'95%'}
                     placeholder={'Mobile Number'}
                     label={'Mobile Number'}
@@ -216,7 +122,15 @@ const ForgotPassword = () => {
                       const numericValue = e.replace(/[^0-9]/g, '');
                       // Update the state with the numeric value
                       const Only10digits = numericValue.slice(0, 10);
+                      // handleChange("Mobile_Number")(Only10digits);
+
+                      // seterrorFormAPI({ Mobile_Number: "" })
+                      // if (Only10digits[0] < 6) {
+                      //   seterrorFormAPI({ Mobile_Number: "Mobile number must start with 6, 7, 8, or 9" })
+                      // }
                       handleChange("Mobile_Number")(Only10digits);
+
+
                     }}
                     onBlur={handleBlur("Mobile_Number")}
                     // validate={handleBlur("Mobile_Number")}
@@ -227,7 +141,7 @@ const ForgotPassword = () => {
                     // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}
-                  /> */}
+                  />
 
                 </KeyboardAvoidingView>
               </TouchableWithoutFeedback>

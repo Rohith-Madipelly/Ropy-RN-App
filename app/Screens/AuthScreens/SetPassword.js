@@ -8,29 +8,33 @@ import CustomTextInput2 from '../../Components/UI/Inputs/CustomTextInput2'
 
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 
+import { LoginYupSchema } from '../../FormikYupSchema/LoginYupSchema'
 import { useFormik } from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton1 from '../../Components/UI/Buttons/CustomButton1'
-import CustomSpan from '../../Components/UI/TextUI/CustomSpan'
-import { PhoneNumberValidation } from '../../FormikYupSchema/PhoneNumberValidation'
+import { PasswordYupSchema } from '../../FormikYupSchema/PasswordYupSchema'
 import CustomCheckBox from '../../Components/UI/Inputs/CustomCheckBox'
-import { UserLoginApi, UserRegisterApi } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
-import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
-import GlobalStyles from '../../Components/UI/GlobalStyles'
+import { UPDATE_PASSWORD_API, Verify_FORGET_otp_API } from '../../ApiCalls'
 
 
 
 
-const SignUp = () => {
+const SetPassword = ({ route }) => {
+
+  const { params } = route;
+  const TokenForSetUp = params?.TokenForSetUp || '';
+
+  console.log(TokenForSetUp, "TokenForSetUp")
+
+
   const [spinnerBool, setSpinnerbool] = useState(false)
   const [show, setShow] = useState()
   const [errorFormAPI, seterrorFormAPI] = useState("")
-
+  const [isChecked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [isChecked, setChecked] = useState(false);
-  const toast = useToast();
+
   const {
     handleChange,
     handleBlur,
@@ -43,13 +47,14 @@ const SignUp = () => {
     setValues,
     resetForm,
   } = useFormik({
-    initialValues: { phoneNumber: "", password: "", retypePassword: "" },
+    // initialValues: { password: "Rohith@7", retypePassword: "Rohith@7" },
+    initialValues: { password: "", retypePassword: "" },
 
     onSubmit: values => {
       { submitHandler(values) }
     },
 
-    validationSchema: PhoneNumberValidation,
+    validationSchema: PasswordYupSchema,
 
     validate: values => {
       const errors = {};
@@ -59,31 +64,23 @@ const SignUp = () => {
   });
 
 
-  // const submitHandlerw = async (values) => {
-  //   console.log("values ", values)
-  //   setTimeout(() => {
-  //     { navigation.navigate('VerificationCode', { phoneNumber: values.phoneNumber, password: "", retypePassword: "" }); }
-  //     setSpinnerbool(false)
-  //   }, 50);
-
-  // }
 
 
+  const toast = useToast();
 
   const submitHandler = async (values) => {
-    console.log("uytfvbnm")
-    if (isChecked) {
-      console.log("values ", values)
+
+
+      console.log("values ", values,"TokenForSetUp",TokenForSetUp)
       try {
         setSpinnerbool(true)
-        const res = await UserRegisterApi(values)
+        const res = await UPDATE_PASSWORD_API(values,TokenForSetUp)
         if (res.data) {
           console.log("fds", res.data)
           toast.hideAll()
           toast.show(res.data.message)
           setTimeout(() => {
-            
-            { navigation.navigate('VerificationCode', { TokenForSetUp: res.data.token,Mobile_Number:values.phoneNumber }); }
+            { navigation.navigate('Login', { TokenForSetUp: res.data.token, }); }
             // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
             setSpinnerbool(false)
           }, 50);
@@ -94,25 +91,35 @@ const SignUp = () => {
         if (error.response) {
           if (error.response.status === 400) {
             console.log("Error With 400.", error.response.data)
-            seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+            if(error.response.data.message="Email already exists"){
+              seterrorFormAPI({ otp: `${error.response.data.message}` })
+            }
+            else{
+              seterrorFormAPI({ otp: `${error.response.data.message}` })
+            }
           }
           else if (error.response.status === 401) {
-            seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
           }
           else if (error.response.status === 403) {
             console.log("error.response.status login", error.response.data.message)
           }
           else if (error.response.status === 404) {
             console.log("dhg", error.response.data.message)
-            seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
+
+          }
+          else if (error.response.status === 406) {
+            console.log("dhg", error.response.data.message)
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
 
           }
           else if (error.response.status === 500) {
             console.log("Internal Server Error", error.message)
           }
           else {
-            console.log("An error occurred response.>>")
-            ErrorResPrinter(`${error.message}`)
+            console.log("An error occurred response.>>",error.response.data.message)
+            // ErrorResPrinter(`${error.message}`)
           }
         }
         else if (error.code === 'ECONNABORTED') {
@@ -145,14 +152,9 @@ const SignUp = () => {
       }
 
 
-    } else {
-      Alert.alert("Please Select the Terms and Conditions")
-    }
   }
-
   return (
     <StatusBarComponent barStyle='dark-content' barBackgroundColor='white'>
-      <CustomStatusBar barStyle={GlobalStyles.AuthScreenStatusBar1.barStyle} backgroundColor={GlobalStyles.AuthScreenStatusBar1.color} />
       <LoaderComponent
         visible={spinnerBool}
         color={"#4A3AFF"}
@@ -178,9 +180,7 @@ const SignUp = () => {
           </View>
           <View style={styles.ContentBox}>
             <View style={{ marginLeft: 10 }}>
-              <TitleComponent TitleName="Phone Number Verification"></TitleComponent>
-              <CustomSpan TextLine='Enter your Phone number below.'></CustomSpan>
-              <CustomSpan TextLine='We will send a 4 digit verification code to verify your Phone number.'></CustomSpan>
+              <TitleComponent TitleName="Set Password"></TitleComponent>
             </View>
 
 
@@ -194,40 +194,26 @@ const SignUp = () => {
                 >
 
 
-
-
-                  <CustomTextInput2
+                  {/* <CustomTextInput2
                     boxWidth={'95%'}
-                    placeholder={'Mobile Number'}
-                    label={'Mobile Number'}
-                    name='phoneNumber'
-                    keyboardType={'phone-pad'}
-                    value={values.phoneNumber}
-                    onChangeText={(e) => {
-                      // Remove any non-numeric characters
-                      const numericValue = e.replace(/[^0-9]/g, '');
-                      // Update the state with the numeric value
-                      const Only10digits = numericValue.slice(0, 10);
-                      // handleChange("phoneNumber")(Only10digits);
+                    label={'Email address'}
+                    placeholder={'Enter email address'}
+                    name='email'
+                    value={values.email}
+                    // bgColor='#e1f3f8'
+                    // bgColor="#B1B1B0"
 
-                      seterrorFormAPI()
-                      // if (Only10digits[0] < 6) {
-                      //   seterrorFormAPI({ phoneNumber: "Mobile number must start with 6, 7, 8, or 9" })
-                      // }
-                      handleChange("phoneNumber")(Only10digits);
+                    onChangeText={(e) => { const eToLowerCaseText = e.toLowerCase(); handleChange("email")(eToLowerCaseText); seterrorFormAPI(); }}
+                    onBlur={handleBlur("email")}
+                    // validate={handleBlur("email")}
 
-
-                    }}
-                    onBlur={handleBlur("phoneNumber")}
-                    // validate={handleBlur("phoneNumber")}
-
-                    eyboardType="numeric"
-                    borderColor={`${(errors.phoneNumber) || (errorFormAPI && errorFormAPI.phoneNumberForm) ? "red" : "#48484A"}`}
-                    errorMessage={`${(errors.phoneNumber) ? `${errors.phoneNumber}` : (errorFormAPI && errorFormAPI.phoneNumberForm) ? `${errorFormAPI.phoneNumberForm}` : ``}`}
-                    // errorColor='magenta'
                     outlined
                     bgColor={'#F6F8FE'}
-                  />
+                    borderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
+                    errorMessage={`${(errors.email && touched.email) ? `${errors.email}` : (errorFormAPI && errorFormAPI.emailForm) ? `${errorFormAPI.emailForm}` : ``}`}
+                  // errorColor='magenta'
+                  /> */}
+
 
                   <CustomTextInput2
                     boxWidth={'95%'}
@@ -235,11 +221,10 @@ const SignUp = () => {
                     label={'Password'}
                     name='Password'
                     value={values.password}
-                    // leftIcon={<Entypo name="lock" size={20} color="black" />}
+                    leftIcon={<Entypo name="lock" size={20} color="black" />}
                     // bgColor='#e1f3f8'
                     onChangeText={(e) => {
                       handleChange("password")(e); seterrorFormAPI();
-                      seterrorFormAPI()
                       // setShow({ ...setShow, password: false });
                     }}
                     onBlur={handleBlur("password")}
@@ -260,6 +245,7 @@ const SignUp = () => {
                     bgColor={'#F6F8FE'}
                   />
 
+
                   <CustomTextInput2
                     boxWidth={'95%'}
                     style={{ marginTop: 10 }}
@@ -267,13 +253,12 @@ const SignUp = () => {
                     label={'Re-enter password'}
                     name='Retype Password'
                     value={values.retypePassword}
-                    // leftIcon={<Entypo name="lock" size={20} color="black" />}
+                    leftIcon={<Entypo name="lock" size={20} color="black" />}
                     // bgColor='#e1f3f8'
 
 
                     onChangeText={(e) => {
                       handleChange("retypePassword")(e); seterrorFormAPI();
-                      seterrorFormAPI()
                       //  setShow({ ...setShow, password: false }); 
                     }}
                     onBlur={handleBlur("retypePassword")}
@@ -298,30 +283,32 @@ const SignUp = () => {
                     bgColor={'#F6F8FE'}
                   />
 
-                  <CustomCheckBox
-                    // value={values.iAgree}
-                    value={isChecked}
-                    // onBlur={handleBlur("iAgree")}             
-                    boxWidth={'95%'}
-                    content={<Text>I agree to the Terms and Conditions or Privacy Policy.</Text>}
-                    // asterisksymbol
-                    // validate={handleBlur("iAgree")}
-                    onValueChange={setChecked}
-                  // CheckboxborderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
-
-                  // CheckboxborderColor={`${(errors.iAgree && touched.iAgree) || (errorFormAPI && errorFormAPI.iAgreeForm) ? "red" : "#4A3AFF"}`}
-                  // errorMessage={`${(errors.iAgree && touched.iAgree) ? `${errors.iAgree}` : (errorFormAPI && errorFormAPI.iAgreeForm) ? `${errorFormAPI.iAgreeForm}` : ``}`}
-
-                  // errorColor='magenta'
-                  />
-
                 </KeyboardAvoidingView>
               </TouchableWithoutFeedback>
             </View>
 
+            <View style={{ marginLeft: 5 }}>
+
+              <CustomCheckBox
+                // value={values.iAgree}
+                value={isChecked}
+                // onBlur={handleBlur("iAgree")}             
+                boxWidth={'95%'}
+                content={<Text>I agree to the Terms and Conditions or Privacy Policy.</Text>}
+                // asterisksymbol
+                // validate={handleBlur("iAgree")}
+                onValueChange={setChecked}
+              // CheckboxborderColor={`${(errors.email && touched.email) || (errorFormAPI && errorFormAPI.emailForm) ? "red" : "#48484A"}`}
+
+              // CheckboxborderColor={`${(errors.iAgree && touched.iAgree) || (errorFormAPI && errorFormAPI.iAgreeForm) ? "red" : "#4A3AFF"}`}
+              // errorMessage={`${(errors.iAgree && touched.iAgree) ? `${errors.iAgree}` : (errorFormAPI && errorFormAPI.iAgreeForm) ? `${errorFormAPI.iAgreeForm}` : ``}`}
+
+              // errorColor='magenta'
+              />
+
+            </View>
+
             <View style={{ alignItems: 'center', flex: 0.5 }}>
-
-
               <CustomButton1
                 boxWidth={'95%'}
                 // onPress={()=>{navigation.navigate("EmailVerification")}}
@@ -332,12 +319,9 @@ const SignUp = () => {
                 //   name={'login'} size={18} color={'white'} />}
                 //  bgColor={`${!isValid ? "rgba(220, 142, 128, 0.9)" : "rgba(242, 142, 128, 1)"}`}
                 bgColor={'#03C4CB'}
-                style={{ marginTop: 50 }}>Next</CustomButton1>
+                style={{ marginTop: 50 }}>SignUp</CustomButton1>
 
 
-              <View style={{ marginTop: 20, flex: 1, flexDirection: 'row' }}>
-                <Text style={[styles.paragraphy, { color: 'black', fontWeight: '400' }]}>Already have an account? </Text><TouchableOpacity onPress={() => { navigation.navigate("Login") }} style={{}}><Text style={[styles.paragraphy, { color: '#03C4CB', fontWeight: '500' }]}> Log In</Text></TouchableOpacity>
-              </View>
 
             </View>
           </View>
@@ -349,7 +333,7 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default SetPassword
 const styles = StyleSheet.create({
   container: {
     flex: 1,

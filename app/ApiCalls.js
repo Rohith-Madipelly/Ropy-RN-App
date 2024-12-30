@@ -33,8 +33,64 @@ export const UserProfileSetUpApi = async (loginFormReq, TokenForSetUp) => {
     }
   })
 }
+// VERIFY REGISTER OTP
+export const Verify_Register_otp_API = async (loginFormReq, TokenForSetUp) => {
+  const formData={
+    OTP:loginFormReq.otp
+  }
+  return await axios.post(`${GUEST_URL}/user/verify_register_otp`, formData, {
+    headers: {
+      'Authorization': `Bearer ${TokenForSetUp}`
+    }
+  })
+}
 
 
+// FORGOT PASSWORD
+export const FORGOT_PASSWORD_API = async (loginFormReq, ) => {
+  const formData={
+    email:loginFormReq.email
+  }
+  return await axios.post(`${GUEST_URL}/forgot`, formData)
+}
+
+
+// VERIFY REGISTER OTP FORGET
+export const Verify_FORGET_otp_API = async (loginFormReq, TokenForSetUp) => {
+  const formData={
+    otp:loginFormReq.otp
+  }
+  return await axios.post(`${GUEST_URL}/user/otp`, formData, {
+    headers: {
+      'Authorization': `Bearer ${TokenForSetUp}`
+    }
+  })
+}
+
+
+// VERIFY REGISTER OTP FORGET
+export const RESEND_FORGET_otp_API = async (TokenForSetUp) => {
+
+  return await axios.get(`${GUEST_URL}/user/resend`,{
+    headers: {
+      'Authorization': `Bearer ${TokenForSetUp}`
+    }
+  })
+}
+
+// VERIFY REGISTER OTP FORGET
+export const UPDATE_PASSWORD_API = async (loginFormReq, TokenForSetUp) => {
+
+  console.log("cfhvje",TokenForSetUp)
+  const formData={
+    password:loginFormReq.password
+  }
+  return await axios.post(`${GUEST_URL}/user/changepassword`, formData, {
+    headers: {
+      'Authorization': `Bearer ${TokenForSetUp}`
+    }
+  })
+}
 //  API  ff
 export const GetAllInterests_API = async (TokenForSetUp) => {
   return await axios.get(`${GUEST_URL}/user/interests`, {

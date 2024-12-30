@@ -17,18 +17,18 @@ import { otpValidationSchema } from '../../FormikYupSchema/OtpValidationSchema'
 import OtpInput from '../../Components/Functionality/OTP/OtpInput 4digits'
 import CustomStatusBar from '../../Components/UI/StatusBar/CustomStatusBar'
 import GlobalStyles from '../../Components/UI/GlobalStyles'
-import { RESEND_FORGET_otp_API, UserRegisterApi, Verify_Register_otp_API } from '../../ApiCalls'
+import { RESEND_FORGET_otp_API, UserRegisterApi, Verify_FORGET_otp_API, Verify_Register_otp_API } from '../../ApiCalls'
 import { useToast } from 'react-native-toast-notifications'
 
 
 
 
-const VerificationCode = ({ route }) => {
+const VerificationCodeForgot = ({ route }) => {
   const { params } = route;
   const Mobile_Number = params?.Mobile_Number || 'nan';
   const TokenForSetUp = params?.TokenForSetUp || 'nan';
 
-  const emailToken = params?.email || 'nan'
+  const emailToken=params?.email || 'nan'
   console.log("Mobile_Number", Mobile_Number)
   console.log("Mobile_Number", TokenForSetUp)
 
@@ -61,6 +61,15 @@ const VerificationCode = ({ route }) => {
     return () => clearInterval(interval); // Clean up the interval on component unmount
   }, [isResendDisabled]);
 
+  // const ResendCode = () => {
+  //   // Logic for resending OTP
+  //   console.log('OTP Resent');
+
+  //   // Reset the timer and disable resend button
+  //   setTimer(60);
+  //   setIsResendDisabled(true);
+  // };
+
 
   const {
     handleChange,
@@ -91,94 +100,93 @@ const VerificationCode = ({ route }) => {
   const toast = useToast();
 
   const submitHandler = async (values) => {
-    console.log("uytfvbnm", values)
 
-    console.log("values ", values)
-    try {
-      setSpinnerbool(true)
-      const res = await Verify_Register_otp_API(values, TokenForSetUp)
-      if (res.data) {
-        console.log("fds", res.data)
-        toast.hideAll()
-        toast.show(res.data.message)
-        setTimeout(() => {
-          { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token, }); }
-          // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
-          setSpinnerbool(false)
-        }, 50);
+
+      console.log("values ", values)
+      try {
+        setSpinnerbool(true)
+        const res = await Verify_FORGET_otp_API(values,TokenForSetUp)
+        if (res.data) {
+          console.log("fds", res.data)
+          toast.hideAll()
+          toast.show(res.data.message)
+          setTimeout(() => {
+            { navigation.navigate('SetPassword', { TokenForSetUp: res.data.token, }); }
+            // { navigation.navigate('ProfileSetUp', { TokenForSetUp: res.data.token }); }
+            setSpinnerbool(false)
+          }, 50);
+        }
       }
-    }
 
-    catch (error) {
-      if (error.response) {
-        if (error.response.status === 400) {
-          console.log("Error With 400.", error.response.data)
-          if (error.response.data.message = "Email already exists") {
+      catch (error) {
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.log("Error With 400.", error.response.data)
+            if(error.response.data.message="Email already exists"){
+              seterrorFormAPI({ otp: `${error.response.data.message}` })
+            }
+            else{
+              seterrorFormAPI({ otp: `${error.response.data.message}` })
+            }
+          }
+          else if (error.response.status === 401) {
             seterrorFormAPI({ otp: `${error.response.data.message}` })
+          }
+          else if (error.response.status === 403) {
+            console.log("error.response.status login", error.response.data.message)
+          }
+          else if (error.response.status === 404) {
+            console.log("dhg", error.response.data.message)
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
+
+          }
+          else if (error.response.status === 406) {
+            console.log("dhg", error.response.data.message)
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
+
+          }
+          else if (error.response.status === 500) {
+            console.log("Internal Server Error", error.message)
           }
           else {
-            seterrorFormAPI({ otp: `${error.response.data.message}` })
+            console.log("An error occurred response.>>",error.response.data.message)
+            // ErrorResPrinter(`${error.message}`)
           }
         }
-        else if (error.response.status === 401) {
-          seterrorFormAPI({ otp: `${error.response.data.message}` })
+        else if (error.code === 'ECONNABORTED') {
+          console.log('Request timed out. Please try again later.');
         }
-        else if (error.response.status === 403) {
-          console.log("error.response.status login", error.response.data.message)
+        else if (error.request) {
+          console.log("No Response Received From the Server.")
+          if (error.request.status === 0) {
+            // console.log("error in request ",error.request.status)
+            Alert.alert("No Network Found", "Please Check your Internet Connection")
+          }
         }
-        else if (error.response.status === 404) {
-          console.log("dhg", error.response.data.message)
-          seterrorFormAPI({ otp: `${error.response.data.message}` })
 
-        }
-        else if (error.response.status === 406) {
-          console.log("dhg", error.response.data.message)
-          seterrorFormAPI({ otp: `${error.response.data.message}` })
-
-        }
-        else if (error.response.status === 500) {
-          console.log("Internal Server Error", error.message)
-        }
         else {
-          console.log("An error occurred response.>>", error.response.data.message)
-          // ErrorResPrinter(`${error.message}`)
+          console.log("Error in Setting up the Request.")
+        }
+
+        setSpinnerbool(false)
+
+        if (error) {
+
+          // message = error.message;
+          // seterrorFormAPI(message)
+          // "userEmail or Password does not match !"
         }
       }
-      else if (error.code === 'ECONNABORTED') {
-        console.log('Request timed out. Please try again later.');
+      finally {
+        // setLoading(false);
+        setSpinnerbool(false)
       }
-      else if (error.request) {
-        console.log("No Response Received From the Server.")
-        if (error.request.status === 0) {
-          // console.log("error in request ",error.request.status)
-          Alert.alert("No Network Found", "Please Check your Internet Connection")
-        }
-      }
-
-      else {
-        console.log("Error in Setting up the Request.")
-      }
-
-      setSpinnerbool(false)
-
-      if (error) {
-
-        // message = error.message;
-        // seterrorFormAPI(message)
-        // "userEmail or Password does not match !"
-      }
-    }
-    finally {
-      // setLoading(false);
-      setSpinnerbool(false)
-    }
 
 
   }
 
-
-  const ResendCode = async () => {
-    console.log("Helloooo....", TokenForSetUp)
+  const ResendCode =async () => {
+    console.log("Helloooo....",TokenForSetUp)
     try {
       setSpinnerbool(true)
       const res = await RESEND_FORGET_otp_API(TokenForSetUp)
@@ -188,12 +196,12 @@ const VerificationCode = ({ route }) => {
         toast.show(res.data.message)
 
 
-        // Logic for resending OTP
-        console.log('OTP Resent');
+            // Logic for resending OTP
+    console.log('OTP Resent');
 
-        // Reset the timer and disable resend button
-        setTimer(60);
-        setIsResendDisabled(true);
+    // Reset the timer and disable resend button
+    setTimer(60);
+    setIsResendDisabled(true);
       }
     }
 
@@ -201,10 +209,10 @@ const VerificationCode = ({ route }) => {
       if (error.response) {
         if (error.response.status === 400) {
           console.log("Error With 400.", error.response.data)
-          if (error.response.data.message = "Email already exists") {
+          if(error.response.data.message="Email already exists"){
             seterrorFormAPI({ otp: `${error.response.data.message}` })
           }
-          else {
+          else{
             seterrorFormAPI({ otp: `${error.response.data.message}` })
           }
         }
@@ -228,7 +236,7 @@ const VerificationCode = ({ route }) => {
           console.log("Internal Server Error", error.message)
         }
         else {
-          console.log("An error occurred response.>>", error.response.data.message)
+          console.log("An error occurred response.>>",error.response.data.message)
           // ErrorResPrinter(`${error.message}`)
         }
       }
@@ -367,7 +375,7 @@ const VerificationCode = ({ route }) => {
   )
 }
 
-export default VerificationCode
+export default VerificationCodeForgot
 const styles = StyleSheet.create({
   container: {
     flex: 1,

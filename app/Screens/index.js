@@ -32,6 +32,8 @@ import ForgotPassword from './AuthScreens/ForgotPassword';
 import SplashScreen from './SplashScreen/SplashScreen';
 import ProfileSetUp from './AuthScreens/ProfileSetUp';
 import Testing from './Testing';
+import VerificationCodeForgot from './AuthScreens/VerificationCodeForgot';
+import SetPassword from './AuthScreens/SetPassword';
 
 
 
@@ -180,12 +182,15 @@ export default function Screens() {
           <>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="VerificationCode" component={VerificationCode} />
-            <Stack.Screen name="CreatePassword" component={CreatePassword} />
             <Stack.Screen name="ProfileSetUp" component={ProfileSetUp} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen name="VerificationCodeForgot" component={VerificationCodeForgot} />
             <Stack.Screen name="InterestsForm" component={InterestsForm} />
             <Stack.Screen name="SuccessfullyScreen" component={SuccessfullyScreen} />
+            <Stack.Screen name="CreatePassword" component={CreatePassword} />
+            <Stack.Screen name="SetPassword" component={SetPassword} />
+            
           </>) : (
           <>
             {/* <Stack.Screen name="BottomTabScreen2" component={Testing} /> */}
