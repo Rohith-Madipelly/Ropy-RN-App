@@ -167,7 +167,7 @@ export default function Screens() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false }} >
 
 
         {isSplashSelector && <Stack.Screen name="SplashScreen" component={SplashScreen}

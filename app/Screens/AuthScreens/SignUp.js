@@ -82,6 +82,8 @@ const SignUp = () => {
 
       catch (error) {
         if (error.response) {
+
+          console.log("error for sign up",error.response)
           if (error.response.status === 400) {
             console.log("Error With 400.", error.response.data)
             if(error.response.data.message="Email already exists"){
@@ -91,8 +93,13 @@ const SignUp = () => {
               seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
             }
           }
+          else if(error.response.status===402)
+          {
+            seterrorFormAPI({ emailForm: `${error.response.data.message}` })
+          }
           else if (error.response.status === 401) {
-            seterrorFormAPI({ passwordForm: `${error.response.data.message}` })
+            console.log("phone number error",error.response)
+            seterrorFormAPI({ phoneNumberForm: `${error.response.data.message}` })
           }
           else if (error.response.status === 403) {
             console.log("error.response.status login", error.response.data.message)
@@ -107,7 +114,7 @@ const SignUp = () => {
           }
           else {
             console.log("An error occurred response.>>")
-            ErrorResPrinter(`${error.message}`)
+            // ErrorResPrinter(`${error.message}`)
           }
         }
         else if (error.code === 'ECONNABORTED') {
@@ -141,7 +148,19 @@ const SignUp = () => {
 
 
     } else {
-      Alert.alert("Please Select the Terms and Conditions")
+      // Alert.alert("Please Select the Terms and Conditions")
+          Alert.alert(
+              "Info", 
+              "Please Select the Terms and Conditions before proceeding.",
+              [
+                {
+                  text: "Ok",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "ok"
+                }
+              ],
+              { cancelable: false }
+            );
     }
   }
 
@@ -234,7 +253,6 @@ const SignUp = () => {
                     outlined
                     bgColor={'#F6F8FE'}
                   />
-
                   <CustomTextInput2
                     boxWidth={'95%'}
                     placeholder={'Enter password'}

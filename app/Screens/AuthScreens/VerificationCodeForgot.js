@@ -122,12 +122,13 @@ const VerificationCodeForgot = ({ route }) => {
         if (error.response) {
           if (error.response.status === 400) {
             console.log("Error With 400.", error.response.data)
-            if(error.response.data.message="Email already exists"){
-              seterrorFormAPI({ otp: `${error.response.data.message}` })
-            }
-            else{
-              seterrorFormAPI({ otp: `${error.response.data.message}` })
-            }
+            seterrorFormAPI({ otp: `${error.response.data.message}` })
+            // if(error.response.data.message="Email already exists"){
+            //   seterrorFormAPI({ otp: `${error.response.data.message}` })
+            // }
+            // else{
+            //   seterrorFormAPI({ otp: `${error.response.data.message}` })
+            // }
           }
           else if (error.response.status === 401) {
             seterrorFormAPI({ otp: `${error.response.data.message}` })
